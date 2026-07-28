@@ -279,7 +279,7 @@
 </div>
 
 <script>
-// LINK CLOUD SHEETS API TÀI KHOẢN MỚI (ĐÃ ĐỔI ĐUÔI /EXEC ĐỂ CHẠY THỰC TẾ)
+// LINK CLOUD SHEETS API TÀI KHOẢN MỚI
 const CLOUD_URL = "https://script.google.com/macros/s/AKfycbxk7kwl0WCKt5XLGYCtadGXiZBInV2NUc3Ow70tgHQ/exec";
 
 // ======================== TỐI ƯU HÓA DOM & RENDER ========================
@@ -785,14 +785,50 @@ function dongBoCloudDown(typeStr) {
 function xuatExcelCSV(type) {
     var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
     var history = JSON.parse(localStorage.getItem(key) || '[]');
-    if (history.length === 0) { alert("Không có dữ liệu!"); return; }
-    var html = "<html><head><meta charset='utf-8'></head><body><h2>BÁO CÁO CBM THÍ NGHIỆM " + type.toUpperCase() + " - PTC3</h2>";
-    history.forEach(item => { html += "<h3>Trạm/Thiết bị: " + item.tag + " - Lần đo: " + item.time + "</h3>" + (item.tsbDetail || "") + "<br>" + (item.r1cDetail || "") + "<hr>"; });
+    if (history.length === 0) { alert("Không có dữ liệu để xuất!"); return; }
+
+    var css = `
+        <style>
+            table { border-collapse: collapse; width: 100%; font-family: 'Times New Roman', sans-serif; font-size: 12pt; margin-bottom: 20px; }
+            th { background-color: #0a3b82; color: #ffffff; border: 1px solid #000000; padding: 8px; font-weight: bold; text-align: center; vertical-align: middle; }
+            td { border: 1px solid #000000; padding: 6px; text-align: center; vertical-align: middle; }
+            .error-badge { color: #c53030; background-color: #fed7d7; font-weight: bold; }
+            .pass-badge { color: #2f855a; font-weight: bold; }
+            h2 { font-family: Arial, sans-serif; color: #0a3b82; text-align: center; text-transform: uppercase; }
+            h3 { font-family: Arial, sans-serif; color: #e32219; font-size: 14pt; border-bottom: 1px solid #ccc; padding-bottom: 5px;}
+            h4 { font-family: Arial, sans-serif; color: #2d3748; margin-bottom: 5px;}
+        </style>
+    `;
+
+    var html = "<html xmlns:x='urn:schemas-microsoft-com:office:excel'><head><meta charset='utf-8'>" + css + "</head><body>";
+    html += "<h2>BÁO CÁO CBM THÍ NGHIỆM " + type.toUpperCase() + " - PTC3</h2>";
+
+    history.forEach(item => {
+        html += "<h3>📍 Trạm/Thiết bị: " + item.tag + " &nbsp;&nbsp;|&nbsp;&nbsp; ⏱ Lần đo: " + item.time + "</h3>";
+        if (item.tsbHtml) {
+            html += "<h4>1. KẾT QUẢ TỈ SỐ BIẾN (TSB)</h4>";
+            html += item.tsbHtml;
+        }
+        if (item.r1cHtml) {
+            html += "<h4>2. KẾT QUẢ QUY ĐỔI R1C</h4>";
+            html += item.r1cHtml;
+        }
+        if (!item.tsbHtml && !item.r1cHtml) {
+            html += "<p>" + (item.tsbDetail || "") + "<br>" + (item.r1cDetail || "") + "</p>";
+        }
+        html += "<br><br>";
+    });
+
     html += "</body></html>";
+
     var blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8;' });
-    var url = URL.createObjectURL(blob); var a = document.createElement('a'); a.href = url;
+    var url = URL.createObjectURL(blob); 
+    var a = document.createElement('a'); 
+    a.href = url;
     a.download = "Baocao_CBM_" + type.toUpperCase() + "_" + new Date().toISOString().slice(0,10) + ".xls";
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    document.body.appendChild(a); 
+    a.click(); 
+    document.body.removeChild(a);
 }
 
 function nhapDulieutuJSON(event, type) {
