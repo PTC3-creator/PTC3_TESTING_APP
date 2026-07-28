@@ -468,7 +468,8 @@ function tinhTisoTI() {
     for (var i = 1; i <= maxCoils; i++) {
         var ip_n = parseFloat(document.getElementById('ti_ip_n_' + i).value); var is_n = parseFloat(document.getElementById('ti_is_n_' + i).value);
         if(isNaN(ip_n) || isNaN(is_n)) continue;
-        var rowHasData = false; var rowCells = ""; var logLine = "Cuon " + i + ": ";
+        var rowHasData = false; var rowCells = ""; var logLine = "Cuộn " + i + ": ";
+        var phaseLogs = []; // Dùng mảng nối chuỗi hiển thị chi tiết TSB đo được
         
         for (var p = 0; p < 3; p++) {
             var input_elem = document.getElementById('ti_is_' + phases[p] + '_' + i);
@@ -488,10 +489,15 @@ function tinhTisoTI() {
                 }
                 var badgeStyle = isHighError ? "class='error-badge'" : "class='pass-badge'";
                 rowCells += "<td><b>" + Ratio_P_Actual.toFixed(2) + "/" + is_n + "</b></td><td><span " + badgeStyle + ">" + saisoDisplay + "</span></td>";
-                logLine += phaseNames[p] + "[" + saisoDisplay + "] ";
+                
+                // CẬP NHẬT TẠI ĐÂY: Nối thông số TSB đo được bên cạnh sai số
+                phaseLogs.push(phaseNames[p] + ": " + Ratio_P_Actual.toFixed(2) + "/" + is_n + " (" + saisoDisplay + ")");
             } else { rowCells += "<td>-</td><td>-</td>"; }
         }
-        if (rowHasData) { tbodyHtml += "<tr><td><b>" + i + "</b></td><td>" + ip_n + "/" + is_n + "</td>" + rowCells + "</tr>"; detailLog += logLine + "<br>"; }
+        if (rowHasData) { 
+            tbodyHtml += "<tr><td><b>" + i + "</b></td><td>" + ip_n + "/" + is_n + "</td>" + rowCells + "</tr>"; 
+            detailLog += logLine + phaseLogs.join(" | ") + "<br>"; 
+        }
     }
     if (!hasData) { alert("Vui lòng nhập dòng thứ cấp đo được!"); return; }
 
@@ -549,7 +555,7 @@ function tinhR1CTI() {
     alertDiv.innerHTML = (hasAlertR1C ? alertR1CMsg : "") + historyDrift;
 
     document.getElementById('ti_result_r1c_body').innerHTML = tbodyHtml; document.getElementById('ti_result_r1c').style.display = 'block';
-    luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Quy Đổi R1C TI", tag: tag, detail: detailLog, tableHtml: document.getElementById('ti_result_r1c_body').parentNode.outerHTML, rawData: rawDataR1C });
+    luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Quy Đổi R1C TI", tag: tag, detail: detailLog, tableHtml: document.getElementById('ti_result_r1c_table_body').parentNode.outerHTML, rawData: rawDataR1C });
 }
 
 function getKnTU(val_so, val_thu_type) {
@@ -614,51 +620,6 @@ function tinhTisoTU() {
 
     document.getElementById('tu_result_table_body').innerHTML = tbodyHtml; document.getElementById('tu_result_tiso').style.display = 'block';
     luuVaoLocalStorage('tu', { time: layThoiGian(), type: "Tỉ Số Biến TU", tag: tag, detail: detailLog, tableHtml: document.getElementById('tu_result_table_body').parentNode.outerHTML, rawData: rawDataTSB });
-}
-
-function tinhR1CTU() {
-    var tag = document.getElementById('tu_name_global').value.trim() || "TU Chưa Rõ Tên";
-    var T_const = parseFloat(getRadioValue('tu_material'));
-    var phasR = [ { name: "Pha A", ph: 'a'}, { name: "Pha B", ph: 'b'}, { name: "Pha C", ph: 'c'} ];
-    var tbodyHtml = ""; var detailLog = ""; var hasData = false;
-    var r_cuon1 = [], r_cuon2 = [], r_cuon3 = []; var rawDataR1C = { type: 'TU', maxLech: 0 };
-
-    for (var i = 0; i < phasR.length; i++) {
-        var p = phasR[i]; 
-        var t_pha = parseFloat(document.getElementById(`tu_temp_${p.ph}`)?.value);
-        var v1 = parseFloat(document.getElementById(`tu_r${p.ph}_1`)?.value);
-        var v2 = parseFloat(document.getElementById(`tu_r${p.ph}_2`)?.value);
-        var v3 = parseFloat(document.getElementById(`tu_r${p.ph}_3`)?.value);
-        
-        if (!isNaN(v1) || !isNaN(v2) || !isNaN(v3)) {
-            hasData = true; var k_pha = (75 + T_const) / (t_pha + T_const);
-            var r1_75 = !isNaN(v1) ? v1 * k_pha : NaN; if(!isNaN(r1_75)) r_cuon1.push(r1_75);
-            var r2_75 = !isNaN(v2) ? v2 * k_pha : NaN; if(!isNaN(r2_75)) r_cuon2.push(r2_75);
-            var r3_75 = !isNaN(v3) ? v3 * k_pha : NaN; if(!isNaN(r3_75)) r_cuon3.push(r3_75);
-
-            tbodyHtml += "<tr><td><b>" + p.name + "</b></td><td>" + t_pha + "</td><td>" + k_pha.toFixed(4) + "</td><td><b>" + (!isNaN(r1_75)?r1_75.toFixed(3):"-") + "</b></td><td><b>" + (!isNaN(r2_75)?r2_75.toFixed(3):"-") + "</b></td><td><b>" + (!isNaN(r3_75)?r3_75.toFixed(3):"-") + "</b></td></tr>";
-            detailLog += p.name + " (" + t_pha + "°C): R1=" + (!isNaN(r1_75)?r1_75.toFixed(3):"-") + " mΩ | R2=" + (!isNaN(r2_75)?r2_75.toFixed(3):"-") + " mΩ | R3=" + (!isNaN(r3_75)?r3_75.toFixed(3):"-") + " mΩ<br>";
-        }
-    }
-    if (!hasData) { alert("Nhập R1C TU!"); return; }
-
-    var hasAlertR1C = false; var alertR1CMsg = "⚠️ <b>CẢNH BÁO ĐỘ LỆCH PHA TU (>10%):</b> ";
-    var checkLech = function(arr, name) {
-        if(arr.length >= 2) {
-            var lech = ((Math.max.apply(null, arr) - Math.min.apply(null, arr)) / Math.min.apply(null, arr)) * 100;
-            if(lech > rawDataR1C.maxLech) rawDataR1C.maxLech = lech;
-            if (lech > 10.0) { hasAlertR1C = true; alertR1CMsg += name + " lệch " + lech.toFixed(1) + "% giữa các pha; "; }
-        }
-    };
-    checkLech(r_cuon1, "Cuộn 1"); checkLech(r_cuon2, "Cuộn 2"); checkLech(r_cuon3, "Cuộn 3");
-
-    var historyDrift = checkHistoryDrift('tu', tag, rawDataR1C, 'R1C');
-    var alertDiv = document.getElementById('tu_alert_box_r1c');
-    alertDiv.style.display = (hasAlertR1C || historyDrift !== "") ? 'block' : 'none';
-    alertDiv.innerHTML = (hasAlertR1C ? alertR1CMsg : "") + historyDrift;
-
-    document.getElementById('tu_result_r1c_table_body').innerHTML = tbodyHtml; document.getElementById('tu_result_r1c').style.display = 'block';
-    luuVaoLocalStorage('tu', { time: layThoiGian(), type: "Quy Đổi R1C TU", tag: tag, detail: detailLog, tableHtml: document.getElementById('tu_result_r1c_table_body').parentNode.outerHTML, rawData: rawDataR1C });
 }
 
 var myChart = null;
