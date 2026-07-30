@@ -407,7 +407,6 @@ function getRadioValue(name) {
     return null;
 }
 
-// BẢN VÁ LỖI XUNG ĐỘT GHI ĐÈ LỊCH SỬ (CHỐNG SẬP 100%)
 function luuVaoLocalStorage(type, record) {
     try {
         var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
@@ -416,7 +415,6 @@ function luuVaoLocalStorage(type, record) {
         var recTag = (record.tag || "").replace(/\s/g,'').toUpperCase();
 
         var merged = false;
-        // Chỉ gộp đè nếu là MỚI THÊM R1C vào biên bản TSB (hoặc ngược lại)
         if (history.length > 0) {
             var histTag = (history[0].tag || "").replace(/\s/g,'').toUpperCase();
             var histDay = (history[0].time || "").split(" ")[0];
@@ -425,7 +423,6 @@ function luuVaoLocalStorage(type, record) {
                 var isTSB = record.type.includes("Tỉ Số");
                 var isR1C = record.type.includes("R1C");
 
-                // Nếu bản ghi cũ chưa có TSB mà mình đang bấm TSB thì gộp. Còn có rồi thì tạo dòng mới!
                 if ((isTSB && !history[0].tsbHtml) || (isR1C && !history[0].r1cHtml)) {
                     if (isTSB) { history[0].tsbHtml = record.tableHtml; history[0].tsbDetail = record.detail; history[0].rawTSB = record.rawData; }
                     if (isR1C) { history[0].r1cHtml = record.tableHtml; history[0].r1cDetail = record.detail; history[0].rawR1C = record.rawData; }
@@ -437,7 +434,6 @@ function luuVaoLocalStorage(type, record) {
             }
         }
 
-        // Nếu không gộp, tạo mới 100% để hiển thị đủ các lần bấm test của Sếp
         if (!merged) {
             var newRecord = {
                 time: record.time, tag: record.tag, equip: record.equip, station: record.station, type: record.type, synced: false,
@@ -449,11 +445,9 @@ function luuVaoLocalStorage(type, record) {
         }
         
         localStorage.setItem(key, JSON.stringify(history));
-        // Ép cập nhật giao diện lịch sử ngay lập tức (không cần đợi bấm sang tab mới)
         hienThiNhatKy(type);
     } catch(e) {
         console.error("Lỗi an toàn:", e);
-        alert("Có sự cố bộ nhớ, nhưng hệ thống đã khắc phục tự động!");
     }
 }
 
@@ -486,7 +480,7 @@ function checkHistoryDrift(type, currentTag, currentData, dataType) {
         }
         return alertStr;
     } catch(e) {
-        return ""; // Chống sập hệ thống CBM
+        return ""; 
     }
 }
 
@@ -567,10 +561,14 @@ function tinhR1CTI() {
     var maxCoils = document.getElementById('ti_show_extra_r1c').checked ? 8 : 5;
     var tbodyHtml = ""; var detailLog = ""; var hasData = false;
     var hasAlertR1C = false; var alertR1CMsg = "⚠️ <b>CẢNH BÁO ĐỘ LỆCH PHA GIỮA CÁC PHA A-B-C (>10%):</b> "; 
-    var rawDataR1C = { type: 'TI', maxLech: 0 };
+    
+    // TÍNH NĂNG MỚI: BỔ SUNG LƯU TRỮ GIÁ TRỊ TUYỆT ĐỐI CHO TỪNG CUỘN ĐỂ VẼ BIỂU ĐỒ 3 MÀU
+    var rawDataR1C = { type: 'TI', maxLech: 0, coils: {} };
 
     for (var i = 1; i <= maxCoils; i++) {
         var rowHasData = false; var rowCells = ""; var logLine = "Cuộn " + i + ": "; var r_75_arr = [];
+        var coilVals = {A: null, B: null, C: null};
+        
         for (var p = 0; p < 3; p++) {
             var input_elem = document.getElementById('ti_r_' + phases[p] + '_' + i);
             var r_test = input_elem ? parseFloat(input_elem.value) : NaN;
@@ -578,9 +576,13 @@ function tinhR1CTI() {
             if (!isNaN(r_test)) {
                 rowHasData = true; hasData = true;
                 var r_75 = r_test * k_factors[p]; r_75_arr.push(r_75);
+                if(p===0) coilVals.A = r_75; if(p===1) coilVals.B = r_75; if(p===2) coilVals.C = r_75;
+                
                 rowCells += "<td><b>" + r_75.toFixed(4) + "</b></td>"; logLine += phaseNames[p] + "(" + r_75.toFixed(4) + "Ω) ";
             } else { rowCells += "<td>-</td>"; }
         }
+        
+        rawDataR1C.coils[i] = coilVals; // Gắn dữ liệu cuộn i vào bộ nhớ
         
         if (r_75_arr.length >= 2) {
             var maxR = Math.max.apply(null, r_75_arr); var minR = Math.min.apply(null, r_75_arr);
@@ -684,10 +686,14 @@ function tinhR1CTU() {
     var T_const = parseFloat(getRadioValue('tu_material'));
     var phasR = [ { name: "Pha A", ph: 'a'}, { name: "Pha B", ph: 'b'}, { name: "Pha C", ph: 'c'} ];
     var tbodyHtml = ""; var detailLog = ""; var hasData = false;
-    var r_cuon1 = [], r_cuon2 = [], r_cuon3 = []; var rawDataR1C = { type: 'TU', maxLech: 0 };
+    var r_cuon1 = [], r_cuon2 = [], r_cuon3 = []; 
+    
+    // TÍNH NĂNG MỚI: BỔ SUNG LƯU TRỮ TUYỆT ĐỐI CHO TỪNG CUỘN TU
+    var rawDataR1C = { type: 'TU', maxLech: 0, coils: { 1:{}, 2:{}, 3:{} } };
 
     for (var i = 0; i < phasR.length; i++) {
         var p = phasR[i]; 
+        var phaKey = p.name.replace('Pha ', ''); // Ra chữ A, B, C
         
         var temp_elem = document.getElementById('tu_temp_' + p.ph);
         var t_pha = temp_elem ? parseFloat(temp_elem.value) : 30;
@@ -701,6 +707,10 @@ function tinhR1CTU() {
             var r1_75 = !isNaN(v1) ? v1 * k_pha : NaN; if(!isNaN(r1_75)) r_cuon1.push(r1_75);
             var r2_75 = !isNaN(v2) ? v2 * k_pha : NaN; if(!isNaN(r2_75)) r_cuon2.push(r2_75);
             var r3_75 = !isNaN(v3) ? v3 * k_pha : NaN; if(!isNaN(r3_75)) r_cuon3.push(r3_75);
+
+            rawDataR1C.coils[1][phaKey] = isNaN(r1_75) ? null : r1_75;
+            rawDataR1C.coils[2][phaKey] = isNaN(r2_75) ? null : r2_75;
+            rawDataR1C.coils[3][phaKey] = isNaN(r3_75) ? null : r3_75;
 
             tbodyHtml += "<tr><td><b>" + p.name + "</b></td><td>" + t_pha + "</td><td>" + k_pha.toFixed(4) + "</td><td><b>" + (!isNaN(r1_75)?r1_75.toFixed(3):"-") + "</b></td><td><b>" + (!isNaN(r2_75)?r2_75.toFixed(3):"-") + "</b></td><td><b>" + (!isNaN(r3_75)?r3_75.toFixed(3):"-") + "</b></td></tr>";
             detailLog += p.name + " (" + t_pha + "°C): R1=" + (!isNaN(r1_75)?r1_75.toFixed(3):"-") + " mΩ | R2=" + (!isNaN(r2_75)?r2_75.toFixed(3):"-") + " mΩ | R3=" + (!isNaN(r3_75)?r3_75.toFixed(3):"-") + " mΩ<br>";
@@ -728,30 +738,71 @@ function tinhR1CTU() {
 }
 
 var myChart = null;
+
+// TÍNH NĂNG MỚI: VẼ 3 ĐƯỜNG R1C (PHA A, B, C) VÀ TỰ ĐỘNG GIẢI MÃ DỮ LIỆU CŨ
 function showTrendChart(type) {
     var equip = document.getElementById(type + '_equip_global').value.trim();
     var station = document.getElementById(type + '_station_global').value.trim();
-    if(!equip && !station) { alert("Sếp vui lòng nhập Tên thiết bị và Vị trí trạm!"); return; }
+    if(!equip && !station) { alert("Sếp vui lòng nhập Tên thiết bị và Vị trí trạm để xem biểu đồ!"); return; }
     var tag = equip + " - " + station;
     
     var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
     var history = JSON.parse(localStorage.getItem(key) || '[]');
-    var stationData = history.filter(r => (r.tag||"").replace(/\s/g,'').toUpperCase() === tag.replace(/\s/g,'').toUpperCase() && r.rawR1C != null).reverse(); 
+    
+    // Lọc lấy các bản ghi có tính R1C (chấp nhận cả bản ghi cũ chỉ có text chi tiết)
+    var stationData = history.filter(r => (r.tag||"").replace(/\s/g,'').toUpperCase() === tag.replace(/\s/g,'').toUpperCase() && (r.rawR1C != null || r.r1cDetail)).reverse(); 
+    
     if (stationData.length < 2) { alert("Cần ít nhất 2 lần đo có dữ liệu R1C để vẽ biểu đồ CBM!"); return; }
 
-    var labels = []; var r1cData = [];
+    var labels = []; 
+    var dataA = []; var dataB = []; var dataC = [];
+    var unit = type === 'ti' ? '(Ω)' : '(mΩ)';
+
     stationData.forEach(r => {
         labels.push(r.time.split(" ")[0]);
-        r1cData.push(r.rawR1C.maxLech);
+        var valA = null, valB = null, valC = null;
+        
+        // 1. Nếu là dữ liệu mới vừa tính (có lưu mảng coils)
+        if (r.rawR1C && r.rawR1C.coils && r.rawR1C.coils[1]) {
+            valA = r.rawR1C.coils[1].A; 
+            valB = r.rawR1C.coils[1].B; 
+            valC = r.rawR1C.coils[1].C;
+        } 
+        // 2. Nếu là dữ liệu cũ (Tự động giải mã text thành số bằng Regex)
+        else if (r.r1cDetail) {
+            if (type === 'ti') {
+                var mA = r.r1cDetail.match(/Cuộn 1:.*?Pha A\(([\d.]+)Ω\)/); if(mA) valA = parseFloat(mA[1]);
+                var mB = r.r1cDetail.match(/Cuộn 1:.*?Pha B\(([\d.]+)Ω\)/); if(mB) valB = parseFloat(mB[1]);
+                var mC = r.r1cDetail.match(/Cuộn 1:.*?Pha C\(([\d.]+)Ω\)/); if(mC) valC = parseFloat(mC[1]);
+            } else {
+                var mAt = r.r1cDetail.match(/Pha A.*?R1=([\d.]+)/); if(mAt) valA = parseFloat(mAt[1]);
+                var mBt = r.r1cDetail.match(/Pha B.*?R1=([\d.]+)/); if(mBt) valB = parseFloat(mBt[1]);
+                var mCt = r.r1cDetail.match(/Pha C.*?R1=([\d.]+)/); if(mCt) valC = parseFloat(mCt[1]);
+            }
+        }
+        
+        dataA.push(valA); dataB.push(valB); dataC.push(valC);
     });
 
-    document.getElementById('chartTitle').innerText = "CBM XU HƯỚNG BIẾN ĐỘNG R1C: " + tag.toUpperCase();
+    document.getElementById('chartTitle').innerText = "CBM R1C (CUỘN 1): " + tag.toUpperCase();
     document.getElementById('chartModal').style.display = 'flex';
     var ctx = document.getElementById('trendChart').getContext('2d');
+    
     if (myChart) myChart.destroy();
     myChart = new Chart(ctx, {
-        type: 'line', data: { labels: labels, datasets: [{ label: 'Max Lệch Pha R1C (%)', data: r1cData, borderColor: '#e32219', backgroundColor: '#e32219', borderWidth: 2, tension: 0.2 }] },
-        options: { responsive: true }
+        type: 'line', 
+        data: { 
+            labels: labels, 
+            datasets: [
+                { label: 'Pha A ' + unit, data: dataA, borderColor: '#d69e2e', backgroundColor: '#d69e2e', borderWidth: 2, tension: 0.1, spanGaps: true },
+                { label: 'Pha B ' + unit, data: dataB, borderColor: '#38a169', backgroundColor: '#38a169', borderWidth: 2, tension: 0.1, spanGaps: true },
+                { label: 'Pha C ' + unit, data: dataC, borderColor: '#e53e3e', backgroundColor: '#e53e3e', borderWidth: 2, tension: 0.1, spanGaps: true }
+            ] 
+        },
+        options: { 
+            responsive: true,
+            scales: { y: { title: { display: true, text: 'Điện trở ' + unit } } }
+        }
     });
 }
 
