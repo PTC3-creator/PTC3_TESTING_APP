@@ -58,8 +58,8 @@
         .compact-input-table { width: 100%; min-width: 450px; border-collapse: collapse; font-size: 12px; text-align: center; }
         .compact-input-table th { background: #edf2f7; color: #2d3748; padding: 6px; font-size: 11px; border-bottom: 2px solid #cbd5e0; }
         .compact-input-table td { padding: 4px 2px; border-bottom: 1px solid #e2e8f0; vertical-align: middle;}
-        .tap-label { font-weight: bold; color: #4a5568; background: #f8fafc; border-radius: 4px; padding: 4px; border: 1px solid #e2e8f0; display: inline-block; width: 45px;}
-        .mini-in { width: 55px; padding: 6px 4px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; font-weight: bold; font-size: 13px; }
+        .tap-label { font-weight: bold; color: #4a5568; background: #f8fafc; border-radius: 4px; padding: 4px; border: 1px solid #e2e8f0; display: inline-block; width: 48px; text-align: center;}
+        .mini-in { width: 60px; padding: 6px 4px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; font-weight: bold; font-size: 13px; }
         .mini-in:focus { border-color: #3182ce; outline: none; background: #ebf8ff;}
         .ph-a { color: #b7791f; } .ph-b { color: #2f855a; } .ph-c { color: #c53030; }
         
@@ -124,15 +124,15 @@
             <button type="button" class="tab-btn ti-tab-btn" onclick="switchSubTab('ti', 'ti_tab3')">3. Lịch Sử & Đồng Bộ</button>
         </div>
 
-        <!-- TI - TAB TỈ SỐ BIẾN (GIAO DIỆN CHUYÊN NGHIỆP MỚI) -->
+        <!-- TI - TAB TỈ SỐ BIẾN (GIAO DIỆN CHUYÊN NGHIỆP) -->
         <div id="ti_tab1" class="tab-content ti-tab-content active">
             
             <label class="extra-coils-toggle" style="background: #e6fffa; border-color: #319795; color: #285e61;">
                 <input type="checkbox" id="ti_full_taps" onchange="toggleFullTapsTI(this.checked)"> 
-                🛠️ CHẾ ĐỘ ĐO NGHIỆM THU (Hiển thị toàn bộ Đầu phân dòng)
+                🛠️ BẬT CHẾ ĐỘ ĐO NGHIỆM THU (5 Phân Dòng)
             </label>
             
-            <div id="ti_tsb_grid_container"></div> <!-- Container được Render tự động bởi JS -->
+            <div id="ti_tsb_grid_container"></div> 
             
             <label class="extra-coils-toggle"><input type="checkbox" id="ti_show_extra_tsb" onchange="toggleExtraCoilsTI(this.checked)"> ➕ HIỂN THỊ THÊM CUỘN 6, 7, 8</label>
             
@@ -143,7 +143,7 @@
             </div>
         </div>
 
-        <!-- TI - TAB QUY ĐỔI R1C -->
+        <!-- TI - TAB QUY ĐỔI R1C (GIAO DIỆN CHUYÊN NGHIỆP MỚI) -->
         <div id="ti_tab2" class="tab-content ti-tab-content">
             <div class="form-group" style="background: #e2e8f0; padding: 12px; border-radius: 8px;">
                 <label>📐 Vật liệu cuộn dây (Hằng số T):</label>
@@ -152,16 +152,26 @@
                     <div class="radio-tile"><input type="radio" name="material_ti" id="mat_al_ti" value="225"><label for="mat_al_ti">Nhôm (Al - 225)</label></div>
                 </div>
             </div>
-            <label class="extra-coils-toggle"><input type="checkbox" id="ti_show_extra_r1c" onchange="toggleExtraCoilsR1CTI(this.checked)"> ➕ HIỂN THỊ THÊM CUỘN 6, 7, 8</label>
-            <hr>
-            <div style="font-size: 13px; font-weight: 800; color: #0a3b82; margin-bottom: 8px; text-align: center;">📊 NHẬP NHIỆT ĐỘ (°C) & ĐIỆN TRỞ R1C (Ω):</div>
             
-            <div id="ti_phas_container_r1c"></div>
+            <div class="grid-3col-input" style="background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e0; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <div style="font-size: 12px; font-weight: bold; color:#1a365d;">🌡️ T_Pha A: <input type="number" id="ti_temp_a_r1c" value="30" class="mini-in" style="width: 50px;">°C</div>
+                <div style="font-size: 12px; font-weight: bold; color:#1a365d;">🌡️ T_Pha B: <input type="number" id="ti_temp_b_r1c" value="30" class="mini-in" style="width: 50px;">°C</div>
+                <div style="font-size: 12px; font-weight: bold; color:#1a365d;">🌡️ T_Pha C: <input type="number" id="ti_temp_c_r1c" value="30" class="mini-in" style="width: 50px;">°C</div>
+            </div>
+
+            <label class="extra-coils-toggle" style="background: #e6fffa; border-color: #319795; color: #285e61;">
+                <input type="checkbox" id="ti_full_taps_r1c" onchange="toggleFullTapsR1CTI(this.checked)"> 
+                🛠️ BẬT CHẾ ĐỘ ĐO NGHIỆM THU R1C (5 Phân Dòng)
+            </label>
+            
+            <div id="ti_r1c_grid_container"></div>
+            
+            <label class="extra-coils-toggle"><input type="checkbox" id="ti_show_extra_r1c" onchange="toggleExtraCoilsR1CTI(this.checked)"> ➕ HIỂN THỊ THÊM CUỘN 6, 7, 8</label>
             
             <button class="btn-calc" onclick="tinhR1CTI()">QUY ĐỔI VỀ 75°C & KIỂM TRA ĐỘ LỆCH PHA TI</button>
             <div id="ti_result_r1c" class="result-box">
                 <div id="ti_alert_box_r1c" class="alert-banner"></div>
-                <table class="table-result"><thead><tr><th>Cuộn</th><th>Pha A (75°C)</th><th>Pha B (75°C)</th><th>Pha C (75°C)</th></tr></thead><tbody id="ti_result_r1c_body"></tbody></table>
+                <table class="table-result"><thead><tr><th>Cuộn</th><th>Phân dòng</th><th>Pha A (75°C)</th><th>Pha B (75°C)</th><th>Pha C (75°C)</th></tr></thead><tbody id="ti_result_r1c_body"></tbody></table>
             </div>
         </div>
 
@@ -304,10 +314,10 @@ const CLOUD_URL = "https://script.google.com/macros/s/AKfycbx32OT-P6qjRkIpc02z1P
 document.addEventListener("DOMContentLoaded", function() {
     const phases = ['a', 'b', 'c'];
     const phaseIcons = ['🟡 PHA A', '🟢 PHA B', '🔴 PHA C'];
+    const tapNames = ['S1-S2', 'S1-S3', 'S1-S4', 'S1-S5', 'S1-S6']; 
     
-    // TÍNH NĂNG MỚI: TỰ ĐỘNG VẼ LƯỚI ĐẦU PHÂN DÒNG TSB TI CHUYÊN NGHIỆP
+    // TÍNH NĂNG MỚI: TỰ ĐỘNG VẼ LƯỚI ĐẦU PHÂN DÒNG TSB TI CHUYÊN NGHIỆP (ĐẢO NGƯỢC TỈ SỐ)
     let tiTsbGridHtml = '';
-    const tapNames = ['S1-S2', 'S1-S3', 'S1-S4', 'S1-S5', 'S1-S6']; // Map chuẩn EVNNPT
     
     for(let c=1; c<=8; c++) {
         let coilDisplay = c > 5 ? 'style="display:none;" class="pha-card ti-extra-coil"' : 'class="pha-card ti-coil-card"';
@@ -330,16 +340,21 @@ document.addEventListener("DOMContentLoaded", function() {
         // Render 5 Taps per Coil
         for(let t=1; t<=5; t++) {
             let tapDisplay = t > 1 ? 'style="display:none;" class="ti-extra-tap-row"' : '';
-            let defaultIp = 2000;
-            if(t===2) defaultIp = 1500; if(t===3) defaultIp = 1000; if(t===4) defaultIp = 600; if(t===5) defaultIp = 500;
+            
+            // ĐẢO NGƯỢC LOGIC MẶC ĐỊNH: S1-S2 nhỏ nhất, S1-S6 lớn nhất
+            let defaultIp = 500;
+            if(t===2) defaultIp = 600; 
+            if(t===3) defaultIp = 1000; 
+            if(t===4) defaultIp = 1500; 
+            if(t===5) defaultIp = 2000;
             
             tiTsbGridHtml += `
                         <tr ${tapDisplay}>
                             <td><span class="tap-label">${c}${tapNames[t-1]}</span></td>
                             <td><input type="number" id="ti_ip_c${c}_t${t}" value="${defaultIp}" class="mini-in"> / <input type="number" id="ti_is_c${c}_t${t}" value="1" class="mini-in" style="width:35px;"></td>
-                            <td><input type="number" id="ti_a_c${c}_t${t}" class="mini-in ph-a"></td>
-                            <td><input type="number" id="ti_b_c${c}_t${t}" class="mini-in ph-b"></td>
-                            <td><input type="number" id="ti_c_c${c}_t${t}" class="mini-in ph-c"></td>
+                            <td><input type="number" id="ti_a_c${c}_t${t}" class="mini-in ph-a" step="any"></td>
+                            <td><input type="number" id="ti_b_c${c}_t${t}" class="mini-in ph-b" step="any"></td>
+                            <td><input type="number" id="ti_c_c${c}_t${t}" class="mini-in ph-c" step="any"></td>
                         </tr>`;
         }
         tiTsbGridHtml += `</tbody></table></div></div>`;
@@ -347,18 +362,40 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('ti_tsb_grid_container').innerHTML = tiTsbGridHtml;
 
 
+    // TÍNH NĂNG MỚI: TỰ ĐỘNG VẼ LƯỚI ĐẦU PHÂN DÒNG R1C TI CHUYÊN NGHIỆP
     let tiR1cHtml = '';
-    phases.forEach((p, idx) => {
-        let coils = '';
-        for(let i=1; i<=8; i++) {
-            let extraClass = i > 5 ? ' ti-extra-coil-r1c' : '';
-            let extraStyle = i > 5 ? ' style="display:none;"' : '';
-            coils += `<div class="coil-item${extraClass}"${extraStyle}><label>Cuộn ${i}</label><input type="number" id="ti_r_${p}_${i}" step="any"></div>`;
+    for(let c=1; c<=8; c++) {
+        let coilDisplay = c > 5 ? 'style="display:none;" class="pha-card ti-extra-coil-r1c"' : 'class="pha-card ti-coil-card"';
+        tiR1cHtml += `
+        <div ${coilDisplay}>
+            <div class="pha-title"><span>Cuộn ${c}</span></div>
+            <div class="table-responsive">
+                <table class="compact-input-table">
+                    <thead>
+                        <tr>
+                            <th>Phân dòng</th>
+                            <th>Pha A (Ω) <span style="color:#d69e2e">●</span></th>
+                            <th>Pha B (Ω) <span style="color:#38a169">●</span></th>
+                            <th>Pha C (Ω) <span style="color:#e53e3e">●</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+        for(let t=1; t<=5; t++) {
+            let tapDisplay = t > 1 ? 'style="display:none;" class="ti-extra-tap-row-r1c"' : '';
+            tiR1cHtml += `
+                        <tr ${tapDisplay}>
+                            <td><span class="tap-label">${c}${tapNames[t-1]}</span></td>
+                            <td><input type="number" id="ti_r_a_c${c}_t${t}" class="mini-in ph-a" step="any"></td>
+                            <td><input type="number" id="ti_r_b_c${c}_t${t}" class="mini-in ph-b" step="any"></td>
+                            <td><input type="number" id="ti_r_c_c${c}_t${t}" class="mini-in ph-c" step="any"></td>
+                        </tr>`;
         }
-        tiR1cHtml += `<div class="pha-card"><div class="pha-title"><span>${phaseIcons[idx]}</span><span>🌡️ T (°C): <input type="number" id="ti_temp_${p}_r1c" value="30" style="width:55px;"></span></div><div class="grid-3col-input">${coils}</div></div>`;
-    });
-    document.getElementById('ti_phas_container_r1c').innerHTML = tiR1cHtml;
+        tiR1cHtml += `</tbody></table></div></div>`;
+    }
+    document.getElementById('ti_r1c_grid_container').innerHTML = tiR1cHtml;
 
+
+    // RENDER TU (Giữ nguyên cấu trúc đã chuẩn)
     let tuTsbHtml = '';
     phases.forEach((p, idx) => {
         tuTsbHtml += `
@@ -521,6 +558,12 @@ function toggleFullTapsTI(isChecked) {
         extraTaps[i].style.display = isChecked ? 'table-row' : 'none';
     }
 }
+function toggleFullTapsR1CTI(isChecked) {
+    var extraTaps = document.querySelectorAll('.ti-extra-tap-row-r1c');
+    for (var i = 0; i < extraTaps.length; i++) {
+        extraTaps[i].style.display = isChecked ? 'table-row' : 'none';
+    }
+}
 
 // Bật/Tắt Hiển thị Cuộn 6,7,8
 function toggleExtraCoilsTI(isChecked) {
@@ -529,10 +572,10 @@ function toggleExtraCoilsTI(isChecked) {
 }
 function toggleExtraCoilsR1CTI(isChecked) {
     var extraCoils = document.querySelectorAll('.ti-extra-coil-r1c'); 
-    for (var i = 0; i < extraCoils.length; i++) { extraCoils[i].style.display = isChecked ? 'flex' : 'none'; }
+    for (var i = 0; i < extraCoils.length; i++) { extraCoils[i].style.display = isChecked ? 'block' : 'none'; }
 }
 
-// LOGIC TÍNH TOÁN TI TSB MỚI TƯƠNG THÍCH ĐA PHÂN DÒNG
+// LOGIC TÍNH TOÁN TI TSB
 function tinhTisoTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
@@ -596,7 +639,6 @@ function tinhTisoTI() {
         }
         
         if(coilHasData) {
-            // Count rows for rowspan
             var rowCount = (coilRowsHtml.match(/<tr>/g) || []).length;
             coilRowsHtml = coilRowsHtml.replace('[ROWSPAN]', rowCount);
             tbodyHtml += coilRowsHtml;
@@ -616,53 +658,100 @@ function tinhTisoTI() {
     luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Tỉ Số Biến TI", tag: tag, equip: equip, station: station, detail: detailLog, tableHtml: document.getElementById('ti_result_table_body').parentNode.outerHTML, rawData: rawDataTSB });
 }
 
-
+// LOGIC TÍNH TOÁN TI R1C NHIỀU ĐẦU PHÂN DÒNG
 function tinhR1CTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
     var T_const = parseFloat(getRadioValue('material_ti'));
-    var phases = ['a', 'b', 'c']; var phaseNames = ['Pha A', 'Pha B', 'Pha C'];
-    var temps = [ parseFloat(document.getElementById('ti_temp_a_r1c').value), parseFloat(document.getElementById('ti_temp_b_r1c').value), parseFloat(document.getElementById('ti_temp_c_r1c').value) ];
-    var k_factors = [];
-    for(var p = 0; p < 3; p++){ k_factors[p] = (75 + T_const) / (temps[p] + T_const); }
+    
+    // Đọc Nhiệt độ Toàn Cục
+    var temps = [ 
+        parseFloat(document.getElementById('ti_temp_a_r1c').value), 
+        parseFloat(document.getElementById('ti_temp_b_r1c').value), 
+        parseFloat(document.getElementById('ti_temp_c_r1c').value) 
+    ];
+    var k_factors = [ 
+        (75 + T_const) / (temps[0] + T_const), 
+        (75 + T_const) / (temps[1] + T_const), 
+        (75 + T_const) / (temps[2] + T_const) 
+    ];
 
     var maxCoils = document.getElementById('ti_show_extra_r1c').checked ? 8 : 5;
+    var isFullTaps = document.getElementById('ti_full_taps_r1c').checked;
+    
     var tbodyHtml = ""; var detailLog = ""; var hasData = false;
     var hasAlertR1C = false; var alertR1CMsg = "⚠️ <b>CẢNH BÁO ĐỘ LỆCH PHA GIỮA CÁC PHA A-B-C (>10%):</b> "; 
     
     var rawDataR1C = { type: 'TI', maxLech: 0, coils: {} };
+    const tapNames = ['S1-S2', 'S1-S3', 'S1-S4', 'S1-S5', 'S1-S6'];
 
-    for (var i = 1; i <= maxCoils; i++) {
-        var rowHasData = false; var rowCells = ""; var logLine = "Cuộn " + i + ": "; var r_75_arr = [];
-        var coilVals = {A: null, B: null, C: null};
-        
-        for (var p = 0; p < 3; p++) {
-            var input_elem = document.getElementById('ti_r_' + phases[p] + '_' + i);
-            var r_test = input_elem ? parseFloat(input_elem.value) : NaN;
-            
-            if (!isNaN(r_test)) {
-                rowHasData = true; hasData = true;
-                var r_75 = r_test * k_factors[p]; r_75_arr.push(r_75);
-                if(p===0) coilVals.A = r_75; if(p===1) coilVals.B = r_75; if(p===2) coilVals.C = r_75;
+    for (var c = 1; c <= maxCoils; c++) {
+        var maxTaps = isFullTaps ? 5 : 1;
+        var coilHasData = false;
+        var coilRowsHtml = "";
+        var coilVals = {A: null, B: null, C: null}; 
+        var tapLoggedForTrend = false;
+
+        for (var t = 1; t <= maxTaps; t++) {
+            var r_a = parseFloat(document.getElementById(`ti_r_a_c${c}_t${t}`).value);
+            var r_b = parseFloat(document.getElementById(`ti_r_b_c${c}_t${t}`).value);
+            var r_c = parseFloat(document.getElementById(`ti_r_c_c${c}_t${t}`).value);
+
+            if(!isNaN(r_a) || !isNaN(r_b) || !isNaN(r_c)) {
+                coilHasData = true; hasData = true;
+                var tapName = `${c}${tapNames[t-1]}`;
+                var rowCells = "";
+                var logLine = `Cuộn ${c} (${tapName}): `;
+                var r_75_arr = [];
+
+                [r_a, r_b, r_c].forEach((meas, idx) => {
+                    if(!isNaN(meas)) {
+                        var r_75 = meas * k_factors[idx];
+                        r_75_arr.push(r_75);
+                        rowCells += `<td><b>${r_75.toFixed(4)}</b></td>`;
+                        logLine += `Pha ${['A','B','C'][idx]}: ${r_75.toFixed(4)}Ω | `;
+                        
+                        // Lấy duy nhất nấc đầu tiên được nhập liệu để vẽ Trend CBM
+                        if(!tapLoggedForTrend) {
+                            if(idx===0) coilVals.A = r_75;
+                            if(idx===1) coilVals.B = r_75;
+                            if(idx===2) coilVals.C = r_75;
+                        }
+                    } else {
+                        rowCells += `<td>-</td>`;
+                    }
+                });
+                tapLoggedForTrend = true; 
                 
-                rowCells += "<td><b>" + r_75.toFixed(4) + "</b></td>"; logLine += phaseNames[p] + "(" + r_75.toFixed(4) + "Ω) ";
-            } else { rowCells += "<td>-</td>"; }
-        }
-        
-        rawDataR1C.coils[i] = coilVals; 
-        
-        if (r_75_arr.length >= 2) {
-            var maxR = Math.max.apply(null, r_75_arr); var minR = Math.min.apply(null, r_75_arr);
-            var lech = ((maxR - minR) / minR) * 100;
-            if(lech > rawDataR1C.maxLech) rawDataR1C.maxLech = lech;
-            if (lech > 10.0) { 
-                hasAlertR1C = true; 
-                alertR1CMsg += "Cuộn " + i + " lệch giữa các pha " + lech.toFixed(1) + "% (> tiêu chuẩn 10%); "; 
+                if (r_75_arr.length >= 2) {
+                    var maxR = Math.max.apply(null, r_75_arr); var minR = Math.min.apply(null, r_75_arr);
+                    var lech = ((maxR - minR) / minR) * 100;
+                    if(lech > rawDataR1C.maxLech) rawDataR1C.maxLech = lech;
+                    if (lech > 10.0) { 
+                        hasAlertR1C = true; 
+                        alertR1CMsg += `Cuộn ${c} (${tapName}) lệch ${lech.toFixed(1)}%; `; 
+                    }
+                }
+
+                coilRowsHtml += `<tr>
+                                    ${t===1 ? `<td rowspan="[ROWSPAN]" style="vertical-align:middle;"><b>${c}</b></td>` : ""}
+                                    <td><b>${tapName}</b></td>
+                                    ${rowCells}
+                                 </tr>`;
+                detailLog += logLine + "<br>";
             }
         }
-        if (rowHasData) { tbodyHtml += "<tr><td><b>" + i + "</b></td>" + rowCells + "</tr>"; detailLog += logLine + "<br>"; }
+        
+        rawDataR1C.coils[c] = coilVals;
+
+        if(coilHasData) {
+            var rowCount = (coilRowsHtml.match(/<tr>/g) || []).length;
+            coilRowsHtml = coilRowsHtml.replace('[ROWSPAN]', rowCount);
+            tbodyHtml += coilRowsHtml;
+        }
     }
+    
     if (!hasData) { alert("Vui lòng nhập số liệu R1C!"); return; }
 
     var historyDrift = checkHistoryDrift('ti', tag, rawDataR1C, 'R1C');
@@ -670,7 +759,9 @@ function tinhR1CTI() {
     alertDiv.style.display = (hasAlertR1C || historyDrift !== "") ? 'block' : 'none';
     alertDiv.innerHTML = (hasAlertR1C ? alertR1CMsg : "") + historyDrift;
 
-    document.getElementById('ti_result_r1c_body').innerHTML = tbodyHtml; document.getElementById('ti_result_r1c').style.display = 'block';
+    document.getElementById('ti_result_r1c_body').innerHTML = tbodyHtml; 
+    document.getElementById('ti_result_r1c').style.display = 'block';
+    
     luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Quy Đổi R1C TI", tag: tag, equip: equip, station: station, detail: detailLog, tableHtml: document.getElementById('ti_result_r1c_body').parentNode.outerHTML, rawData: rawDataR1C });
 }
 
