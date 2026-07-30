@@ -596,6 +596,7 @@ function tinhTisoTU() {
     for (var i = 0; i < 3; i++) {
         var ph = phas[i]; var pname = phaseNames[i];
         
+        // TRUY XUẤT AN TOÀN (Bản vá chống lỗi cú pháp cũ)
         var us1_elem = document.getElementById('tu_u' + ph + '_s1');
         var us2_elem = document.getElementById('tu_u' + ph + '_s2');
         var us1 = (us1_elem && us1_elem.value !== "") ? parseFloat(us1_elem.value) : 10; 
@@ -654,6 +655,7 @@ function tinhR1CTU() {
     for (var i = 0; i < phasR.length; i++) {
         var p = phasR[i]; 
         
+        // TRUY XUẤT AN TOÀN (Bản vá chống lỗi cú pháp cũ)
         var temp_elem = document.getElementById('tu_temp_' + p.ph);
         var t_pha = temp_elem ? parseFloat(temp_elem.value) : 30;
         
