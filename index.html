@@ -51,7 +51,18 @@
         .ratio-item { background: #fff; border: 1px solid #cbd5e0; border-radius: 6px; padding: 6px; display: flex; align-items: center; justify-content: space-between; gap: 4px; }
         .ratio-item label { font-size: 12px; margin: 0; color: #1a365d; }
         .ratio-item input { width: 45%; padding: 4px; font-size: 13px; text-align: center; }
-        .extra-coils-toggle { margin: 15px 0; padding: 10px; background: #fff5f5; border: 1px dashed #fc8181; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: #c53030; font-weight: 700; font-size: 12px; }
+        .extra-coils-toggle { margin: 15px 0; padding: 10px; background: #f0f7ff; border: 1px dashed #3182ce; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: #2b6cb0; font-weight: 700; font-size: 12px; }
+        
+        /* GIAO DIỆN LƯỚI GỌN NHẸ CHO ĐẦU PHÂN DÒNG */
+        .table-responsive { overflow-x: auto; margin-top: 8px; }
+        .compact-input-table { width: 100%; min-width: 450px; border-collapse: collapse; font-size: 12px; text-align: center; }
+        .compact-input-table th { background: #edf2f7; color: #2d3748; padding: 6px; font-size: 11px; border-bottom: 2px solid #cbd5e0; }
+        .compact-input-table td { padding: 4px 2px; border-bottom: 1px solid #e2e8f0; vertical-align: middle;}
+        .tap-label { font-weight: bold; color: #4a5568; background: #f8fafc; border-radius: 4px; padding: 4px; border: 1px solid #e2e8f0; display: inline-block; width: 45px;}
+        .mini-in { width: 55px; padding: 6px 4px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; font-weight: bold; font-size: 13px; }
+        .mini-in:focus { border-color: #3182ce; outline: none; background: #ebf8ff;}
+        .ph-a { color: #b7791f; } .ph-b { color: #2f855a; } .ph-c { color: #c53030; }
+        
         .table-result { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; background: #fff; }
         .table-result th, .table-result td { border: 1px solid #cbd5e0; padding: 6px 4px; text-align: center; }
         .table-result th { background: #0a3b82; color: white; }
@@ -113,33 +124,22 @@
             <button type="button" class="tab-btn ti-tab-btn" onclick="switchSubTab('ti', 'ti_tab3')">3. Lịch Sử & Đồng Bộ</button>
         </div>
 
-        <!-- TI - TAB TỈ SỐ BIẾN -->
+        <!-- TI - TAB TỈ SỐ BIẾN (GIAO DIỆN CHUYÊN NGHIỆP MỚI) -->
         <div id="ti_tab1" class="tab-content ti-tab-content active">
-            <div style="background: #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
-                <div style="font-weight:bold; color:#0a3b82; margin-bottom:8px; font-size:13px;">⚙️ TỈ SỐ ĐỊNH MỨC TỪNG CUỘN (A/A):</div>
-                <div class="grid-2col-input">
-                    <div class="ratio-item"><label>Cuộn 1:</label><input type="number" id="ti_ip_n_1" value="2000"> / <input type="number" id="ti_is_n_1" value="1"></div>
-                    <div class="ratio-item"><label>Cuộn 2:</label><input type="number" id="ti_ip_n_2" value="2000"> / <input type="number" id="ti_is_n_2" value="1"></div>
-                    <div class="ratio-item"><label>Cuộn 3:</label><input type="number" id="ti_ip_n_3" value="2000"> / <input type="number" id="ti_is_n_3" value="1"></div>
-                    <div class="ratio-item"><label>Cuộn 4:</label><input type="number" id="ti_ip_n_4" value="2000"> / <input type="number" id="ti_is_n_4" value="1"></div>
-                    <div class="ratio-item"><label>Cuộn 5:</label><input type="number" id="ti_ip_n_5" value="2000"> / <input type="number" id="ti_is_n_5" value="1"></div>
-                </div>
-                <div class="grid-2col-input ti-extra-ratio" style="display:none; margin-top:8px;">
-                    <div class="ratio-item"><label>Cuộn 6:</label><input type="number" id="ti_ip_n_6" value="2000"> / <input type="number" id="ti_is_n_6" value="1"></div>
-                    <div class="ratio-item"><label>Cuộn 7:</label><input type="number" id="ti_ip_n_7" value="2000"> / <input type="number" id="ti_is_n_7" value="1"></div>
-                    <div class="ratio-item"><label>Cuộn 8:</label><input type="number" id="ti_ip_n_8" value="2000"> / <input type="number" id="ti_is_n_8" value="1"></div>
-                </div>
-            </div>
-            <label class="extra-coils-toggle"><input type="checkbox" id="ti_show_extra_tsb" onchange="toggleExtraCoilsTI(this.checked)"> TICK HIỂN THỊ THÊM CUỘN 6, 7, 8</label>
-            <hr>
-            <div style="font-size: 13px; font-weight: 800; color: #0a3b82; margin-bottom: 8px; text-align: center;">📊 NHẬP DÒNG THỨ CẤP (Is) ĐO ĐƯỢC 3 PHA:</div>
             
-            <div id="ti_phas_container_tsb"></div>
+            <label class="extra-coils-toggle" style="background: #e6fffa; border-color: #319795; color: #285e61;">
+                <input type="checkbox" id="ti_full_taps" onchange="toggleFullTapsTI(this.checked)"> 
+                🛠️ CHẾ ĐỘ ĐO NGHIỆM THU (Hiển thị toàn bộ Đầu phân dòng)
+            </label>
+            
+            <div id="ti_tsb_grid_container"></div> <!-- Container được Render tự động bởi JS -->
+            
+            <label class="extra-coils-toggle"><input type="checkbox" id="ti_show_extra_tsb" onchange="toggleExtraCoilsTI(this.checked)"> ➕ HIỂN THỊ THÊM CUỘN 6, 7, 8</label>
             
             <button class="btn-calc" onclick="tinhTisoTI()">TÍNH TỈ SỐ & KIỂM TRA SAI SỐ TI</button>
             <div id="ti_result_tiso" class="result-box">
                 <div id="ti_alert_box" class="alert-banner"></div>
-                <table class="table-result"><thead><tr><th>Cuộn</th><th>TSB Chuẩn</th><th colspan="2">Pha A</th><th colspan="2">Pha B</th><th colspan="2">Pha C</th></tr></thead><tbody id="ti_result_table_body"></tbody></table>
+                <table class="table-result"><thead><tr><th>Cuộn</th><th>Đầu phân dòng</th><th>TSB Chuẩn</th><th>Pha A</th><th>Pha B</th><th>Pha C</th></tr></thead><tbody id="ti_result_table_body"></tbody></table>
             </div>
         </div>
 
@@ -152,7 +152,7 @@
                     <div class="radio-tile"><input type="radio" name="material_ti" id="mat_al_ti" value="225"><label for="mat_al_ti">Nhôm (Al - 225)</label></div>
                 </div>
             </div>
-            <label class="extra-coils-toggle"><input type="checkbox" id="ti_show_extra_r1c" onchange="toggleExtraCoilsTI(this.checked)"> TICK HIỂN THỊ THÊM CUỘN 6, 7, 8</label>
+            <label class="extra-coils-toggle"><input type="checkbox" id="ti_show_extra_r1c" onchange="toggleExtraCoilsR1CTI(this.checked)"> ➕ HIỂN THỊ THÊM CUỘN 6, 7, 8</label>
             <hr>
             <div style="font-size: 13px; font-weight: 800; color: #0a3b82; margin-bottom: 8px; text-align: center;">📊 NHẬP NHIỆT ĐỘ (°C) & ĐIỆN TRỞ R1C (Ω):</div>
             
@@ -305,23 +305,53 @@ document.addEventListener("DOMContentLoaded", function() {
     const phases = ['a', 'b', 'c'];
     const phaseIcons = ['🟡 PHA A', '🟢 PHA B', '🔴 PHA C'];
     
-    let tiTsbHtml = '';
-    phases.forEach((p, idx) => {
-        let coils = '';
-        for(let i=1; i<=8; i++) {
-            let extraClass = i > 5 ? ' ti-extra-coil' : '';
-            let extraStyle = i > 5 ? ' style="display:none;"' : '';
-            coils += `<div class="coil-item${extraClass}"${extraStyle}><label>Cuộn ${i}</label><input type="number" id="ti_is_${p}_${i}" step="any"></div>`;
+    // TÍNH NĂNG MỚI: TỰ ĐỘNG VẼ LƯỚI ĐẦU PHÂN DÒNG TSB TI CHUYÊN NGHIỆP
+    let tiTsbGridHtml = '';
+    const tapNames = ['S1-S2', 'S1-S3', 'S1-S4', 'S1-S5', 'S1-S6']; // Map chuẩn EVNNPT
+    
+    for(let c=1; c<=8; c++) {
+        let coilDisplay = c > 5 ? 'style="display:none;" class="pha-card ti-extra-coil"' : 'class="pha-card ti-coil-card"';
+        tiTsbGridHtml += `
+        <div ${coilDisplay}>
+            <div class="pha-title"><span>Cuộn ${c}</span></div>
+            <div class="table-responsive">
+                <table class="compact-input-table">
+                    <thead>
+                        <tr>
+                            <th>Phân dòng</th>
+                            <th>Tỉ số (Ip/Is)</th>
+                            <th>Pha A (Is) <span style="color:#d69e2e">●</span></th>
+                            <th>Pha B (Is) <span style="color:#38a169">●</span></th>
+                            <th>Pha C (Is) <span style="color:#e53e3e">●</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+        
+        // Render 5 Taps per Coil
+        for(let t=1; t<=5; t++) {
+            let tapDisplay = t > 1 ? 'style="display:none;" class="ti-extra-tap-row"' : '';
+            let defaultIp = 2000;
+            if(t===2) defaultIp = 1500; if(t===3) defaultIp = 1000; if(t===4) defaultIp = 600; if(t===5) defaultIp = 500;
+            
+            tiTsbGridHtml += `
+                        <tr ${tapDisplay}>
+                            <td><span class="tap-label">${c}${tapNames[t-1]}</span></td>
+                            <td><input type="number" id="ti_ip_c${c}_t${t}" value="${defaultIp}" class="mini-in"> / <input type="number" id="ti_is_c${c}_t${t}" value="1" class="mini-in" style="width:35px;"></td>
+                            <td><input type="number" id="ti_a_c${c}_t${t}" class="mini-in ph-a"></td>
+                            <td><input type="number" id="ti_b_c${c}_t${t}" class="mini-in ph-b"></td>
+                            <td><input type="number" id="ti_c_c${c}_t${t}" class="mini-in ph-c"></td>
+                        </tr>`;
         }
-        tiTsbHtml += `<div class="pha-card"><div class="pha-title"><span>${phaseIcons[idx]}</span></div><div class="grid-3col-input">${coils}</div></div>`;
-    });
-    document.getElementById('ti_phas_container_tsb').innerHTML = tiTsbHtml;
+        tiTsbGridHtml += `</tbody></table></div></div>`;
+    }
+    document.getElementById('ti_tsb_grid_container').innerHTML = tiTsbGridHtml;
+
 
     let tiR1cHtml = '';
     phases.forEach((p, idx) => {
         let coils = '';
         for(let i=1; i<=8; i++) {
-            let extraClass = i > 5 ? ' ti-extra-coil' : '';
+            let extraClass = i > 5 ? ' ti-extra-coil-r1c' : '';
             let extraStyle = i > 5 ? ' style="display:none;"' : '';
             coils += `<div class="coil-item${extraClass}"${extraStyle}><label>Cuộn ${i}</label><input type="number" id="ti_r_${p}_${i}" step="any"></div>`;
         }
@@ -484,69 +514,108 @@ function checkHistoryDrift(type, currentTag, currentData, dataType) {
     }
 }
 
+// Bật/Tắt Hiển thị 5 Nấc Phân Dòng
+function toggleFullTapsTI(isChecked) {
+    var extraTaps = document.querySelectorAll('.ti-extra-tap-row');
+    for (var i = 0; i < extraTaps.length; i++) {
+        extraTaps[i].style.display = isChecked ? 'table-row' : 'none';
+    }
+}
+
+// Bật/Tắt Hiển thị Cuộn 6,7,8
 function toggleExtraCoilsTI(isChecked) {
-    document.getElementById('ti_show_extra_tsb').checked = isChecked; 
-    document.getElementById('ti_show_extra_r1c').checked = isChecked;
-    
-    var extraRatios = document.querySelectorAll('.ti-extra-ratio'); 
-    for (var i = 0; i < extraRatios.length; i++) { extraRatios[i].style.display = isChecked ? 'grid' : 'none'; }
-    
     var extraCoils = document.querySelectorAll('.ti-extra-coil'); 
+    for (var i = 0; i < extraCoils.length; i++) { extraCoils[i].style.display = isChecked ? 'block' : 'none'; }
+}
+function toggleExtraCoilsR1CTI(isChecked) {
+    var extraCoils = document.querySelectorAll('.ti-extra-coil-r1c'); 
     for (var i = 0; i < extraCoils.length; i++) { extraCoils[i].style.display = isChecked ? 'flex' : 'none'; }
 }
 
+// LOGIC TÍNH TOÁN TI TSB MỚI TƯƠNG THÍCH ĐA PHÂN DÒNG
 function tinhTisoTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
     var maxCoils = document.getElementById('ti_show_extra_tsb').checked ? 8 : 5;
-    var phases = ['a', 'b', 'c']; var phaseNames = ['Pha A', 'Pha B', 'Pha C'];
+    var isFullTaps = document.getElementById('ti_full_taps').checked;
+    
     var tbodyHtml = ""; var detailLog = ""; var hasData = false; var hasAlert = false;
     var alertMsg = "⚠️ <b>CẢNH BÁO SAI SỐ TSB THIẾT BỊ:</b> ";
     var rawDataTSB = { type: 'TI', maxError: 0 };
+    const tapNames = ['S1-S2', 'S1-S3', 'S1-S4', 'S1-S5', 'S1-S6'];
 
-    for (var i = 1; i <= maxCoils; i++) {
-        var ip_n = parseFloat(document.getElementById('ti_ip_n_' + i).value); var is_n = parseFloat(document.getElementById('ti_is_n_' + i).value);
-        if(isNaN(ip_n) || isNaN(is_n)) continue;
-        var rowHasData = false; var rowCells = ""; var logLine = "Cuộn " + i + ": ";
-        var phaseLogs = []; 
+    for (var c = 1; c <= maxCoils; c++) {
+        var maxTaps = isFullTaps ? 5 : 1;
+        var coilHasData = false;
+        var coilRowsHtml = "";
         
-        for (var p = 0; p < 3; p++) {
-            var input_elem = document.getElementById('ti_is_' + phases[p] + '_' + i);
-            var is_test = input_elem ? parseFloat(input_elem.value) : NaN;
+        for (var t = 1; t <= maxTaps; t++) {
+            var ip_n = parseFloat(document.getElementById(`ti_ip_c${c}_t${t}`).value); 
+            var is_n = parseFloat(document.getElementById(`ti_is_c${c}_t${t}`).value);
+            if(isNaN(ip_n) || isNaN(is_n)) continue;
             
-            if (!isNaN(is_test) && is_test > 0) {
-                rowHasData = true; hasData = true;
-                var saiso = ((is_test - is_n) / is_n) * 100;
-                if(Math.abs(saiso) > Math.abs(rawDataTSB.maxError)) rawDataTSB.maxError = saiso;
-                var Ratio_P_Actual = (ip_n / is_test) * is_n;
-                var saisoDisplay = (saiso > 0 ? "+" : "") + saiso.toFixed(3) + "%";
+            var a_meas = parseFloat(document.getElementById(`ti_a_c${c}_t${t}`).value);
+            var b_meas = parseFloat(document.getElementById(`ti_b_c${c}_t${t}`).value);
+            var c_meas = parseFloat(document.getElementById(`ti_c_c${c}_t${t}`).value);
+            
+            if(!isNaN(a_meas) || !isNaN(b_meas) || !isNaN(c_meas)) {
+                coilHasData = true; hasData = true;
+                var tapName = `${c}${tapNames[t-1]}`;
+                var rowCells = "";
+                var logLine = `Cuộn ${c} (${tapName}): `;
                 
-                var isHighError = Math.abs(saiso) > 0.5; 
-                if (isHighError) {
-                    hasAlert = true;
-                    alertMsg += "Cuộn " + i + " (" + phaseNames[p] + ") sai số " + saisoDisplay + " vượt ngưỡng cho phép; ";
-                }
-                var badgeStyle = isHighError ? "class='error-badge'" : "class='pass-badge'";
-                rowCells += "<td><b>" + Ratio_P_Actual.toFixed(2) + "/" + is_n + "</b></td><td><span " + badgeStyle + ">" + saisoDisplay + "</span></td>";
-                phaseLogs.push(phaseNames[p] + ": " + Ratio_P_Actual.toFixed(2) + "/" + is_n + " (" + saisoDisplay + ")");
-            } else { rowCells += "<td>-</td><td>-</td>"; }
+                [a_meas, b_meas, c_meas].forEach((meas, idx) => {
+                    if(!isNaN(meas) && meas > 0) {
+                        var saiso = ((meas - is_n) / is_n) * 100;
+                        if(Math.abs(saiso) > Math.abs(rawDataTSB.maxError)) rawDataTSB.maxError = saiso;
+                        var Ratio_P_Actual = (ip_n / meas) * is_n;
+                        var saisoDisplay = (saiso > 0 ? "+" : "") + saiso.toFixed(3) + "%";
+                        
+                        var isHighError = Math.abs(saiso) > 0.5; 
+                        if (isHighError) {
+                            hasAlert = true;
+                            alertMsg += `Cuộn ${c} Pha ${['A','B','C'][idx]} lệch ${saisoDisplay}; `;
+                        }
+                        var badgeStyle = isHighError ? "class='error-badge'" : "class='pass-badge'";
+                        rowCells += `<td><b>${Ratio_P_Actual.toFixed(2)}/${is_n}</b><br><span ${badgeStyle}>${saisoDisplay}</span></td>`;
+                        logLine += `Pha ${['A','B','C'][idx]}: ${Ratio_P_Actual.toFixed(2)}/${is_n} (${saisoDisplay}) | `;
+                    } else {
+                        rowCells += `<td>-</td>`;
+                    }
+                });
+                
+                coilRowsHtml += `<tr>
+                                    ${t===1 ? `<td rowspan="[ROWSPAN]" style="vertical-align:middle;"><b>${c}</b></td>` : ""}
+                                    <td><b>${tapName}</b></td>
+                                    <td>${ip_n}/${is_n}</td>
+                                    ${rowCells}
+                                 </tr>`;
+                detailLog += logLine + "<br>";
+            }
         }
-        if (rowHasData) { 
-            tbodyHtml += "<tr><td><b>" + i + "</b></td><td>" + ip_n + "/" + is_n + "</td>" + rowCells + "</tr>"; 
-            detailLog += logLine + phaseLogs.join(" | ") + "<br>"; 
+        
+        if(coilHasData) {
+            // Count rows for rowspan
+            var rowCount = (coilRowsHtml.match(/<tr>/g) || []).length;
+            coilRowsHtml = coilRowsHtml.replace('[ROWSPAN]', rowCount);
+            tbodyHtml += coilRowsHtml;
         }
     }
-    if (!hasData) { alert("Vui lòng nhập dòng thứ cấp đo được!"); return; }
+    
+    if (!hasData) { alert("Sếp vui lòng nhập dòng thứ cấp đo được ạ!"); return; }
 
     var historyDrift = checkHistoryDrift('ti', tag, rawDataTSB, 'TSB');
     var alertDiv = document.getElementById('ti_alert_box');
     alertDiv.style.display = (hasAlert || historyDrift !== "") ? 'block' : 'none';
     alertDiv.innerHTML = (hasAlert ? alertMsg : "") + historyDrift;
 
-    document.getElementById('ti_result_table_body').innerHTML = tbodyHtml; document.getElementById('ti_result_tiso').style.display = 'block';
+    document.getElementById('ti_result_table_body').innerHTML = tbodyHtml; 
+    document.getElementById('ti_result_tiso').style.display = 'block';
+    
     luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Tỉ Số Biến TI", tag: tag, equip: equip, station: station, detail: detailLog, tableHtml: document.getElementById('ti_result_table_body').parentNode.outerHTML, rawData: rawDataTSB });
 }
+
 
 function tinhR1CTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
@@ -562,7 +631,6 @@ function tinhR1CTI() {
     var tbodyHtml = ""; var detailLog = ""; var hasData = false;
     var hasAlertR1C = false; var alertR1CMsg = "⚠️ <b>CẢNH BÁO ĐỘ LỆCH PHA GIỮA CÁC PHA A-B-C (>10%):</b> "; 
     
-    // TÍNH NĂNG MỚI: BỔ SUNG LƯU TRỮ GIÁ TRỊ TUYỆT ĐỐI CHO TỪNG CUỘN ĐỂ VẼ BIỂU ĐỒ 3 MÀU
     var rawDataR1C = { type: 'TI', maxLech: 0, coils: {} };
 
     for (var i = 1; i <= maxCoils; i++) {
@@ -582,7 +650,7 @@ function tinhR1CTI() {
             } else { rowCells += "<td>-</td>"; }
         }
         
-        rawDataR1C.coils[i] = coilVals; // Gắn dữ liệu cuộn i vào bộ nhớ
+        rawDataR1C.coils[i] = coilVals; 
         
         if (r_75_arr.length >= 2) {
             var maxR = Math.max.apply(null, r_75_arr); var minR = Math.min.apply(null, r_75_arr);
@@ -688,12 +756,11 @@ function tinhR1CTU() {
     var tbodyHtml = ""; var detailLog = ""; var hasData = false;
     var r_cuon1 = [], r_cuon2 = [], r_cuon3 = []; 
     
-    // TÍNH NĂNG MỚI: BỔ SUNG LƯU TRỮ TUYỆT ĐỐI CHO TỪNG CUỘN TU
     var rawDataR1C = { type: 'TU', maxLech: 0, coils: { 1:{}, 2:{}, 3:{} } };
 
     for (var i = 0; i < phasR.length; i++) {
         var p = phasR[i]; 
-        var phaKey = p.name.replace('Pha ', ''); // Ra chữ A, B, C
+        var phaKey = p.name.replace('Pha ', ''); 
         
         var temp_elem = document.getElementById('tu_temp_' + p.ph);
         var t_pha = temp_elem ? parseFloat(temp_elem.value) : 30;
@@ -739,7 +806,6 @@ function tinhR1CTU() {
 
 var myChart = null;
 
-// TÍNH NĂNG MỚI: VẼ 3 ĐƯỜNG R1C (PHA A, B, C) VÀ TỰ ĐỘNG GIẢI MÃ DỮ LIỆU CŨ
 function showTrendChart(type) {
     var equip = document.getElementById(type + '_equip_global').value.trim();
     var station = document.getElementById(type + '_station_global').value.trim();
@@ -749,7 +815,6 @@ function showTrendChart(type) {
     var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
     var history = JSON.parse(localStorage.getItem(key) || '[]');
     
-    // Lọc lấy các bản ghi có tính R1C (chấp nhận cả bản ghi cũ chỉ có text chi tiết)
     var stationData = history.filter(r => (r.tag||"").replace(/\s/g,'').toUpperCase() === tag.replace(/\s/g,'').toUpperCase() && (r.rawR1C != null || r.r1cDetail)).reverse(); 
     
     if (stationData.length < 2) { alert("Cần ít nhất 2 lần đo có dữ liệu R1C để vẽ biểu đồ CBM!"); return; }
@@ -762,13 +827,11 @@ function showTrendChart(type) {
         labels.push(r.time.split(" ")[0]);
         var valA = null, valB = null, valC = null;
         
-        // 1. Nếu là dữ liệu mới vừa tính (có lưu mảng coils)
         if (r.rawR1C && r.rawR1C.coils && r.rawR1C.coils[1]) {
             valA = r.rawR1C.coils[1].A; 
             valB = r.rawR1C.coils[1].B; 
             valC = r.rawR1C.coils[1].C;
         } 
-        // 2. Nếu là dữ liệu cũ (Tự động giải mã text thành số bằng Regex)
         else if (r.r1cDetail) {
             if (type === 'ti') {
                 var mA = r.r1cDetail.match(/Cuộn 1:.*?Pha A\(([\d.]+)Ω\)/); if(mA) valA = parseFloat(mA[1]);
