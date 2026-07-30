@@ -52,30 +52,34 @@
         .ratio-item label { font-size: 12px; margin: 0; color: #1a365d; }
         .ratio-item input { width: 45%; padding: 4px; font-size: 13px; text-align: center; }
         .extra-coils-toggle { margin: 15px 0; padding: 10px; background: #f0f7ff; border: 1px dashed #3182ce; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: #2b6cb0; font-weight: 700; font-size: 12px; }
+        
         .table-responsive { overflow-x: auto; margin-top: 8px; }
         .compact-input-table { width: 100%; min-width: 450px; border-collapse: collapse; font-size: 12px; text-align: center; }
         .compact-input-table th { background: #edf2f7; color: #2d3748; padding: 6px; font-size: 11px; border-bottom: 2px solid #cbd5e0; }
         .compact-input-table td { padding: 4px 2px; border-bottom: 1px solid #e2e8f0; vertical-align: middle;}
+        
         .tap-input { width: 55px; padding: 4px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; font-weight: bold; font-size: 12px; color: #2c5282; background: #fff; }
         .tap-input:focus { border-color: #3182ce; outline: none; background: #ebf8ff; box-shadow: 0 0 0 2px rgba(49,130,206,0.2); }
         .mini-in { width: 60px; padding: 6px 4px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; font-weight: bold; font-size: 13px; }
         .mini-in:focus { border-color: #3182ce; outline: none; background: #ebf8ff;}
         .ph-a { color: #b7791f; } .ph-b { color: #2f855a; } .ph-c { color: #c53030; }
+        
         .table-result { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; background: #fff; }
         .table-result th, .table-result td { border: 1px solid #cbd5e0; padding: 6px 4px; text-align: center; }
         .table-result th { background: #0a3b82; color: white; }
         .alert-banner { background: #fff5f5; border: 1px solid #fc8181; border-left: 5px solid #e32219; color: #c53030; padding: 10px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-bottom: 12px; display: none; line-height: 1.5; }
         .error-badge { background: #fed7d7; color: #c53030; padding: 2px 4px; border-radius: 4px; font-weight: 800; font-size: 10px;}
         .pass-badge { color: #2f855a; font-weight: bold; font-size: 10px;}
+        
         .history-card { margin-top: 15px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; max-height: 400px; overflow-y: auto; }
         .history-item { border-bottom: 1px solid #edf2f7; padding: 10px 0; font-size: 12px; position: relative;}
         .history-time { font-size: 11px; color: #e32219; font-weight: bold; margin-bottom: 6px; padding-right: 120px; }
         
-        /* CẬP NHẬT GIAO DIỆN LỊCH SỬ CHUẨN KỸ THUẬT (MONOSPACE) */
+        /* CẬP NHẬT FONT MONOSPACE CHO LỊCH SỬ ĐỂ CHỮ GIÓNG THẲNG TẮP */
         .history-detail { 
-            color: #1a365d; line-height: 1.6; background: #f8fafc; padding: 10px; 
-            border-radius: 6px; white-space: pre-wrap; font-family: 'Courier New', Courier, monospace; 
-            font-size: 11.5px; font-weight: 600; border-left: 3px solid #3182ce; 
+            color: #1a365d; line-height: 1.6; background: #f8fafc; padding: 12px; 
+            border-radius: 6px; font-family: 'Consolas', 'Courier New', monospace; 
+            font-size: 12px; font-weight: 600; border-left: 4px solid #3182ce; 
         }
         
         .sync-badge { position: absolute; top: 10px; right: 55px; font-size: 10px; background: #c6f6d5; color: #276749; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
@@ -107,6 +111,7 @@
         <button type="button" class="master-tab-btn" data-action="master-tab" data-type="tu">⚡ MÁY BIẾN ÁP (TU)</button>
     </div>
 
+    <!-- ======================= MÁY BIẾN DÒNG (TI) ======================= -->
     <div id="master-ti" class="master-content active">
         <div class="form-group" style="background: #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #0a3b82;">
             <div class="grid-2col-input" style="margin-bottom: 8px;">
@@ -161,7 +166,7 @@
         </div>
     </div>
 
-    <!-- TU TAB -->
+    <!-- ======================= MÁY BIẾN ÁP (TU) ======================= -->
     <div id="master-tu" class="master-content">
         <div class="form-group" style="background: #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #0a3b82;">
             <div class="grid-2col-input" style="margin-bottom: 8px;">
@@ -187,7 +192,6 @@
                     <div class="radio-tile"><input type="radio" name="tu_un_so" id="so_500" value="500"><label for="so_500">500kV</label></div>
                 </div>
             </div>
-
             <div class="form-group"><label>🔌 Cuộn Thứ 1:</label>
                 <div class="radio-tile-group">
                     <div class="radio-tile"><input type="radio" name="tu_un_thu1" id="t1_110_sqrt3" value="110_sqrt3" checked><label for="t1_110_sqrt3">110/√3</label></div>
@@ -196,7 +200,6 @@
                     <div class="radio-tile"><input type="radio" name="tu_un_thu1" id="t1_100_3" value="100_3"><label for="t1_100_3">100/3</label></div>
                 </div>
             </div>
-
             <div class="form-group"><label>🔌 Cuộn Thứ 2:</label>
                 <div class="radio-tile-group">
                     <div class="radio-tile"><input type="radio" name="tu_un_thu2" id="t2_110_sqrt3" value="110_sqrt3" checked><label for="t2_110_sqrt3">110/√3</label></div>
@@ -206,7 +209,6 @@
                     <div class="radio-tile"><input type="radio" name="tu_un_thu2" id="t2_none" value="none"><label for="t2_none">❌ Tắt</label></div>
                 </div>
             </div>
-
             <div class="form-group"><label>🔌 Cuộn Thứ 3:</label>
                 <div class="radio-tile-group">
                     <div class="radio-tile"><input type="radio" name="tu_un_thu3" id="t3_100_3" value="100_3" checked><label for="t3_100_3">100/3</label></div>
@@ -262,7 +264,6 @@
 // LINK CLOUD SHEETS API CHUẨN ĐÃ KẾT NỐI
 const CLOUD_URL = "https://script.google.com/macros/s/AKfycbx32OT-P6qjRkIpc02z1P02dJWvit6Bd01fdkTGNXxzzuaaYRJWuLNHybTtI68eO6vO/exec";
 
-// ======================== TỐI ƯU HÓA DOM & RENDER ========================
 document.addEventListener("DOMContentLoaded", function() {
     const phases = ['a', 'b', 'c'];
     const phaseIcons = ['🟡 PHA A', '🟢 PHA B', '🔴 PHA C'];
@@ -291,7 +292,6 @@ document.addEventListener("DOMContentLoaded", function() {
             let tapDisplay = t > 1 ? 'style="display:none;" class="ti-extra-tap-row"' : '';
             let defaultIp = 500; if(t===2) defaultIp = 600; if(t===3) defaultIp = 1000; if(t===4) defaultIp = 1500; if(t===5) defaultIp = 2000;
             
-            // Ép nowrap để khung ko rớt dòng dấu '/'
             tiTsbGridHtml += `
                         <tr ${tapDisplay}>
                             <td><input type="text" id="ti_tap_name_tsb_c${c}_t${t}" value="${c}${tapNames[t-1]}" class="tap-input"></td>
@@ -499,7 +499,7 @@ function toggleExtraCoilsR1CTI(isChecked) {
     for (var i = 0; i < extraCoils.length; i++) { extraCoils[i].style.display = isChecked ? 'block' : 'none'; }
 }
 
-// LOGIC CẬP NHẬT: LOG BÁO CÁO CÓ CẤU TRÚC MONOSPACE (TSB TI)
+// LOGIC CẬP NHẬT: LOG BÁO CÁO CÓ CẤU TRÚC CÂY THƯ MỤC CHUYÊN NGHIỆP (TSB TI)
 function tinhTisoTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
@@ -547,7 +547,7 @@ function tinhTisoTI() {
                         var badgeStyle = isHighError ? "class='error-badge'" : "class='pass-badge'";
                         
                         rowCells += `<td><b>${Ratio_P_Actual.toFixed(2)}/${is_n}</b><br><span ${badgeStyle}>${saisoDisplay}</span></td>`;
-                        arrPha.push(`Ph.${['A','B','C'][idx]}: ${Ratio_P_Actual.toFixed(2)}/${is_n} (${saisoDisplay})`);
+                        arrPha.push(`Pha ${['A','B','C'][idx]}: ${Ratio_P_Actual.toFixed(2)}/${is_n} (${saisoDisplay})`);
                     } else {
                         rowCells += `<td>-</td>`;
                     }
@@ -555,8 +555,12 @@ function tinhTisoTI() {
                 
                 coilRowsHtml += `<tr>${t===1 ? `<td rowspan="[ROWSPAN]" style="vertical-align:middle;"><b>${c}</b></td>` : ""}<td><b>${tapName}</b></td><td>${ip_n}/${is_n}</td>${rowCells}</tr>`;
                 
-                // LOG CẤU TRÚC CHO EXCEL & APP
-                detailLog += `▶ Cuộn ${c} [${tapName}] - Đ/M: ${ip_n}/${is_n}<br>   ↳ ` + arrPha.join("  |  ") + `<br>`;
+                // LOG CẤU TRÚC CÂY THƯ MỤC
+                detailLog += `<b>▶ Cuộn ${c} [${tapName}]</b> - Đ/M: ${ip_n}/${is_n}<br>`;
+                arrPha.forEach((p, index) => {
+                    var prefix = (index === arrPha.length - 1) ? "&nbsp;&nbsp;└ " : "&nbsp;&nbsp;├ ";
+                    detailLog += prefix + p + `<br>`;
+                });
             }
         }
         
@@ -580,7 +584,7 @@ function tinhTisoTI() {
     luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Tỉ Số Biến TI", tag: tag, equip: equip, station: station, detail: detailLog, tableHtml: document.getElementById('ti_result_table_body').parentNode.outerHTML, rawData: rawDataTSB });
 }
 
-// LOGIC CẬP NHẬT: LOG BÁO CÁO CÓ CẤU TRÚC MONOSPACE (R1C TI)
+// LOGIC CẬP NHẬT: LOG BÁO CÁO CÓ CẤU TRÚC CÂY THƯ MỤC (R1C TI)
 function tinhR1CTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
@@ -631,7 +635,7 @@ function tinhR1CTI() {
                         r_75_arr.push(r_75);
                         rowCells += `<td><b>${r_75.toFixed(4)}</b></td>`;
                         
-                        arrPha.push(`Ph.${['A','B','C'][idx]}: ${r_75.toFixed(4)}Ω`);
+                        arrPha.push(`Pha ${['A','B','C'][idx]}: ${r_75.toFixed(4)} Ω`);
                         
                         if(!tapLoggedForTrend) {
                             if(idx===0) coilVals.A = r_75; if(idx===1) coilVals.B = r_75; if(idx===2) coilVals.C = r_75;
@@ -651,8 +655,12 @@ function tinhR1CTI() {
 
                 coilRowsHtml += `<tr>${t===1 ? `<td rowspan="[ROWSPAN]" style="vertical-align:middle;"><b>${c}</b></td>` : ""}<td><b>${tapName}</b></td>${rowCells}</tr>`;
                 
-                // LOG CẤU TRÚC CHO EXCEL & APP
-                detailLog += `▶ Cuộn ${c} [${tapName}]:<br>   ↳ ` + arrPha.join("  |  ") + `<br>`;
+                // LOG CẤU TRÚC CÂY THƯ MỤC
+                detailLog += `<b>▶ Cuộn ${c} [${tapName}]</b>:<br>`;
+                arrPha.forEach((p, index) => {
+                    var prefix = (index === arrPha.length - 1) ? "&nbsp;&nbsp;└ " : "&nbsp;&nbsp;├ ";
+                    detailLog += prefix + p + `<br>`;
+                });
             }
         }
         
@@ -678,7 +686,7 @@ function tinhR1CTI() {
     luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Quy Đổi R1C TI", tag: tag, equip: equip, station: station, detail: detailLog, tableHtml: document.getElementById('ti_result_r1c_body').parentNode.outerHTML, rawData: rawDataR1C });
 }
 
-// LOGIC CẬP NHẬT: LOG BÁO CÁO CÓ CẤU TRÚC MONOSPACE (TU)
+// LOGIC CẬP NHẬT: LOG BÁO CÁO CÓ CẤU TRÚC CÂY THƯ MỤC (TU)
 function getKnTU(val_so, val_thu_type) {
     if (!val_thu_type || val_thu_type === 'none') return null;
     var un_so_v = (val_so * 1000) / Math.sqrt(3); 
@@ -738,8 +746,8 @@ function tinhTisoTU() {
 
                 tbodyHtml += "<tr><td><b>" + pname + "</b></td><td>" + c.name + "</td><td>" + c.Kn.toFixed(3) + "</td><td><b>" + Ktt.toFixed(3) + "</b></td><td><span class='" + (isHighError?"error-badge":"pass-badge") + "'>" + (saiso>0?"+":"") + saiso.toFixed(3) + "%</span></td></tr>";
                 
-                // LOG CẤU TRÚC CHO EXCEL & APP
-                detailLog += `▶ ${pname} - ${c.name} [Đ/M: ${c.Kn.toFixed(3)}]<br>   ↳ K_đo: ${Ktt.toFixed(3)} (Sai số: ${(saiso>0?"+":"")+saiso.toFixed(3)}%)<br>`;
+                // LOG CẤU TRÚC CÂY THƯ MỤC
+                detailLog += `<b>▶ ${pname} - ${c.name}</b> [Đ/M: ${c.Kn.toFixed(3)}]<br>&nbsp;&nbsp;└ K_đo: ${Ktt.toFixed(3)} (Sai số: ${(saiso>0?"+":"")+saiso.toFixed(3)}%)<br>`;
             }
         }
     }
@@ -787,8 +795,11 @@ function tinhR1CTU() {
 
             tbodyHtml += "<tr><td><b>" + p.name + "</b></td><td>" + t_pha + "</td><td>" + k_pha.toFixed(4) + "</td><td><b>" + (!isNaN(r1_75)?r1_75.toFixed(3):"-") + "</b></td><td><b>" + (!isNaN(r2_75)?r2_75.toFixed(3):"-") + "</b></td><td><b>" + (!isNaN(r3_75)?r3_75.toFixed(3):"-") + "</b></td></tr>";
             
-            // LOG CẤU TRÚC CHO EXCEL & APP
-            detailLog += `▶ ${p.name} (${t_pha}°C) - k: ${k_pha.toFixed(4)}<br>   ↳ R1: ${(!isNaN(r1_75)?r1_75.toFixed(3):"-")} mΩ | R2: ${(!isNaN(r2_75)?r2_75.toFixed(3):"-")} mΩ | R3: ${(!isNaN(r3_75)?r3_75.toFixed(3):"-")} mΩ<br>`;
+            // LOG CẤU TRÚC CÂY THƯ MỤC
+            detailLog += `<b>▶ ${p.name} (${t_pha}°C)</b> - k: ${k_pha.toFixed(4)}<br>`;
+            detailLog += `&nbsp;&nbsp;├ R1: ${(!isNaN(r1_75)?r1_75.toFixed(3):"-")} mΩ<br>`;
+            detailLog += `&nbsp;&nbsp;├ R2: ${(!isNaN(r2_75)?r2_75.toFixed(3):"-")} mΩ<br>`;
+            detailLog += `&nbsp;&nbsp;└ R3: ${(!isNaN(r3_75)?r3_75.toFixed(3):"-")} mΩ<br>`;
         }
     }
     if (!hasData) { alert("Nhập R1C TU!"); return; }
@@ -842,15 +853,15 @@ function showTrendChart(type) {
             valC = r.rawR1C.coils[1].C;
         } 
         else if (r.r1cDetail) {
-            // Regex hỗ trợ đọc ngược dữ liệu lịch sử cấu trúc cũ
+            // Regex hỗ trợ đọc ngược dữ liệu lịch sử cấu trúc cây thư mục mới
             if (type === 'ti') {
-                var mA = r.r1cDetail.match(/Pha A\(([\d.]+)Ω\)/) || r.r1cDetail.match(/Ph\.A:\s*([\d.]+)Ω/); if(mA) valA = parseFloat(mA[1]);
-                var mB = r.r1cDetail.match(/Pha B\(([\d.]+)Ω\)/) || r.r1cDetail.match(/Ph\.B:\s*([\d.]+)Ω/); if(mB) valB = parseFloat(mB[1]);
-                var mC = r.r1cDetail.match(/Pha C\(([\d.]+)Ω\)/) || r.r1cDetail.match(/Ph\.C:\s*([\d.]+)Ω/); if(mC) valC = parseFloat(mC[1]);
+                var mA = r.r1cDetail.match(/Pha A.*?([\d.]+) ?Ω/) || r.r1cDetail.match(/Pha A\(([\d.]+)Ω\)/) || r.r1cDetail.match(/Ph\.A:\s*([\d.]+)Ω/); if(mA) valA = parseFloat(mA[1]);
+                var mB = r.r1cDetail.match(/Pha B.*?([\d.]+) ?Ω/) || r.r1cDetail.match(/Pha B\(([\d.]+)Ω\)/) || r.r1cDetail.match(/Ph\.B:\s*([\d.]+)Ω/); if(mB) valB = parseFloat(mB[1]);
+                var mC = r.r1cDetail.match(/Pha C.*?([\d.]+) ?Ω/) || r.r1cDetail.match(/Pha C\(([\d.]+)Ω\)/) || r.r1cDetail.match(/Ph\.C:\s*([\d.]+)Ω/); if(mC) valC = parseFloat(mC[1]);
             } else {
-                var mAt = r.r1cDetail.match(/Pha A.*?R1=([\d.]+)/) || r.r1cDetail.match(/Pha A.*?R1:\s*([\d.]+)/); if(mAt) valA = parseFloat(mAt[1]);
-                var mBt = r.r1cDetail.match(/Pha B.*?R1=([\d.]+)/) || r.r1cDetail.match(/Pha B.*?R1:\s*([\d.]+)/); if(mBt) valB = parseFloat(mBt[1]);
-                var mCt = r.r1cDetail.match(/Pha C.*?R1=([\d.]+)/) || r.r1cDetail.match(/Pha C.*?R1:\s*([\d.]+)/); if(mCt) valC = parseFloat(mCt[1]);
+                var mAt = r.r1cDetail.match(/Pha A[\s\S]*?R1:\s*([\d.]+)/) || r.r1cDetail.match(/Pha A.*?R1=([\d.]+)/); if(mAt) valA = parseFloat(mAt[1]);
+                var mBt = r.r1cDetail.match(/Pha B[\s\S]*?R1:\s*([\d.]+)/) || r.r1cDetail.match(/Pha B.*?R1=([\d.]+)/); if(mBt) valB = parseFloat(mBt[1]);
+                var mCt = r.r1cDetail.match(/Pha C[\s\S]*?R1:\s*([\d.]+)/) || r.r1cDetail.match(/Pha C.*?R1=([\d.]+)/); if(mCt) valC = parseFloat(mCt[1]);
             }
         }
         
