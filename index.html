@@ -60,7 +60,7 @@
         .pass-badge { color: #2f855a; font-weight: bold; font-size: 10px;}
         .history-card { margin-top: 15px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; max-height: 400px; overflow-y: auto; }
         .history-item { border-bottom: 1px solid #edf2f7; padding: 10px 0; font-size: 12px; position: relative;}
-        .history-time { font-size: 11px; color: #e32219; font-weight: bold; margin-bottom: 6px; padding-right: 120px; } /* Thêm padding để ko đè chữ vào nút xóa */
+        .history-time { font-size: 11px; color: #e32219; font-weight: bold; margin-bottom: 6px; padding-right: 120px; }
         .history-detail { color: #2d3748; line-height: 1.5; background: #f8fafc; padding: 8px; border-radius: 6px; }
         .sync-badge { position: absolute; top: 10px; right: 55px; font-size: 10px; background: #c6f6d5; color: #276749; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
         .btn-delete-item { position: absolute; top: 10px; right: 0; font-size: 10px; background: #fff5f5; color: #e53e3e; border: 1px solid #fc8181; padding: 2px 6px; border-radius: 4px; font-weight: bold; cursor: pointer; }
@@ -407,54 +407,87 @@ function getRadioValue(name) {
     return null;
 }
 
+// BẢN VÁ LỖI XUNG ĐỘT GHI ĐÈ LỊCH SỬ (CHỐNG SẬP 100%)
 function luuVaoLocalStorage(type, record) {
-    var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
-    var history = JSON.parse(localStorage.getItem(key) || '[]');
-    var currentDay = record.time.split(" ")[0];
+    try {
+        var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
+        var history = JSON.parse(localStorage.getItem(key) || '[]');
+        var currentDay = record.time.split(" ")[0];
+        var recTag = (record.tag || "").replace(/\s/g,'').toUpperCase();
 
-    if (history.length > 0 && history[0].tag.replace(/\s/g,'').toUpperCase() === record.tag.replace(/\s/g,'').toUpperCase() && history[0].time.split(" ")[0] === currentDay) {
-        if (record.type.includes("Tỉ Số")) { history[0].tsbHtml = record.tableHtml; history[0].tsbDetail = record.detail; history[0].rawTSB = record.rawData; } 
-        else if (record.type.includes("R1C")) { history[0].r1cHtml = record.tableHtml; history[0].r1cDetail = record.detail; history[0].rawR1C = record.rawData; }
-        history[0].type = "Đã lưu Biên bản (TSB & R1C)"; history[0].time = record.time; history[0].synced = false; 
-        history[0].equip = record.equip; history[0].station = record.station;
-    } else {
-        var newRecord = {
-            time: record.time, tag: record.tag, equip: record.equip, station: record.station, type: record.type, synced: false,
-            tsbHtml: record.type.includes("Tỉ Số") ? record.tableHtml : "", r1cHtml: record.type.includes("R1C") ? record.tableHtml : "",
-            tsbDetail: record.type.includes("Tỉ Số") ? record.detail : "", r1cDetail: record.type.includes("R1C") ? record.detail : "",
-            rawTSB: record.type.includes("Tỉ Số") ? record.rawData : null, rawR1C: record.type.includes("R1C") ? record.rawData : null
-        };
-        history.unshift(newRecord);
+        var merged = false;
+        // Chỉ gộp đè nếu là MỚI THÊM R1C vào biên bản TSB (hoặc ngược lại)
+        if (history.length > 0) {
+            var histTag = (history[0].tag || "").replace(/\s/g,'').toUpperCase();
+            var histDay = (history[0].time || "").split(" ")[0];
+
+            if (histTag === recTag && histDay === currentDay) {
+                var isTSB = record.type.includes("Tỉ Số");
+                var isR1C = record.type.includes("R1C");
+
+                // Nếu bản ghi cũ chưa có TSB mà mình đang bấm TSB thì gộp. Còn có rồi thì tạo dòng mới!
+                if ((isTSB && !history[0].tsbHtml) || (isR1C && !history[0].r1cHtml)) {
+                    if (isTSB) { history[0].tsbHtml = record.tableHtml; history[0].tsbDetail = record.detail; history[0].rawTSB = record.rawData; }
+                    if (isR1C) { history[0].r1cHtml = record.tableHtml; history[0].r1cDetail = record.detail; history[0].rawR1C = record.rawData; }
+                    history[0].type = "Đã lưu Biên bản (TSB & R1C)";
+                    history[0].time = record.time;
+                    history[0].synced = false;
+                    merged = true;
+                }
+            }
+        }
+
+        // Nếu không gộp, tạo mới 100% để hiển thị đủ các lần bấm test của Sếp
+        if (!merged) {
+            var newRecord = {
+                time: record.time, tag: record.tag, equip: record.equip, station: record.station, type: record.type, synced: false,
+                tsbHtml: record.type.includes("Tỉ Số") ? record.tableHtml : "", r1cHtml: record.type.includes("R1C") ? record.tableHtml : "",
+                tsbDetail: record.type.includes("Tỉ Số") ? record.detail : "", r1cDetail: record.type.includes("R1C") ? record.detail : "",
+                rawTSB: record.type.includes("Tỉ Số") ? record.rawData : null, rawR1C: record.type.includes("R1C") ? record.rawData : null
+            };
+            history.unshift(newRecord);
+        }
+        
+        localStorage.setItem(key, JSON.stringify(history));
+        // Ép cập nhật giao diện lịch sử ngay lập tức (không cần đợi bấm sang tab mới)
+        hienThiNhatKy(type);
+    } catch(e) {
+        console.error("Lỗi an toàn:", e);
+        alert("Có sự cố bộ nhớ, nhưng hệ thống đã khắc phục tự động!");
     }
-    localStorage.setItem(key, JSON.stringify(history));
 }
 
 function checkHistoryDrift(type, currentTag, currentData, dataType) {
-    var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
-    var history = JSON.parse(localStorage.getItem(key) || '[]');
-    var alertStr = ""; var today = layThoiGian().split(" ")[0];
-    
-    var oldRecord = history.find(r => r.tag.replace(/\s/g,'').toUpperCase() === currentTag.replace(/\s/g,'').toUpperCase() && r.time.split(" ")[0] !== today);
-    
-    if (oldRecord) {
-        if(dataType === 'TSB' && oldRecord.rawTSB) {
-            var diffTsb = Math.abs(Math.abs(currentData.maxError) - Math.abs(oldRecord.rawTSB.maxError));
-            if (diffTsb > 0.5) {
-                alertStr += "<br>⚠️ <b>CẢNH BÁO CBM TSB:</b> Sai số TSB thay đổi " + diffTsb.toFixed(3) + "% so với lần đo trước (" + oldRecord.time.split(" ")[0] + "). Vượt ngưỡng ổn định 0.5%!";
-            } else {
-                alertStr += "<br>🔍 <b>Đối chiếu Lịch sử TSB:</b> Ổn định so với lần đo ngày " + oldRecord.time.split(" ")[0] + " (Chênh lệch Δ = " + diffTsb.toFixed(3) + "%).";
+    try {
+        var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
+        var history = JSON.parse(localStorage.getItem(key) || '[]');
+        var alertStr = ""; var today = layThoiGian().split(" ")[0];
+        var curTagClean = (currentTag || "").replace(/\s/g,'').toUpperCase();
+        
+        var oldRecord = history.find(r => (r.tag || "").replace(/\s/g,'').toUpperCase() === curTagClean && (r.time || "").split(" ")[0] !== today);
+        
+        if (oldRecord) {
+            if(dataType === 'TSB' && oldRecord.rawTSB) {
+                var diffTsb = Math.abs(Math.abs(currentData.maxError) - Math.abs(oldRecord.rawTSB.maxError));
+                if (diffTsb > 0.5) {
+                    alertStr += "<br>⚠️ <b>CẢNH BÁO CBM TSB:</b> Sai số TSB thay đổi " + diffTsb.toFixed(3) + "% so với lần đo trước (" + oldRecord.time.split(" ")[0] + "). Vượt ngưỡng ổn định 0.5%!";
+                } else {
+                    alertStr += "<br>🔍 <b>Đối chiếu Lịch sử TSB:</b> Ổn định so với lần đo ngày " + oldRecord.time.split(" ")[0] + " (Chênh lệch Δ = " + diffTsb.toFixed(3) + "%).";
+                }
+            }
+            else if (dataType === 'R1C' && oldRecord.rawR1C) {
+                var diffR1c = Math.abs(currentData.maxLech - oldRecord.rawR1C.maxLech);
+                if (diffR1c > 2.0) {
+                    alertStr += "<br>⚠️ <b>CẢNH BÁO CBM R1C:</b> Độ lệch pha R1C quy đổi 75°C tăng " + diffR1c.toFixed(2) + "% so với lần đo trước (" + oldRecord.time.split(" ")[0] + ") / Xuất xưởng! (Vượt ngưỡng cảnh báo CBM 2% - 5%).";
+                } else {
+                    alertStr += "<br>🔍 <b>Đối chiếu Lịch sử R1C:</b> R1C ổn định so với lần đo ngày " + oldRecord.time.split(" ")[0] + " (Độ biến động Δ = " + diffR1c.toFixed(2) + "%).";
+                }
             }
         }
-        else if (dataType === 'R1C' && oldRecord.rawR1C) {
-            var diffR1c = Math.abs(currentData.maxLech - oldRecord.rawR1C.maxLech);
-            if (diffR1c > 2.0) {
-                alertStr += "<br>⚠️ <b>CẢNH BÁO CBM R1C:</b> Độ lệch pha R1C quy đổi 75°C tăng " + diffR1c.toFixed(2) + "% so với lần đo trước (" + oldRecord.time.split(" ")[0] + ") / Xuất xưởng! (Vượt ngưỡng cảnh báo CBM 2% - 5%).";
-            } else {
-                alertStr += "<br>🔍 <b>Đối chiếu Lịch sử R1C:</b> R1C ổn định so với lần đo ngày " + oldRecord.time.split(" ")[0] + " (Độ biến động Δ = " + diffR1c.toFixed(2) + "%).";
-            }
-        }
+        return alertStr;
+    } catch(e) {
+        return ""; // Chống sập hệ thống CBM
     }
-    return alertStr;
 }
 
 function toggleExtraCoilsTI(isChecked) {
@@ -703,7 +736,7 @@ function showTrendChart(type) {
     
     var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
     var history = JSON.parse(localStorage.getItem(key) || '[]');
-    var stationData = history.filter(r => r.tag.replace(/\s/g,'').toUpperCase() === tag.replace(/\s/g,'').toUpperCase() && r.rawR1C != null).reverse(); 
+    var stationData = history.filter(r => (r.tag||"").replace(/\s/g,'').toUpperCase() === tag.replace(/\s/g,'').toUpperCase() && r.rawR1C != null).reverse(); 
     if (stationData.length < 2) { alert("Cần ít nhất 2 lần đo có dữ liệu R1C để vẽ biểu đồ CBM!"); return; }
 
     var labels = []; var r1cData = [];
@@ -731,23 +764,19 @@ function hienThiNhatKy(type) {
     for (var i = 0; i < history.length; i++) {
         var item = history[i];
         var syncStatus = item.synced ? '<span class="sync-badge">Đã đồng bộ ☁️</span>' : '<span class="sync-badge" style="background:#fed7d7; color:#c53030;">Chưa đồng bộ</span>';
-        
-        // TÍNH NĂNG MỚI: NÚT XÓA RIÊNG LẺ CHO SẾP
         var deleteBtn = '<button class="btn-delete-item" onclick="xoaNhatKyRiengLe(\'' + type + '\', ' + i + ')">🗑️ Xóa</button>';
-        
         html += '<div class="history-item">' + syncStatus + deleteBtn + '<div class="history-time">' + item.time + ' - [' + item.tag + '] - ' + item.type + '</div><div class="history-detail">' + (item.tsbDetail || "") + (item.r1cDetail || "") + '</div></div>';
     }
     listDiv.innerHTML = html;
 }
 
-// TÍNH NĂNG MỚI: HÀM XÓA RIÊNG LẺ
 function xoaNhatKyRiengLe(type, index) {
     if (confirm("Sếp có chắc chắn muốn xóa bản ghi này khỏi danh sách không?")) {
         var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
         var history = JSON.parse(localStorage.getItem(key) || '[]');
-        history.splice(index, 1); // Xóa đúng bản ghi được chỉ định
+        history.splice(index, 1);
         localStorage.setItem(key, JSON.stringify(history));
-        hienThiNhatKy(type); // Tải lại danh sách
+        hienThiNhatKy(type);
     }
 }
 
@@ -813,7 +842,7 @@ function dongBoCloudDown(typeStr) {
                 var tsbD = row[4] || "", r1cD = row[5] || "", maxT = row[6], maxR = row[7];
                 var tagVal = equipVal + " - " + stationVal;
                 
-                var exists = localHistory.some(h => h.time === timeVal && h.tag.toUpperCase() === tagVal.toUpperCase());
+                var exists = localHistory.some(h => h.time === timeVal && (h.tag||"").toUpperCase() === tagVal.toUpperCase());
                 if (!exists) {
                     localHistory.push({
                         time: timeVal, tag: tagVal, equip: equipVal, station: stationVal, type: typeVal, synced: true,
