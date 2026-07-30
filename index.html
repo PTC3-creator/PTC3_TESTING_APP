@@ -31,6 +31,12 @@
         .master-content.active, .tab-content.active { display: block; }
         .form-group { margin-bottom: 12px; }
         label { display: block; font-weight: 700; margin-bottom: 6px; color: #1a365d; font-size: 13px; }
+        
+        /* ẨN NÚT MŨI TÊN CỦA Ô NHẬP SỐ ĐỂ TIẾT KIỆM DIỆN TÍCH */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        
         select, input[type="text"], input[type="number"] { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: #f8fafc; }
         .radio-tile-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
         .radio-tile { position: relative; flex-grow: 1; }
@@ -59,7 +65,6 @@
         .compact-input-table th { background: #edf2f7; color: #2d3748; padding: 6px; font-size: 11px; border-bottom: 2px solid #cbd5e0; }
         .compact-input-table td { padding: 4px 2px; border-bottom: 1px solid #e2e8f0; vertical-align: middle;}
         
-        /* CẬP NHẬT TÍNH NĂNG CHỈNH SỬA TÊN ĐẦU PHÂN DÒNG */
         .tap-input { width: 55px; padding: 4px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; font-weight: bold; font-size: 12px; color: #2c5282; background: #fff; }
         .tap-input:focus { border-color: #3182ce; outline: none; background: #ebf8ff; box-shadow: 0 0 0 2px rgba(49,130,206,0.2); }
         
@@ -320,7 +325,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const phaseIcons = ['🟡 PHA A', '🟢 PHA B', '🔴 PHA C'];
     const tapNames = ['S1-S2', 'S1-S3', 'S1-S4', 'S1-S5', 'S1-S6']; 
     
-    // TÍNH NĂNG MỚI: TỰ ĐỘNG VẼ LƯỚI ĐẦU PHÂN DÒNG TSB TI CHUYÊN NGHIỆP (ĐẢO NGƯỢC TỈ SỐ & CHO PHÉP SỬA TÊN BẰNG TAY)
     let tiTsbGridHtml = '';
     
     for(let c=1; c<=8; c++) {
@@ -341,7 +345,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     </thead>
                     <tbody>`;
         
-        // Render 5 Taps per Coil
         for(let t=1; t<=5; t++) {
             let tapDisplay = t > 1 ? 'style="display:none;" class="ti-extra-tap-row"' : '';
             
@@ -351,11 +354,11 @@ document.addEventListener("DOMContentLoaded", function() {
             if(t===4) defaultIp = 1500; 
             if(t===5) defaultIp = 2000;
             
+            // CẬP NHẬT GIAO DIỆN BẢO VỆ CHỐNG RỚT DÒNG (white-space: nowrap) VÀ THAY ĐỔI WIDTH (55px & 40px)
             tiTsbGridHtml += `
                         <tr ${tapDisplay}>
-                            <!-- Ô NHẬP LIỆU TÊN PHÂN DÒNG (CHO PHÉP SỬA BẰNG TAY) -->
                             <td><input type="text" id="ti_tap_name_tsb_c${c}_t${t}" value="${c}${tapNames[t-1]}" class="tap-input"></td>
-                            <td><input type="number" id="ti_ip_c${c}_t${t}" value="${defaultIp}" class="mini-in"> / <input type="number" id="ti_is_c${c}_t${t}" value="1" class="mini-in" style="width:35px;"></td>
+                            <td style="white-space: nowrap;"><input type="number" id="ti_ip_c${c}_t${t}" value="${defaultIp}" class="mini-in" style="width: 55px;"> / <input type="number" id="ti_is_c${c}_t${t}" value="1" class="mini-in" style="width: 40px;"></td>
                             <td><input type="number" id="ti_a_c${c}_t${t}" class="mini-in ph-a" step="any"></td>
                             <td><input type="number" id="ti_b_c${c}_t${t}" class="mini-in ph-b" step="any"></td>
                             <td><input type="number" id="ti_c_c${c}_t${t}" class="mini-in ph-c" step="any"></td>
@@ -366,7 +369,6 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('ti_tsb_grid_container').innerHTML = tiTsbGridHtml;
 
 
-    // TÍNH NĂNG MỚI: TỰ ĐỘNG VẼ LƯỚI ĐẦU PHÂN DÒNG R1C TI CHUYÊN NGHIỆP (CHO PHÉP SỬA TÊN BẰNG TAY)
     let tiR1cHtml = '';
     for(let c=1; c<=8; c++) {
         let coilDisplay = c > 5 ? 'style="display:none;" class="pha-card ti-extra-coil-r1c"' : 'class="pha-card ti-coil-card"';
@@ -388,7 +390,6 @@ document.addEventListener("DOMContentLoaded", function() {
             let tapDisplay = t > 1 ? 'style="display:none;" class="ti-extra-tap-row-r1c"' : '';
             tiR1cHtml += `
                         <tr ${tapDisplay}>
-                            <!-- Ô NHẬP LIỆU TÊN PHÂN DÒNG (CHO PHÉP SỬA BẰNG TAY) -->
                             <td><input type="text" id="ti_tap_name_r1c_c${c}_t${t}" value="${c}${tapNames[t-1]}" class="tap-input"></td>
                             <td><input type="number" id="ti_r_a_c${c}_t${t}" class="mini-in ph-a" step="any"></td>
                             <td><input type="number" id="ti_r_b_c${c}_t${t}" class="mini-in ph-b" step="any"></td>
@@ -400,7 +401,6 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('ti_r1c_grid_container').innerHTML = tiR1cHtml;
 
 
-    // RENDER TU (Giữ nguyên cấu trúc đã chuẩn)
     let tuTsbHtml = '';
     phases.forEach((p, idx) => {
         tuTsbHtml += `
@@ -556,7 +556,6 @@ function checkHistoryDrift(type, currentTag, currentData, dataType) {
     }
 }
 
-// Bật/Tắt Hiển thị 5 Nấc Phân Dòng
 function toggleFullTapsTI(isChecked) {
     var extraTaps = document.querySelectorAll('.ti-extra-tap-row');
     for (var i = 0; i < extraTaps.length; i++) {
@@ -570,7 +569,6 @@ function toggleFullTapsR1CTI(isChecked) {
     }
 }
 
-// Bật/Tắt Hiển thị Cuộn 6,7,8
 function toggleExtraCoilsTI(isChecked) {
     var extraCoils = document.querySelectorAll('.ti-extra-coil'); 
     for (var i = 0; i < extraCoils.length; i++) { extraCoils[i].style.display = isChecked ? 'block' : 'none'; }
@@ -580,7 +578,6 @@ function toggleExtraCoilsR1CTI(isChecked) {
     for (var i = 0; i < extraCoils.length; i++) { extraCoils[i].style.display = isChecked ? 'block' : 'none'; }
 }
 
-// LOGIC TÍNH TOÁN TI TSB
 function tinhTisoTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
@@ -609,10 +606,9 @@ function tinhTisoTI() {
             if(!isNaN(a_meas) || !isNaN(b_meas) || !isNaN(c_meas)) {
                 coilHasData = true; hasData = true;
                 
-                // Đọc Tên Đầu Phân Dòng do người dùng nhập hoặc sửa
                 var tapNameInput = document.getElementById(`ti_tap_name_tsb_c${c}_t${t}`);
                 var tapName = tapNameInput ? tapNameInput.value.trim() : `${c}S1-S2`;
-                if(tapName === "") tapName = "Đầu " + t; // Dự phòng rỗng
+                if(tapName === "") tapName = "Đầu " + t;
                 
                 var rowCells = "";
                 var logLine = `Cuộn ${c} (${tapName}): `;
@@ -667,14 +663,12 @@ function tinhTisoTI() {
     luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Tỉ Số Biến TI", tag: tag, equip: equip, station: station, detail: detailLog, tableHtml: document.getElementById('ti_result_table_body').parentNode.outerHTML, rawData: rawDataTSB });
 }
 
-// LOGIC TÍNH TOÁN TI R1C NHIỀU ĐẦU PHÂN DÒNG
 function tinhR1CTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
     var T_const = parseFloat(getRadioValue('material_ti'));
     
-    // Đọc Nhiệt độ Toàn Cục
     var temps = [ 
         parseFloat(document.getElementById('ti_temp_a_r1c').value), 
         parseFloat(document.getElementById('ti_temp_b_r1c').value), 
@@ -709,7 +703,6 @@ function tinhR1CTI() {
             if(!isNaN(r_a) || !isNaN(r_b) || !isNaN(r_c)) {
                 coilHasData = true; hasData = true;
                 
-                // Đọc Tên Đầu Phân Dòng do người dùng nhập hoặc sửa
                 var tapNameInput = document.getElementById(`ti_tap_name_r1c_c${c}_t${t}`);
                 var tapName = tapNameInput ? tapNameInput.value.trim() : `${c}S1-S2`;
                 if(tapName === "") tapName = "Đầu " + t;
@@ -725,7 +718,6 @@ function tinhR1CTI() {
                         rowCells += `<td><b>${r_75.toFixed(4)}</b></td>`;
                         logLine += `Pha ${['A','B','C'][idx]}: ${r_75.toFixed(4)}Ω | `;
                         
-                        // Lấy duy nhất nấc đầu tiên được nhập liệu để vẽ Trend CBM
                         if(!tapLoggedForTrend) {
                             if(idx===0) coilVals.A = r_75;
                             if(idx===1) coilVals.B = r_75;
