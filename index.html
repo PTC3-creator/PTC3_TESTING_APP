@@ -7,8 +7,10 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
+
       gtag('config', 'G-R0ER3LP5LZ');
     </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thí Nghiệm TU & TI - PTC3</title>
@@ -29,8 +31,11 @@
         .master-content.active, .tab-content.active { display: block; }
         .form-group { margin-bottom: 12px; }
         label { display: block; font-weight: 700; margin-bottom: 6px; color: #1a365d; font-size: 13px; }
-        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
+        
         select, input[type="text"], input[type="number"] { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: #f8fafc; }
         .radio-tile-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
         .radio-tile { position: relative; flex-grow: 1; }
@@ -53,6 +58,7 @@
         .ratio-item input { width: 45%; padding: 4px; font-size: 13px; text-align: center; }
         .extra-coils-toggle { margin: 15px 0; padding: 10px; background: #f0f7ff; border: 1px dashed #3182ce; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: #2b6cb0; font-weight: 700; font-size: 12px; }
         
+        /* GIAO DIỆN LƯỚI GỌN NHẸ CHO ĐẦU PHÂN DÒNG */
         .table-responsive { overflow-x: auto; margin-top: 8px; }
         .compact-input-table { width: 100%; min-width: 450px; border-collapse: collapse; font-size: 12px; text-align: center; }
         .compact-input-table th { background: #edf2f7; color: #2d3748; padding: 6px; font-size: 11px; border-bottom: 2px solid #cbd5e0; }
@@ -60,6 +66,7 @@
         
         .tap-input { width: 55px; padding: 4px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; font-weight: bold; font-size: 12px; color: #2c5282; background: #fff; }
         .tap-input:focus { border-color: #3182ce; outline: none; background: #ebf8ff; box-shadow: 0 0 0 2px rgba(49,130,206,0.2); }
+        
         .mini-in { width: 60px; padding: 6px 4px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; font-weight: bold; font-size: 13px; }
         .mini-in:focus { border-color: #3182ce; outline: none; background: #ebf8ff;}
         .ph-a { color: #b7791f; } .ph-b { color: #2f855a; } .ph-c { color: #c53030; }
@@ -70,7 +77,6 @@
         .alert-banner { background: #fff5f5; border: 1px solid #fc8181; border-left: 5px solid #e32219; color: #c53030; padding: 10px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-bottom: 12px; display: none; line-height: 1.5; }
         .error-badge { background: #fed7d7; color: #c53030; padding: 2px 4px; border-radius: 4px; font-weight: 800; font-size: 10px;}
         .pass-badge { color: #2f855a; font-weight: bold; font-size: 10px;}
-        
         .history-card { margin-top: 15px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; max-height: 400px; overflow-y: auto; }
         .history-item { border-bottom: 1px solid #edf2f7; padding: 10px 0; font-size: 12px; position: relative;}
         .history-time { font-size: 11px; color: #e32219; font-weight: bold; margin-bottom: 6px; padding-right: 120px; }
@@ -80,6 +86,15 @@
             color: #1a365d; line-height: 1.6; background: #f8fafc; padding: 12px; 
             border-radius: 6px; font-family: 'Consolas', 'Courier New', monospace; 
             font-size: 12px; font-weight: 600; border-left: 4px solid #3182ce; 
+        }
+
+        /* MÀU ĐỎ CẢNH BÁO CHO KẾT QUẢ VƯỢT NGƯỠNG */
+        .log-error-text {
+            color: #e53e3e !important;
+            background: #fff5f5;
+            padding: 0 4px;
+            border-radius: 4px;
+            font-weight: 900;
         }
         
         .sync-badge { position: absolute; top: 10px; right: 55px; font-size: 10px; background: #c6f6d5; color: #276749; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
@@ -220,7 +235,6 @@
             </div>
             <hr>
             <div id="tu_phas_container"></div>
-            
             <button class="btn-calc" onclick="tinhTisoTU()">TÍNH TỈ SỐ & KIỂM TRA SAI SỐ TU</button>
             <div id="tu_result_tiso" class="result-box"><div id="tu_alert_box" class="alert-banner"></div><table class="table-result"><thead><tr><th>Pha</th><th>Cuộn</th><th>Kn Chuẩn</th><th>K_đo</th><th>Sai số (%)</th></tr></thead><tbody id="tu_result_table_body"></tbody></table></div>
         </div>
@@ -261,7 +275,6 @@
 </div>
 
 <script>
-// LINK CLOUD SHEETS API CHUẨN ĐÃ KẾT NỐI
 const CLOUD_URL = "https://script.google.com/macros/s/AKfycbx32OT-P6qjRkIpc02z1P02dJWvit6Bd01fdkTGNXxzzuaaYRJWuLNHybTtI68eO6vO/exec";
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -499,7 +512,6 @@ function toggleExtraCoilsR1CTI(isChecked) {
     for (var i = 0; i < extraCoils.length; i++) { extraCoils[i].style.display = isChecked ? 'block' : 'none'; }
 }
 
-// LOGIC CẬP NHẬT: LOG BÁO CÁO CÓ CẤU TRÚC CÂY THƯ MỤC CHUYÊN NGHIỆP (TSB TI)
 function tinhTisoTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
@@ -533,7 +545,7 @@ function tinhTisoTI() {
                 if(tapName === "") tapName = "Đầu " + t;
                 
                 var rowCells = "";
-                var arrPha = []; // Hứng dữ liệu log dóng hàng
+                var arrPha = []; 
                 
                 [a_meas, b_meas, c_meas].forEach((meas, idx) => {
                     if(!isNaN(meas) && meas > 0) {
@@ -547,7 +559,12 @@ function tinhTisoTI() {
                         var badgeStyle = isHighError ? "class='error-badge'" : "class='pass-badge'";
                         
                         rowCells += `<td><b>${Ratio_P_Actual.toFixed(2)}/${is_n}</b><br><span ${badgeStyle}>${saisoDisplay}</span></td>`;
-                        arrPha.push(`Pha ${['A','B','C'][idx]}: ${Ratio_P_Actual.toFixed(2)}/${is_n} (${saisoDisplay})`);
+                        
+                        // TÍNH NĂNG MỚI: TỰ ĐỘNG BÔI ĐỎ CHỮ NẾU SAI SỐ > 0.5%
+                        var logText = `Pha ${['A','B','C'][idx]}: ${Ratio_P_Actual.toFixed(2)}/${is_n} (${saisoDisplay})`;
+                        if (isHighError) { logText = `<span class="log-error-text">${logText}</span>`; }
+                        arrPha.push(logText);
+
                     } else {
                         rowCells += `<td>-</td>`;
                     }
@@ -555,7 +572,6 @@ function tinhTisoTI() {
                 
                 coilRowsHtml += `<tr>${t===1 ? `<td rowspan="[ROWSPAN]" style="vertical-align:middle;"><b>${c}</b></td>` : ""}<td><b>${tapName}</b></td><td>${ip_n}/${is_n}</td>${rowCells}</tr>`;
                 
-                // LOG CẤU TRÚC CÂY THƯ MỤC
                 detailLog += `<b>▶ Cuộn ${c} [${tapName}]</b> - Đ/M: ${ip_n}/${is_n}<br>`;
                 arrPha.forEach((p, index) => {
                     var prefix = (index === arrPha.length - 1) ? "&nbsp;&nbsp;└ " : "&nbsp;&nbsp;├ ";
@@ -584,19 +600,14 @@ function tinhTisoTI() {
     luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Tỉ Số Biến TI", tag: tag, equip: equip, station: station, detail: detailLog, tableHtml: document.getElementById('ti_result_table_body').parentNode.outerHTML, rawData: rawDataTSB });
 }
 
-// LOGIC CẬP NHẬT: LOG BÁO CÁO CÓ CẤU TRÚC CÂY THƯ MỤC (R1C TI)
 function tinhR1CTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
     var T_const = parseFloat(getRadioValue('material_ti'));
     
-    var temps = [ 
-        parseFloat(document.getElementById('ti_temp_a_r1c').value), parseFloat(document.getElementById('ti_temp_b_r1c').value), parseFloat(document.getElementById('ti_temp_c_r1c').value) 
-    ];
-    var k_factors = [ 
-        (75 + T_const) / (temps[0] + T_const), (75 + T_const) / (temps[1] + T_const), (75 + T_const) / (temps[2] + T_const) 
-    ];
+    var temps = [ parseFloat(document.getElementById('ti_temp_a_r1c').value), parseFloat(document.getElementById('ti_temp_b_r1c').value), parseFloat(document.getElementById('ti_temp_c_r1c').value) ];
+    var k_factors = [ (75 + T_const) / (temps[0] + T_const), (75 + T_const) / (temps[1] + T_const), (75 + T_const) / (temps[2] + T_const) ];
 
     var maxCoils = document.getElementById('ti_show_extra_r1c').checked ? 8 : 5;
     var isFullTaps = document.getElementById('ti_full_taps_r1c').checked;
@@ -634,7 +645,6 @@ function tinhR1CTI() {
                         var r_75 = meas * k_factors[idx];
                         r_75_arr.push(r_75);
                         rowCells += `<td><b>${r_75.toFixed(4)}</b></td>`;
-                        
                         arrPha.push(`Pha ${['A','B','C'][idx]}: ${r_75.toFixed(4)} Ω`);
                         
                         if(!tapLoggedForTrend) {
@@ -642,23 +652,33 @@ function tinhR1CTI() {
                         }
                     } else {
                         rowCells += `<td>-</td>`;
+                        arrPha.push(`Pha ${['A','B','C'][idx]}: -`);
                     }
                 });
                 tapLoggedForTrend = true; 
                 
+                var isHighErrorTap = false;
                 if (r_75_arr.length >= 2) {
                     var maxR = Math.max.apply(null, r_75_arr); var minR = Math.min.apply(null, r_75_arr);
                     var lech = ((maxR - minR) / minR) * 100;
                     if(lech > rawDataR1C.maxLech) rawDataR1C.maxLech = lech;
-                    if (lech > 10.0) { hasAlertR1C = true; alertR1CMsg += `Cuộn ${c} (${tapName}) lệch ${lech.toFixed(1)}%; `; }
+                    if (lech > 10.0) { 
+                        hasAlertR1C = true; 
+                        isHighErrorTap = true;
+                        alertR1CMsg += `Cuộn ${c} (${tapName}) lệch ${lech.toFixed(1)}%; `; 
+                    }
                 }
 
                 coilRowsHtml += `<tr>${t===1 ? `<td rowspan="[ROWSPAN]" style="vertical-align:middle;"><b>${c}</b></td>` : ""}<td><b>${tapName}</b></td>${rowCells}</tr>`;
                 
-                // LOG CẤU TRÚC CÂY THƯ MỤC
-                detailLog += `<b>▶ Cuộn ${c} [${tapName}]</b>:<br>`;
+                // TÍNH NĂNG MỚI: TỰ ĐỘNG BÔI ĐỎ CẢ CỤM NẾU LỆCH > 10%
+                var logTitle = `<b>▶ Cuộn ${c} [${tapName}]</b>:`;
+                if (isHighErrorTap) { logTitle = `<span class="log-error-text">${logTitle} (Lệch > 10%)</span>`; }
+                
+                detailLog += logTitle + `<br>`;
                 arrPha.forEach((p, index) => {
                     var prefix = (index === arrPha.length - 1) ? "&nbsp;&nbsp;└ " : "&nbsp;&nbsp;├ ";
+                    if (isHighErrorTap) { p = `<span class="log-error-text">${p}</span>`; }
                     detailLog += prefix + p + `<br>`;
                 });
             }
@@ -686,7 +706,6 @@ function tinhR1CTI() {
     luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Quy Đổi R1C TI", tag: tag, equip: equip, station: station, detail: detailLog, tableHtml: document.getElementById('ti_result_r1c_body').parentNode.outerHTML, rawData: rawDataR1C });
 }
 
-// LOGIC CẬP NHẬT: LOG BÁO CÁO CÓ CẤU TRÚC CÂY THƯ MỤC (TU)
 function getKnTU(val_so, val_thu_type) {
     if (!val_thu_type || val_thu_type === 'none') return null;
     var un_so_v = (val_so * 1000) / Math.sqrt(3); 
@@ -746,8 +765,11 @@ function tinhTisoTU() {
 
                 tbodyHtml += "<tr><td><b>" + pname + "</b></td><td>" + c.name + "</td><td>" + c.Kn.toFixed(3) + "</td><td><b>" + Ktt.toFixed(3) + "</b></td><td><span class='" + (isHighError?"error-badge":"pass-badge") + "'>" + (saiso>0?"+":"") + saiso.toFixed(3) + "%</span></td></tr>";
                 
-                // LOG CẤU TRÚC CÂY THƯ MỤC
-                detailLog += `<b>▶ ${pname} - ${c.name}</b> [Đ/M: ${c.Kn.toFixed(3)}]<br>&nbsp;&nbsp;└ K_đo: ${Ktt.toFixed(3)} (Sai số: ${(saiso>0?"+":"")+saiso.toFixed(3)}%)<br>`;
+                // TÍNH NĂNG MỚI: TỰ ĐỘNG BÔI ĐỎ CHỮ NẾU SAI SỐ TU > 0.5%
+                var logLine = `&nbsp;&nbsp;└ K_đo: ${Ktt.toFixed(3)} (Sai số: ${(saiso>0?"+":"")+saiso.toFixed(3)}%)`;
+                if (isHighError) { logLine = `<span class="log-error-text">${logLine}</span>`; }
+                
+                detailLog += `<b>▶ ${pname} - ${c.name}</b> [Đ/M: ${c.Kn.toFixed(3)}]<br>${logLine}<br>`;
             }
         }
     }
@@ -795,7 +817,7 @@ function tinhR1CTU() {
 
             tbodyHtml += "<tr><td><b>" + p.name + "</b></td><td>" + t_pha + "</td><td>" + k_pha.toFixed(4) + "</td><td><b>" + (!isNaN(r1_75)?r1_75.toFixed(3):"-") + "</b></td><td><b>" + (!isNaN(r2_75)?r2_75.toFixed(3):"-") + "</b></td><td><b>" + (!isNaN(r3_75)?r3_75.toFixed(3):"-") + "</b></td></tr>";
             
-            // LOG CẤU TRÚC CÂY THƯ MỤC
+            // LOG TẠM THỜI CHƯA TÔ ĐỎ (Vì TU tính lệch chung cho cả 3 cuộn ở hàm dưới)
             detailLog += `<b>▶ ${p.name} (${t_pha}°C)</b> - k: ${k_pha.toFixed(4)}<br>`;
             detailLog += `&nbsp;&nbsp;├ R1: ${(!isNaN(r1_75)?r1_75.toFixed(3):"-")} mΩ<br>`;
             detailLog += `&nbsp;&nbsp;├ R2: ${(!isNaN(r2_75)?r2_75.toFixed(3):"-")} mΩ<br>`;
@@ -814,6 +836,11 @@ function tinhR1CTU() {
         }
     };
     checkLech(1, rawDataR1C.coils[1]); checkLech(2, rawDataR1C.coils[2]); checkLech(3, rawDataR1C.coils[3]);
+    
+    // TÍNH NĂNG MỚI: TỰ ĐỘNG BÔI ĐỎ NẾU TU R1C LỆCH > 10%
+    if(hasAlertR1C) {
+        detailLog = `<span class="log-error-text">▶ CẢNH BÁO: ĐỘ LỆCH R1C VƯỢT 10%</span><br>` + detailLog;
+    }
 
     var historyDrift = checkHistoryDrift('tu', tag, rawDataR1C, 'R1C');
     var alertDiv = document.getElementById('tu_alert_box_r1c');
@@ -853,15 +880,16 @@ function showTrendChart(type) {
             valC = r.rawR1C.coils[1].C;
         } 
         else if (r.r1cDetail) {
-            // Regex hỗ trợ đọc ngược dữ liệu lịch sử cấu trúc cây thư mục mới
+            // Regex đã được nâng cấp để đọc xuyên qua các thẻ màu đỏ (<span...>)
+            var cleanDetail = r.r1cDetail.replace(/<[^>]*>?/gm, ''); 
             if (type === 'ti') {
-                var mA = r.r1cDetail.match(/Pha A.*?([\d.]+) ?Ω/) || r.r1cDetail.match(/Pha A\(([\d.]+)Ω\)/) || r.r1cDetail.match(/Ph\.A:\s*([\d.]+)Ω/); if(mA) valA = parseFloat(mA[1]);
-                var mB = r.r1cDetail.match(/Pha B.*?([\d.]+) ?Ω/) || r.r1cDetail.match(/Pha B\(([\d.]+)Ω\)/) || r.r1cDetail.match(/Ph\.B:\s*([\d.]+)Ω/); if(mB) valB = parseFloat(mB[1]);
-                var mC = r.r1cDetail.match(/Pha C.*?([\d.]+) ?Ω/) || r.r1cDetail.match(/Pha C\(([\d.]+)Ω\)/) || r.r1cDetail.match(/Ph\.C:\s*([\d.]+)Ω/); if(mC) valC = parseFloat(mC[1]);
+                var mA = cleanDetail.match(/Pha A.*?([\d.]+) ?Ω/) || cleanDetail.match(/Pha A\(([\d.]+)Ω\)/) || cleanDetail.match(/Ph\.A:\s*([\d.]+)Ω/); if(mA) valA = parseFloat(mA[1]);
+                var mB = cleanDetail.match(/Pha B.*?([\d.]+) ?Ω/) || cleanDetail.match(/Pha B\(([\d.]+)Ω\)/) || cleanDetail.match(/Ph\.B:\s*([\d.]+)Ω/); if(mB) valB = parseFloat(mB[1]);
+                var mC = cleanDetail.match(/Pha C.*?([\d.]+) ?Ω/) || cleanDetail.match(/Pha C\(([\d.]+)Ω\)/) || cleanDetail.match(/Ph\.C:\s*([\d.]+)Ω/); if(mC) valC = parseFloat(mC[1]);
             } else {
-                var mAt = r.r1cDetail.match(/Pha A[\s\S]*?R1:\s*([\d.]+)/) || r.r1cDetail.match(/Pha A.*?R1=([\d.]+)/); if(mAt) valA = parseFloat(mAt[1]);
-                var mBt = r.r1cDetail.match(/Pha B[\s\S]*?R1:\s*([\d.]+)/) || r.r1cDetail.match(/Pha B.*?R1=([\d.]+)/); if(mBt) valB = parseFloat(mBt[1]);
-                var mCt = r.r1cDetail.match(/Pha C[\s\S]*?R1:\s*([\d.]+)/) || r.r1cDetail.match(/Pha C.*?R1=([\d.]+)/); if(mCt) valC = parseFloat(mCt[1]);
+                var mAt = cleanDetail.match(/Pha A[\s\S]*?R1:\s*([\d.]+)/) || cleanDetail.match(/Pha A.*?R1=([\d.]+)/); if(mAt) valA = parseFloat(mAt[1]);
+                var mBt = cleanDetail.match(/Pha B[\s\S]*?R1:\s*([\d.]+)/) || cleanDetail.match(/Pha B.*?R1=([\d.]+)/); if(mBt) valB = parseFloat(mBt[1]);
+                var mCt = cleanDetail.match(/Pha C[\s\S]*?R1:\s*([\d.]+)/) || cleanDetail.match(/Pha C.*?R1=([\d.]+)/); if(mCt) valC = parseFloat(mCt[1]);
             }
         }
         
@@ -900,7 +928,13 @@ function hienThiNhatKy(type) {
         var item = history[i];
         var syncStatus = item.synced ? '<span class="sync-badge">Đã đồng bộ ☁️</span>' : '<span class="sync-badge" style="background:#fed7d7; color:#c53030;">Chưa đồng bộ</span>';
         var deleteBtn = '<button class="btn-delete-item" onclick="xoaNhatKyRiengLe(\'' + type + '\', ' + i + ')">🗑️ Xóa</button>';
-        html += '<div class="history-item">' + syncStatus + deleteBtn + '<div class="history-time">' + item.time + ' - [' + item.tag + '] - ' + item.type + '</div><div class="history-detail">' + (item.tsbDetail || "") + (item.r1cDetail || "") + '</div></div>';
+        
+        // KIỂM TRA MÀU ĐỎ TRÊN PHẦN TÊN TAB LỊCH SỬ NẾU CÓ LỖI TỔNG
+        var titleColor = "#e32219";
+        if (item.tsbDetail && item.tsbDetail.includes("log-error-text")) titleColor = "#c53030";
+        if (item.r1cDetail && item.r1cDetail.includes("log-error-text")) titleColor = "#c53030";
+
+        html += '<div class="history-item">' + syncStatus + deleteBtn + '<div class="history-time" style="color:' + titleColor + ';">' + item.time + ' - [' + item.tag + '] - ' + item.type + '</div><div class="history-detail">' + (item.tsbDetail || "") + (item.r1cDetail || "") + '</div></div>';
     }
     listDiv.innerHTML = html;
 }
@@ -1032,7 +1066,10 @@ function xuatExcelCSV(type) {
             html += item.r1cHtml;
         }
         if (!item.tsbHtml && !item.r1cHtml) {
-            html += "<p>" + (item.tsbDetail || "") + "<br>" + (item.r1cDetail || "") + "</p>";
+            // Loại bỏ thẻ span màu đỏ khi xuất Excel để tránh lỗi hiển thị HTML thô
+            var cleanTsb = (item.tsbDetail || "").replace(/<span[^>]*>|<\/span>/g, "");
+            var cleanR1c = (item.r1cDetail || "").replace(/<span[^>]*>|<\/span>/g, "");
+            html += "<p>" + cleanTsb + "<br>" + cleanR1c + "</p>";
         }
         html += "<br><br>";
     });
