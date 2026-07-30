@@ -92,8 +92,16 @@
     <!-- ======================= MÁY BIẾN DÒNG (TI) ======================= -->
     <div id="master-ti" class="master-content active">
         <div class="form-group" style="background: #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #0a3b82;">
-            <label style="font-size: 14px; margin-bottom: 8px;">🏷️ TÊN / VỊ TRÍ TRẠM:</label>
-            <input type="text" id="ti_name_global" placeholder="VD: TI 431 - Trạm 220kV Bảo Lộc" style="font-weight: bold; font-size: 15px; color: #0a3b82; background: #fff;">
+            <div class="grid-2col-input" style="margin-bottom: 8px;">
+                <div>
+                    <label style="font-size: 13px; margin-bottom: 4px;">🏷️ THIẾT BỊ:</label>
+                    <input type="text" id="ti_equip_global" placeholder="VD: TI 431" style="font-weight: bold; font-size: 14px; color: #0a3b82; background: #fff;">
+                </div>
+                <div>
+                    <label style="font-size: 13px; margin-bottom: 4px;">📍 TRẠM:</label>
+                    <input type="text" id="ti_station_global" placeholder="VD: Trạm 110kV Bảo Lộc" style="font-weight: bold; font-size: 14px; color: #0a3b82; background: #fff;">
+                </div>
+            </div>
             <button type="button" class="btn-trend" onclick="showTrendChart('ti')">📈 XEM BIỂU ĐỒ XU HƯỚNG CBM (R1C)</button>
         </div>
 
@@ -174,8 +182,16 @@
     <!-- ======================= MÁY BIẾN ÁP (TU) ======================= -->
     <div id="master-tu" class="master-content">
         <div class="form-group" style="background: #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #0a3b82;">
-            <label style="font-size: 14px; margin-bottom: 8px;">🏷️ TÊN / VỊ TRÍ TRẠM:</label>
-            <input type="text" id="tu_name_global" placeholder="VD: TU 431 - Trạm 110kV Bảo Lộc" style="font-weight: bold; font-size: 15px; color: #0a3b82; background: #fff;">
+            <div class="grid-2col-input" style="margin-bottom: 8px;">
+                <div>
+                    <label style="font-size: 13px; margin-bottom: 4px;">🏷️ THIẾT BỊ:</label>
+                    <input type="text" id="tu_equip_global" placeholder="VD: TU 431" style="font-weight: bold; font-size: 14px; color: #0a3b82; background: #fff;">
+                </div>
+                <div>
+                    <label style="font-size: 13px; margin-bottom: 4px;">📍 TRẠM:</label>
+                    <input type="text" id="tu_station_global" placeholder="VD: Trạm 110kV Bảo Lộc" style="font-weight: bold; font-size: 14px; color: #0a3b82; background: #fff;">
+                </div>
+            </div>
             <button type="button" class="btn-trend" onclick="showTrendChart('tu')">📈 XEM BIỂU ĐỒ XU HƯỚNG CBM (R1C)</button>
         </div>
 
@@ -287,7 +303,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const phases = ['a', 'b', 'c'];
     const phaseIcons = ['🟡 PHA A', '🟢 PHA B', '🔴 PHA C'];
     
-    // 1. Render TI TSB
     let tiTsbHtml = '';
     phases.forEach((p, idx) => {
         let coils = '';
@@ -300,7 +315,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     document.getElementById('ti_phas_container_tsb').innerHTML = tiTsbHtml;
 
-    // 2. Render TI R1C
     let tiR1cHtml = '';
     phases.forEach((p, idx) => {
         let coils = '';
@@ -313,7 +327,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     document.getElementById('ti_phas_container_r1c').innerHTML = tiR1cHtml;
 
-    // 3. Render TU TSB
     let tuTsbHtml = '';
     phases.forEach((p, idx) => {
         tuTsbHtml += `
@@ -333,7 +346,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     document.getElementById('tu_phas_container').innerHTML = tuTsbHtml;
 
-    // 4. Render TU R1C
     let tuR1cHtml = '';
     phases.forEach((p, idx) => {
         tuR1cHtml += `
@@ -348,14 +360,12 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     document.getElementById('tu_phas_container_r1c').innerHTML = tuR1cHtml;
     
-    // Đăng ký Event Delegation cho các tab Master
     document.addEventListener('click', function(e) {
         if (e.target && e.target.matches('[data-action="master-tab"]')) {
             switchMasterTab(e.target.dataset.type);
         }
     });
 });
-// ======================================================================
 
 function switchMasterTab(type) {
     var btns = document.querySelectorAll('.master-tab-btn');
@@ -404,9 +414,10 @@ function luuVaoLocalStorage(type, record) {
         if (record.type.includes("Tỉ Số")) { history[0].tsbHtml = record.tableHtml; history[0].tsbDetail = record.detail; history[0].rawTSB = record.rawData; } 
         else if (record.type.includes("R1C")) { history[0].r1cHtml = record.tableHtml; history[0].r1cDetail = record.detail; history[0].rawR1C = record.rawData; }
         history[0].type = "Đã lưu Biên bản (TSB & R1C)"; history[0].time = record.time; history[0].synced = false; 
+        history[0].equip = record.equip; history[0].station = record.station;
     } else {
         var newRecord = {
-            time: record.time, tag: record.tag, type: record.type, synced: false,
+            time: record.time, tag: record.tag, equip: record.equip, station: record.station, type: record.type, synced: false,
             tsbHtml: record.type.includes("Tỉ Số") ? record.tableHtml : "", r1cHtml: record.type.includes("R1C") ? record.tableHtml : "",
             tsbDetail: record.type.includes("Tỉ Số") ? record.detail : "", r1cDetail: record.type.includes("R1C") ? record.detail : "",
             rawTSB: record.type.includes("Tỉ Số") ? record.rawData : null, rawR1C: record.type.includes("R1C") ? record.rawData : null
@@ -416,7 +427,6 @@ function luuVaoLocalStorage(type, record) {
     localStorage.setItem(key, JSON.stringify(history));
 }
 
-// 📌 HÀM ĐÁNH GIÁ CBM & CẢNH BÁO LỊCH SỬ / XUẤT XƯỞNG
 function checkHistoryDrift(type, currentTag, currentData, dataType) {
     var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
     var history = JSON.parse(localStorage.getItem(key) || '[]');
@@ -445,7 +455,6 @@ function checkHistoryDrift(type, currentTag, currentData, dataType) {
     return alertStr;
 }
 
-// 📌 Tự động Toggle ẩn hiện cho Cuộn 6, 7, 8 ở cả 2 Tab TSB và R1C
 function toggleExtraCoilsTI(isChecked) {
     document.getElementById('ti_show_extra_tsb').checked = isChecked; 
     document.getElementById('ti_show_extra_r1c').checked = isChecked;
@@ -458,7 +467,9 @@ function toggleExtraCoilsTI(isChecked) {
 }
 
 function tinhTisoTI() {
-    var tag = document.getElementById('ti_name_global').value.trim() || "TI Chưa Rõ Tên";
+    var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
+    var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
+    var tag = equip + " - " + station;
     var maxCoils = document.getElementById('ti_show_extra_tsb').checked ? 8 : 5;
     var phases = ['a', 'b', 'c']; var phaseNames = ['Pha A', 'Pha B', 'Pha C'];
     var tbodyHtml = ""; var detailLog = ""; var hasData = false; var hasAlert = false;
@@ -469,7 +480,7 @@ function tinhTisoTI() {
         var ip_n = parseFloat(document.getElementById('ti_ip_n_' + i).value); var is_n = parseFloat(document.getElementById('ti_is_n_' + i).value);
         if(isNaN(ip_n) || isNaN(is_n)) continue;
         var rowHasData = false; var rowCells = ""; var logLine = "Cuộn " + i + ": ";
-        var phaseLogs = []; // Bản vá kẹp thêm thông số TSB hiển thị trên Sheets
+        var phaseLogs = []; 
         
         for (var p = 0; p < 3; p++) {
             var input_elem = document.getElementById('ti_is_' + phases[p] + '_' + i);
@@ -489,8 +500,6 @@ function tinhTisoTI() {
                 }
                 var badgeStyle = isHighError ? "class='error-badge'" : "class='pass-badge'";
                 rowCells += "<td><b>" + Ratio_P_Actual.toFixed(2) + "/" + is_n + "</b></td><td><span " + badgeStyle + ">" + saisoDisplay + "</span></td>";
-                
-                // Hiển thị kẹp tham số TSB đo được vào String báo cáo
                 phaseLogs.push(phaseNames[p] + ": " + Ratio_P_Actual.toFixed(2) + "/" + is_n + " (" + saisoDisplay + ")");
             } else { rowCells += "<td>-</td><td>-</td>"; }
         }
@@ -507,11 +516,13 @@ function tinhTisoTI() {
     alertDiv.innerHTML = (hasAlert ? alertMsg : "") + historyDrift;
 
     document.getElementById('ti_result_table_body').innerHTML = tbodyHtml; document.getElementById('ti_result_tiso').style.display = 'block';
-    luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Tỉ Số Biến TI", tag: tag, detail: detailLog, tableHtml: document.getElementById('ti_result_table_body').parentNode.outerHTML, rawData: rawDataTSB });
+    luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Tỉ Số Biến TI", tag: tag, equip: equip, station: station, detail: detailLog, tableHtml: document.getElementById('ti_result_table_body').parentNode.outerHTML, rawData: rawDataTSB });
 }
 
 function tinhR1CTI() {
-    var tag = document.getElementById('ti_name_global').value.trim() || "TI Chưa Rõ Tên";
+    var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
+    var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
+    var tag = equip + " - " + station;
     var T_const = parseFloat(getRadioValue('material_ti'));
     var phases = ['a', 'b', 'c']; var phaseNames = ['Pha A', 'Pha B', 'Pha C'];
     var temps = [ parseFloat(document.getElementById('ti_temp_a_r1c').value), parseFloat(document.getElementById('ti_temp_b_r1c').value), parseFloat(document.getElementById('ti_temp_c_r1c').value) ];
@@ -524,7 +535,7 @@ function tinhR1CTI() {
     var rawDataR1C = { type: 'TI', maxLech: 0 };
 
     for (var i = 1; i <= maxCoils; i++) {
-        var rowHasData = false; var rowCells = ""; var logLine = "Cuon " + i + ": "; var r_75_arr = [];
+        var rowHasData = false; var rowCells = ""; var logLine = "Cuộn " + i + ": "; var r_75_arr = [];
         for (var p = 0; p < 3; p++) {
             var input_elem = document.getElementById('ti_r_' + phases[p] + '_' + i);
             var r_test = input_elem ? parseFloat(input_elem.value) : NaN;
@@ -555,7 +566,7 @@ function tinhR1CTI() {
     alertDiv.innerHTML = (hasAlertR1C ? alertR1CMsg : "") + historyDrift;
 
     document.getElementById('ti_result_r1c_body').innerHTML = tbodyHtml; document.getElementById('ti_result_r1c').style.display = 'block';
-    luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Quy Đổi R1C TI", tag: tag, detail: detailLog, tableHtml: document.getElementById('ti_result_r1c_table_body').parentNode.outerHTML, rawData: rawDataR1C });
+    luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Quy Đổi R1C TI", tag: tag, equip: equip, station: station, detail: detailLog, tableHtml: document.getElementById('ti_result_r1c_body').parentNode.outerHTML, rawData: rawDataR1C });
 }
 
 function getKnTU(val_so, val_thu_type) {
@@ -570,7 +581,9 @@ function getKnTU(val_so, val_thu_type) {
 }
 
 function tinhTisoTU() {
-    var tag = document.getElementById('tu_name_global').value.trim() || "TU Chưa Rõ Tên";
+    var equip = document.getElementById('tu_equip_global').value.trim() || "Chưa rõ TB";
+    var station = document.getElementById('tu_station_global').value.trim() || "Chưa rõ Trạm";
+    var tag = equip + " - " + station;
     var val_so = parseFloat(getRadioValue('tu_un_so'));
     var kn1 = getKnTU(val_so, getRadioValue('tu_un_thu1')), kn2 = getKnTU(val_so, getRadioValue('tu_un_thu2')), kn3 = getKnTU(val_so, getRadioValue('tu_un_thu3'));
     var phas = ['a', 'b', 'c'];
@@ -583,15 +596,22 @@ function tinhTisoTU() {
     for (var i = 0; i < 3; i++) {
         var ph = phas[i]; var pname = phaseNames[i];
         
-        var us1_elem = document.getElementById(`tu_u${ph}_s1`);
-        var us2_elem = document.getElementById(`tu_u${ph}_s2`);
-        var us1 = us1_elem ? (parseFloat(us1_elem.value) || 10) : 10; 
-        var us2 = us2_elem ? (parseFloat(us2_elem.value) || 10) : 10;
+        var us1_elem = document.getElementById('tu_u' + ph + '_s1');
+        var us2_elem = document.getElementById('tu_u' + ph + '_s2');
+        var us1 = (us1_elem && us1_elem.value !== "") ? parseFloat(us1_elem.value) : 10; 
+        var us2 = (us2_elem && us2_elem.value !== "") ? parseFloat(us2_elem.value) : 10;
         
+        var e1_1 = document.getElementById('tu_u2' + ph + '1_1'); var v1_1 = e1_1 ? parseFloat(e1_1.value) : NaN;
+        var e1_2 = document.getElementById('tu_u2' + ph + '1_2'); var v1_2 = e1_2 ? parseFloat(e1_2.value) : NaN;
+        var e2_1 = document.getElementById('tu_u2' + ph + '2_1'); var v2_1 = e2_1 ? parseFloat(e2_1.value) : NaN;
+        var e2_2 = document.getElementById('tu_u2' + ph + '2_2'); var v2_2 = e2_2 ? parseFloat(e2_2.value) : NaN;
+        var e3_1 = document.getElementById('tu_u2' + ph + '3_1'); var v3_1 = e3_1 ? parseFloat(e3_1.value) : NaN;
+        var e3_2 = document.getElementById('tu_u2' + ph + '3_2'); var v3_2 = e3_2 ? parseFloat(e3_2.value) : NaN;
+
         var cuons = [ 
-            { name: "Cuộn 1", Kn: kn1, v1: parseFloat(document.getElementById(`tu_u2${ph}1_1`)?.value), v2: parseFloat(document.getElementById(`tu_u2${ph}1_2`)?.value) }, 
-            { name: "Cuộn 2", Kn: kn2, v1: parseFloat(document.getElementById(`tu_u2${ph}2_1`)?.value), v2: parseFloat(document.getElementById(`tu_u2${ph}2_2`)?.value) }, 
-            { name: "Cuộn 3", Kn: kn3, v1: parseFloat(document.getElementById(`tu_u2${ph}3_1`)?.value), v2: parseFloat(document.getElementById(`tu_u2${ph}3_2`)?.value) } 
+            { name: "Cuộn 1", Kn: kn1, v1: v1_1, v2: v1_2 }, 
+            { name: "Cuộn 2", Kn: kn2, v1: v2_1, v2: v2_2 }, 
+            { name: "Cuộn 3", Kn: kn3, v1: v3_1, v2: v3_2 } 
         ];
 
         for (var j = 0; j < cuons.length; j++) {
@@ -619,11 +639,13 @@ function tinhTisoTU() {
     alertDiv.innerHTML = (hasAlert ? alertMsg : "") + historyDrift;
 
     document.getElementById('tu_result_table_body').innerHTML = tbodyHtml; document.getElementById('tu_result_tiso').style.display = 'block';
-    luuVaoLocalStorage('tu', { time: layThoiGian(), type: "Tỉ Số Biến TU", tag: tag, detail: detailLog, tableHtml: document.getElementById('tu_result_table_body').parentNode.outerHTML, rawData: rawDataTSB });
+    luuVaoLocalStorage('tu', { time: layThoiGian(), type: "Tỉ Số Biến TU", tag: tag, equip: equip, station: station, detail: detailLog, tableHtml: document.getElementById('tu_result_table_body').parentNode.outerHTML, rawData: rawDataTSB });
 }
 
 function tinhR1CTU() {
-    var tag = document.getElementById('tu_name_global').value.trim() || "TU Chưa Rõ Tên";
+    var equip = document.getElementById('tu_equip_global').value.trim() || "Chưa rõ TB";
+    var station = document.getElementById('tu_station_global').value.trim() || "Chưa rõ Trạm";
+    var tag = equip + " - " + station;
     var T_const = parseFloat(getRadioValue('tu_material'));
     var phasR = [ { name: "Pha A", ph: 'a'}, { name: "Pha B", ph: 'b'}, { name: "Pha C", ph: 'c'} ];
     var tbodyHtml = ""; var detailLog = ""; var hasData = false;
@@ -631,10 +653,13 @@ function tinhR1CTU() {
 
     for (var i = 0; i < phasR.length; i++) {
         var p = phasR[i]; 
-        var t_pha = parseFloat(document.getElementById(`tu_temp_${p.ph}`)?.value);
-        var v1 = parseFloat(document.getElementById(`tu_r${p.ph}_1`)?.value);
-        var v2 = parseFloat(document.getElementById(`tu_r${p.ph}_2`)?.value);
-        var v3 = parseFloat(document.getElementById(`tu_r${p.ph}_3`)?.value);
+        
+        var temp_elem = document.getElementById('tu_temp_' + p.ph);
+        var t_pha = temp_elem ? parseFloat(temp_elem.value) : 30;
+        
+        var e1 = document.getElementById('tu_r' + p.ph + '_1'); var v1 = e1 ? parseFloat(e1.value) : NaN;
+        var e2 = document.getElementById('tu_r' + p.ph + '_2'); var v2 = e2 ? parseFloat(e2.value) : NaN;
+        var e3 = document.getElementById('tu_r' + p.ph + '_3'); var v3 = e3 ? parseFloat(e3.value) : NaN;
         
         if (!isNaN(v1) || !isNaN(v2) || !isNaN(v3)) {
             hasData = true; var k_pha = (75 + T_const) / (t_pha + T_const);
@@ -664,13 +689,16 @@ function tinhR1CTU() {
     alertDiv.innerHTML = (hasAlertR1C ? alertR1CMsg : "") + historyDrift;
 
     document.getElementById('tu_result_r1c_table_body').innerHTML = tbodyHtml; document.getElementById('tu_result_r1c').style.display = 'block';
-    luuVaoLocalStorage('tu', { time: layThoiGian(), type: "Quy Đổi R1C TU", tag: tag, detail: detailLog, tableHtml: document.getElementById('tu_result_r1c_table_body').parentNode.outerHTML, rawData: rawDataR1C });
+    luuVaoLocalStorage('tu', { time: layThoiGian(), type: "Quy Đổi R1C TU", tag: tag, equip: equip, station: station, detail: detailLog, tableHtml: document.getElementById('tu_result_r1c_table_body').parentNode.outerHTML, rawData: rawDataR1C });
 }
 
 var myChart = null;
 function showTrendChart(type) {
-    var tag = document.getElementById(type + '_name_global').value.trim();
-    if(!tag) { alert("Sếp vui lòng nhập Tên/Vị trí trạm!"); return; }
+    var equip = document.getElementById(type + '_equip_global').value.trim();
+    var station = document.getElementById(type + '_station_global').value.trim();
+    if(!equip && !station) { alert("Sếp vui lòng nhập Tên thiết bị và Vị trí trạm!"); return; }
+    var tag = equip + " - " + station;
+    
     var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
     var history = JSON.parse(localStorage.getItem(key) || '[]');
     var stationData = history.filter(r => r.tag.replace(/\s/g,'').toUpperCase() === tag.replace(/\s/g,'').toUpperCase() && r.rawR1C != null).reverse(); 
@@ -729,7 +757,7 @@ function dongBoCloudUp(typeStr) {
         if (data.status === "success") {
             history.forEach(r => { if(r.synced !== true) r.synced = true; });
             localStorage.setItem(key, JSON.stringify(history));
-            alert("Đã đẩy thành công " + unsynced.length + " bản ghi lên Google Sheets!");
+            alert("Đã đẩy thành công bản ghi lên Google Sheets!");
             hienThiNhatKy(type);
         } else { alert("Lỗi: " + data.message); }
     })
@@ -763,12 +791,15 @@ function dongBoCloudDown(typeStr) {
             var count = 0;
 
             cloudRows.forEach(row => {
-                if (!row || row.length < 3) return;
-                var timeVal = row[0] || "", tagVal = row[1] || "Không rõ", typeVal = row[2] || "", tsbD = row[3] || "", r1cD = row[4] || "", maxT = row[5], maxR = row[6];
+                if (!row || row.length < 4) return;
+                var timeVal = row[0] || "", equipVal = row[1] || "", stationVal = row[2] || "", typeVal = row[3] || "";
+                var tsbD = row[4] || "", r1cD = row[5] || "", maxT = row[6], maxR = row[7];
+                var tagVal = equipVal + " - " + stationVal;
+                
                 var exists = localHistory.some(h => h.time === timeVal && h.tag.toUpperCase() === tagVal.toUpperCase());
                 if (!exists) {
                     localHistory.push({
-                        time: timeVal, tag: tagVal, type: typeVal, synced: true,
+                        time: timeVal, tag: tagVal, equip: equipVal, station: stationVal, type: typeVal, synced: true,
                         tsbHtml: "", r1cHtml: "", tsbDetail: tsbD, r1cDetail: r1cD,
                         rawTSB: (maxT !== "" && maxT !== undefined && !isNaN(maxT)) ? { maxError: parseFloat(maxT) } : null,
                         rawR1C: (maxR !== "" && maxR !== undefined && !isNaN(maxR)) ? { maxLech: parseFloat(maxR) } : null
