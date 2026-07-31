@@ -350,7 +350,9 @@
 <script>
 // --- CẤU HÌNH CLOUD & DATABASE ---
 const CLOUD_URL = "https://script.google.com/macros/s/AKfycbx32OT-P6qjRkIpc02z1P02dJWvit6Bd01fdkTGNXxzzuaaYRJWuLNHybTtI68eO6vO/exec";
-const API_TOKEN = "EVN_PTC3_SECRET_TOKEN_2026"; // Fix P2: Chèn Security Token
+
+// Cập nhật đúng khóa bảo mật Backend yêu cầu
+const API_TOKEN = "PTC3_DAVID_ANH_2026_SECURE_LOCK"; 
 
 // Cấu hình Database ngầm (IndexedDB) qua localForage
 localforage.config({
@@ -371,7 +373,7 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Fix P0: Hàm chống lỗ hổng XSS
+// Hàm chống lỗ hổng XSS
 function escapeHTML(str) {
     if (!str) return '';
     return str.toString().replace(/[&<>'"]/g, function(tag) {
@@ -553,13 +555,11 @@ async function hienThiNhatKy(type) {
         var item = history[i];
         var syncStatus = item.synced ? '<span class="sync-badge">Đã đồng bộ ☁️</span>' : '<span class="sync-badge" style="background:#fed7d7; color:#c53030;">Chưa đồng bộ</span>';
         var deleteBtn = '<button class="btn-delete-item" onclick="xoaNhatKyRiengLe(\'' + type + '\', ' + i + ')">🗑️ Xóa</button>';
-        // Fix P0: escapeHTML bọc item.tag chống XSS
         html += '<div class="history-item">' + syncStatus + deleteBtn + '<div class="history-time">' + item.time + ' - [' + escapeHTML(item.tag) + ']</div><div class="history-detail">' + (item.tsbDetail||"") + (item.r1cDetail||"") + (item.thDetail||"") + '</div></div>';
     }
     listDiv.innerHTML = html;
 }
 
-// XÓA NGHIỆP VỤ BẤT ĐỒNG BỘ
 async function xoaNhatKyRiengLe(type, index) { 
     if(confirm("Sếp có chắc muốn xóa bản ghi này?")) { 
         var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history'; 
@@ -578,7 +578,6 @@ async function xoaNhatKy(type) {
     } 
 }
 
-// VẼ BIỂU ĐỒ TỪ DB (BẤT ĐỒNG BỘ)
 let cbmChart = null;
 async function showTrendChart(type) {
     const equip = document.getElementById(`${type}_equip_global`).value.trim();
@@ -606,7 +605,6 @@ async function showTrendChart(type) {
     });
 }
 
-// XUẤT NHẬP DỮ LIỆU
 async function xuatExcelCSV(type) {
     var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
     var history = (await localforage.getItem(key)) || [];
@@ -663,15 +661,17 @@ async function dongBoCloudUp(typeStr) {
     var unsynced = history.filter(r => r.synced !== true);
     if (unsynced.length === 0) { showToast("Dữ liệu " + typeStr + " đã đồng bộ hết!", "success"); return; }
 
-    var payload = { action: "upload", type: typeStr, records: unsynced }; 
+    var payload = { 
+        action: "upload", 
+        type: typeStr, 
+        records: unsynced,
+        secretKey: API_TOKEN 
+    }; 
     var btn = event.target; var originalText = btn.innerText; btn.innerText = "⏳ ĐANG GỬI..."; btn.disabled = true;
 
     fetch(CLOUD_URL, { 
         method: "POST", 
-        headers: { 
-            "Content-Type": "text/plain;charset=utf-8",
-            "Authorization": "Bearer " + API_TOKEN // Fix P2: Chèn Security Token
-        }, 
+        headers: { "Content-Type": "text/plain;charset=utf-8" }, 
         body: JSON.stringify(payload) 
     })
     .then(res => res.json()).then(async data => {
@@ -687,27 +687,50 @@ function dongBoCloudDown(typeStr) {
     if (!CLOUD_URL) { showToast("Chưa cấu hình link Cloud!", "error"); return; }
     var btn = event.target; var originalText = btn.innerText; btn.innerText = "⏳ ĐANG KÉO DỮ LIỆU..."; btn.disabled = true;
 
-    // Fix P1: Hoàn thiện logic API Sync Down bằng phương thức GET kèm Token
-    fetch(CLOUD_URL + "?action=download&type=" + typeStr, {
-        method: "GET",
-        headers: {
-            "Authorization": "Bearer " + API_TOKEN
-        }
+    var payload = {
+        action: "download",
+        secretKey: API_TOKEN
+    };
+
+    fetch(CLOUD_URL, {
+        method: "POST", 
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
     })
     .then(res => res.json())
     .then(async data => {
-        if (data.status === "success" && data.records) {
-            var key = typeStr.toLowerCase() === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
+        if (data.status === "success" && data.data) {
+            var typeKey = typeStr.toLowerCase();
+            var key = typeKey === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
             var existing = (await localforage.getItem(key)) || [];
             
-            // Lọc và nối dữ liệu mới, tránh trùng lặp tag và thời gian
-            var merged = existing.concat(data.records.filter(imp => !existing.some(ex => ex.time === imp.time && ex.tag === imp.tag)));
+            var rawData = typeKey === 'ti' ? data.data.ti : data.data.tu;
+            if (!rawData || rawData.length === 0) {
+                showToast("Chưa có dữ liệu lịch sử trên Cloud!", "success");
+                return;
+            }
+
+            var mappedRecords = rawData.map(function(row) {
+                return {
+                    time: row[0],
+                    equip: row[1],
+                    station: row[2],
+                    tag: row[1] + " - " + row[2],
+                    type: row[3],
+                    tsbDetail: row[4] || "",
+                    r1cDetail: row[5] || "",
+                    thDetail: row[6] || "",
+                    synced: true 
+                };
+            });
+            
+            var merged = existing.concat(mappedRecords.filter(imp => !existing.some(ex => ex.time === imp.time && ex.tag === imp.tag)));
             
             await localforage.setItem(key, merged);
             showToast("Đã tải và cập nhật dữ liệu từ Cloud thành công!", "success");
-            hienThiNhatKy(typeStr.toLowerCase());
+            hienThiNhatKy(typeKey);
         } else {
-            showToast("Lỗi máy chủ: " + escapeHTML(data.message || "Không có dữ liệu"), "error");
+            showToast("Lỗi máy chủ: " + escapeHTML(data.message || "Truy cập bị từ chối"), "error");
         }
     })
     .catch(err => showToast("Lỗi mạng: " + err, "error"))
@@ -721,7 +744,6 @@ function dongBoCloudDown(typeStr) {
 // ==========================================
 
 async function tinhTisoTI() {
-    // Fix P0: XSS cho Input
     var equip = escapeHTML(document.getElementById('ti_equip_global').value.trim()) || "Chưa rõ TB";
     var station = escapeHTML(document.getElementById('ti_station_global').value.trim()) || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
@@ -745,7 +767,7 @@ async function tinhTisoTI() {
             if(!isNaN(a_meas) || !isNaN(b_meas) || !isNaN(c_meas)) {
                 coilHasData = true; hasData = true;
                 var tapNameRaw = document.getElementById(`ti_tap_name_tsb_c${c}_t${t}`)?.value.trim() || `Đầu ${t}`;
-                var tapName = escapeHTML(tapNameRaw); // Fix P0: XSS
+                var tapName = escapeHTML(tapNameRaw);
                 var rowObj = { coil: c, tap: tapName, nominal: `${ip_n}/${is_n}` };
                 var rowCells = ""; var tapHasError = false; var logBlock = "";
 
