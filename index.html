@@ -350,6 +350,7 @@
 <script>
 // --- CẤU HÌNH CLOUD & DATABASE ---
 const CLOUD_URL = "https://script.google.com/macros/s/AKfycbx32OT-P6qjRkIpc02z1P02dJWvit6Bd01fdkTGNXxzzuaaYRJWuLNHybTtI68eO6vO/exec";
+const API_TOKEN = "EVN_PTC3_SECRET_TOKEN_2026"; // Fix P2: Chèn Security Token
 
 // Cấu hình Database ngầm (IndexedDB) qua localForage
 localforage.config({
@@ -367,6 +368,15 @@ if (/(iPhone|iPad|iPod)/i.test(navigator.userAgent) && !window.navigator.standal
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(err => console.error('Service Worker lỗi:', err));
+    });
+}
+
+// Fix P0: Hàm chống lỗ hổng XSS
+function escapeHTML(str) {
+    if (!str) return '';
+    return str.toString().replace(/[&<>'"]/g, function(tag) {
+        const charsToReplace = { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' };
+        return charsToReplace[tag] || tag;
     });
 }
 
@@ -543,7 +553,8 @@ async function hienThiNhatKy(type) {
         var item = history[i];
         var syncStatus = item.synced ? '<span class="sync-badge">Đã đồng bộ ☁️</span>' : '<span class="sync-badge" style="background:#fed7d7; color:#c53030;">Chưa đồng bộ</span>';
         var deleteBtn = '<button class="btn-delete-item" onclick="xoaNhatKyRiengLe(\'' + type + '\', ' + i + ')">🗑️ Xóa</button>';
-        html += '<div class="history-item">' + syncStatus + deleteBtn + '<div class="history-time">' + item.time + ' - [' + item.tag + ']</div><div class="history-detail">' + (item.tsbDetail||"") + (item.r1cDetail||"") + (item.thDetail||"") + '</div></div>';
+        // Fix P0: escapeHTML bọc item.tag chống XSS
+        html += '<div class="history-item">' + syncStatus + deleteBtn + '<div class="history-time">' + item.time + ' - [' + escapeHTML(item.tag) + ']</div><div class="history-detail">' + (item.tsbDetail||"") + (item.r1cDetail||"") + (item.thDetail||"") + '</div></div>';
     }
     listDiv.innerHTML = html;
 }
@@ -579,10 +590,10 @@ async function showTrendChart(type) {
     const rawHistory = (await localforage.getItem(key)) || [];
     const history = rawHistory.filter(r => (r.tag || "").replace(/\s/g,'').toUpperCase() === tag.replace(/\s/g,''));
     
-    if (history.length === 0) { showToast(`Chưa có dữ liệu cho ${equip}!`, "error"); return; }
+    if (history.length === 0) { showToast(`Chưa có dữ liệu cho ${escapeHTML(equip)}!`, "error"); return; }
 
     document.getElementById('chartModal').style.display = 'flex';
-    document.getElementById('chartTitle').innerText = `XU HƯỚNG ĐỘ LỆCH R1C - ${equip}`;
+    document.getElementById('chartTitle').innerText = `XU HƯỚNG ĐỘ LỆCH R1C - ${escapeHTML(equip)}`;
     const ctx = document.getElementById('trendChart').getContext('2d');
     if (cbmChart) cbmChart.destroy();
     
@@ -603,7 +614,7 @@ async function xuatExcelCSV(type) {
     
     var html = "<html xmlns:x='urn:schemas-microsoft-com:office:excel'><head><meta charset='utf-8'><style>body{font-family:'Times New Roman';}h2{color:#0a3b82;text-align:center;}h3{color:#e32219;border-bottom:1px solid #ccc;padding-bottom:5px;}</style></head><body><h2>BÁO CÁO CBM " + type.toUpperCase() + "</h2>";
     history.forEach(item => {
-        html += "<h3>📍 Trạm/Thiết bị: " + item.tag + " | ⏱ Lần đo: " + item.time + "</h3>";
+        html += "<h3>📍 Trạm/Thiết bị: " + escapeHTML(item.tag) + " | ⏱ Lần đo: " + item.time + "</h3>";
         if (item.tsbDetail) html += "<h4>1. TỈ SỐ (TSB)</h4><p>" + item.tsbDetail.replace(/<span[^>]*>|<\/span>/g, "") + "</p>";
         if (item.r1cDetail) html += "<h4>2. R1C</h4><p>" + item.r1cDetail.replace(/<span[^>]*>|<\/span>/g, "") + "</p>";
         if (item.thDetail) html += "<h4>3. TỪ HOÁ</h4><p>" + item.thDetail.replace(/<span[^>]*>|<\/span>/g, "") + "</p><hr>";
@@ -655,19 +666,54 @@ async function dongBoCloudUp(typeStr) {
     var payload = { action: "upload", type: typeStr, records: unsynced }; 
     var btn = event.target; var originalText = btn.innerText; btn.innerText = "⏳ ĐANG GỬI..."; btn.disabled = true;
 
-    fetch(CLOUD_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) })
+    fetch(CLOUD_URL, { 
+        method: "POST", 
+        headers: { 
+            "Content-Type": "text/plain;charset=utf-8",
+            "Authorization": "Bearer " + API_TOKEN // Fix P2: Chèn Security Token
+        }, 
+        body: JSON.stringify(payload) 
+    })
     .then(res => res.json()).then(async data => {
         if (data.status === "success") {
             history.forEach(r => { if(r.synced !== true) r.synced = true; }); 
             await localforage.setItem(key, history);
             showToast("Đã đẩy lên Google Sheets!", "success"); hienThiNhatKy(typeStr.toLowerCase());
-        } else { showToast("Lỗi máy chủ: " + data.message, "error"); }
+        } else { showToast("Lỗi máy chủ: " + escapeHTML(data.message), "error"); }
     }).catch(err => showToast("Lỗi mạng: " + err, "error")).finally(() => { btn.innerText = originalText; btn.disabled = false; });
 }
 
 function dongBoCloudDown(typeStr) {
-    // Placeholder chức năng kéo dữ liệu từ Sheets
-    showToast("Tính năng kéo dữ liệu từ Cloud đang được hoàn thiện, sẽ update ở bản sau Sếp nhé!", "warning");
+    if (!CLOUD_URL) { showToast("Chưa cấu hình link Cloud!", "error"); return; }
+    var btn = event.target; var originalText = btn.innerText; btn.innerText = "⏳ ĐANG KÉO DỮ LIỆU..."; btn.disabled = true;
+
+    // Fix P1: Hoàn thiện logic API Sync Down bằng phương thức GET kèm Token
+    fetch(CLOUD_URL + "?action=download&type=" + typeStr, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + API_TOKEN
+        }
+    })
+    .then(res => res.json())
+    .then(async data => {
+        if (data.status === "success" && data.records) {
+            var key = typeStr.toLowerCase() === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
+            var existing = (await localforage.getItem(key)) || [];
+            
+            // Lọc và nối dữ liệu mới, tránh trùng lặp tag và thời gian
+            var merged = existing.concat(data.records.filter(imp => !existing.some(ex => ex.time === imp.time && ex.tag === imp.tag)));
+            
+            await localforage.setItem(key, merged);
+            showToast("Đã tải và cập nhật dữ liệu từ Cloud thành công!", "success");
+            hienThiNhatKy(typeStr.toLowerCase());
+        } else {
+            showToast("Lỗi máy chủ: " + escapeHTML(data.message || "Không có dữ liệu"), "error");
+        }
+    })
+    .catch(err => showToast("Lỗi mạng: " + err, "error"))
+    .finally(() => {
+        btn.innerText = originalText; btn.disabled = false;
+    });
 }
 
 // ==========================================
@@ -675,8 +721,9 @@ function dongBoCloudDown(typeStr) {
 // ==========================================
 
 async function tinhTisoTI() {
-    var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
-    var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
+    // Fix P0: XSS cho Input
+    var equip = escapeHTML(document.getElementById('ti_equip_global').value.trim()) || "Chưa rõ TB";
+    var station = escapeHTML(document.getElementById('ti_station_global').value.trim()) || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
     var maxCoils = document.getElementById('ti_show_extra_tsb').checked ? 8 : 5;
     var isFullTaps = document.getElementById('ti_full_taps').checked;
@@ -697,7 +744,8 @@ async function tinhTisoTI() {
             
             if(!isNaN(a_meas) || !isNaN(b_meas) || !isNaN(c_meas)) {
                 coilHasData = true; hasData = true;
-                var tapName = (document.getElementById(`ti_tap_name_tsb_c${c}_t${t}`)?.value.trim()) || `Đầu ${t}`;
+                var tapNameRaw = document.getElementById(`ti_tap_name_tsb_c${c}_t${t}`)?.value.trim() || `Đầu ${t}`;
+                var tapName = escapeHTML(tapNameRaw); // Fix P0: XSS
                 var rowObj = { coil: c, tap: tapName, nominal: `${ip_n}/${is_n}` };
                 var rowCells = ""; var tapHasError = false; var logBlock = "";
 
@@ -735,8 +783,8 @@ async function tinhTisoTI() {
 }
 
 async function tinhR1CTI() {
-    var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
-    var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
+    var equip = escapeHTML(document.getElementById('ti_equip_global').value.trim()) || "Chưa rõ TB";
+    var station = escapeHTML(document.getElementById('ti_station_global').value.trim()) || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
     var T_const = parseFloat(getRadioValue('material_ti'));
     var temps = [ parseFloat(document.getElementById('ti_temp_a_r1c').value), parseFloat(document.getElementById('ti_temp_b_r1c').value), parseFloat(document.getElementById('ti_temp_c_r1c').value) ];
@@ -759,7 +807,8 @@ async function tinhR1CTI() {
 
             if(!isNaN(r_a) || !isNaN(r_b) || !isNaN(r_c)) {
                 coilHasData = true; hasData = true;
-                var tapName = (document.getElementById(`ti_tap_name_r1c_c${c}_t${t}`)?.value.trim()) || `Đầu ${t}`;
+                var tapNameRaw = document.getElementById(`ti_tap_name_r1c_c${c}_t${t}`)?.value.trim() || `Đầu ${t}`;
+                var tapName = escapeHTML(tapNameRaw);
                 var r_75_arr = []; var r_75_vals = [null, null, null];
 
                 [r_a, r_b, r_c].forEach((meas, idx) => {
@@ -811,8 +860,8 @@ async function tinhR1CTI() {
 }
 
 async function luuTuHoaTI() {
-    var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
-    var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
+    var equip = escapeHTML(document.getElementById('ti_equip_global').value.trim()) || "Chưa rõ TB";
+    var station = escapeHTML(document.getElementById('ti_station_global').value.trim()) || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
     var maxCoils = document.getElementById('ti_show_extra_th').checked ? 8 : 5;
     
@@ -822,7 +871,8 @@ async function luuTuHoaTI() {
     [{id:'a', name:'🟡 PHA A'}, {id:'b', name:'🟢 PHA B'}, {id:'c', name:'🔴 PHA C'}].forEach(ph => {
         var phaseHasData = false; var phaseHtml = `<tr><td colspan="5" style="background:#edf2f7; font-weight:bold; color:#0a3b82; text-align:left;">${ph.name}</td></tr>`; var phaseLog = "";
         for(let c=1; c<=maxCoils; c++) {
-            var tap = document.getElementById(`ti_th_tap_${ph.id}_${c}`).value.trim();
+            var tapRaw = document.getElementById(`ti_th_tap_${ph.id}_${c}`).value.trim();
+            var tap = escapeHTML(tapRaw);
             var u1 = document.getElementById(`ti_th_u1_${ph.id}_${c}`).value; var i1 = document.getElementById(`ti_th_i1_${ph.id}_${c}`).value;
             var u2 = document.getElementById(`ti_th_u2_${ph.id}_${c}`).value; var i2 = document.getElementById(`ti_th_i2_${ph.id}_${c}`).value;
             var u3 = document.getElementById(`ti_th_u3_${ph.id}_${c}`).value; var i3 = document.getElementById(`ti_th_i3_${ph.id}_${c}`).value;
@@ -844,8 +894,8 @@ async function luuTuHoaTI() {
 }
 
 async function tinhTisoTU() {
-    var equip = document.getElementById('tu_equip_global').value.trim() || "Chưa rõ TB";
-    var station = document.getElementById('tu_station_global').value.trim() || "Chưa rõ Trạm";
+    var equip = escapeHTML(document.getElementById('tu_equip_global').value.trim()) || "Chưa rõ TB";
+    var station = escapeHTML(document.getElementById('tu_station_global').value.trim()) || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
     var val_so = parseFloat(getRadioValue('tu_un_so'));
     var kn1 = getKnTU(val_so, getRadioValue('tu_un_thu1')), kn2 = getKnTU(val_so, getRadioValue('tu_un_thu2')), kn3 = getKnTU(val_so, getRadioValue('tu_un_thu3'));
@@ -893,8 +943,8 @@ async function tinhTisoTU() {
 }
 
 async function tinhR1CTU() {
-    var equip = document.getElementById('tu_equip_global').value.trim() || "Chưa rõ TB";
-    var station = document.getElementById('tu_station_global').value.trim() || "Chưa rõ Trạm";
+    var equip = escapeHTML(document.getElementById('tu_equip_global').value.trim()) || "Chưa rõ TB";
+    var station = escapeHTML(document.getElementById('tu_station_global').value.trim()) || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
     var T_const = parseFloat(getRadioValue('tu_material'));
     var hasData = false;
