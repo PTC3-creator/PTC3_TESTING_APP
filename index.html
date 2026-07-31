@@ -19,24 +19,26 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f7fa; margin: 0; padding: 12px; padding-bottom: 50px; color: #2d3748; }
-        .card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 8px 24px rgba(10, 59, 130, 0.08); max-width: 650px; margin: 0 auto; position: relative; border-top: 4px solid #0a3b82; }
+        /* Khung mặc định cho Mobile */
+        .card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 8px 24px rgba(10, 59, 130, 0.08); max-width: 650px; margin: 0 auto; position: relative; border-top: 4px solid #0a3b82; transition: all 0.3s ease; }
         .brand-header { text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px; }
         .brand-logo { max-height: 80px; object-fit: contain; margin-bottom: 8px; }
-        .app-title { font-size: 16px; font-weight: 800; color: #0a3b82; margin: 4px 0 0 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .app-title { font-size: 16px; font-weight: 800; color: #0a3b82; margin: 4px 0 0 0; text-transform: uppercase; letter-spacing: 0.5px; transition: font-size 0.3s ease; }
+        
         .master-tab-group { display: flex; gap: 8px; margin-bottom: 15px; }
-        .master-tab-btn { flex: 1; padding: 12px 4px; background: #fff; border: 2px solid #cbd5e0; border-radius: 8px; font-weight: 800; font-size: 14px; color: #4a5568; cursor: pointer; text-align: center; text-transform: uppercase;}
+        .master-tab-btn { flex: 1; padding: 12px 4px; background: #fff; border: 2px solid #cbd5e0; border-radius: 8px; font-weight: 800; font-size: 14px; color: #4a5568; cursor: pointer; text-align: center; text-transform: uppercase; transition: all 0.2s ease;}
         .master-tab-btn.active { background: #e32219; border-color: #e32219; color: white; box-shadow: 0 4px 10px rgba(227, 34, 25, 0.25); }
         .tab-group { display: flex; gap: 4px; margin-bottom: 15px; background: #edf2f7; padding: 4px; border-radius: 8px; }
-        .tab-btn { flex: 1; padding: 10px 2px; background: transparent; border: none; border-radius: 6px; font-weight: bold; font-size: 11px; color: #4a5568; cursor: pointer; text-align: center; }
+        .tab-btn { flex: 1; padding: 10px 2px; background: transparent; border: none; border-radius: 6px; font-weight: bold; font-size: 11px; color: #4a5568; cursor: pointer; text-align: center; transition: all 0.2s ease;}
         .tab-btn.active { background: #0a3b82; color: white; box-shadow: 0 2px 8px rgba(10, 59, 130, 0.3); }
         .master-content, .tab-content { display: none; }
         .master-content.active, .tab-content.active { display: block; }
         .form-group { margin-bottom: 12px; }
         label { display: block; font-weight: 700; margin-bottom: 6px; color: #1a365d; font-size: 13px; }
+        
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-        select, input[type="text"], input[type="number"] { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: #f8fafc; }
-        
+        select, input[type="text"], input[type="number"] { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: #f8fafc; transition: all 0.2s ease;}
         input[list]:focus { background-color: #ebf8ff; border-color: #3182ce; outline: none; box-shadow: 0 0 0 2px rgba(49,130,206,0.2); }
         
         .radio-tile-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
@@ -44,7 +46,7 @@
         .radio-tile input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
         .radio-tile label { display: block; text-align: center; padding: 8px 6px; background: #edf2f7; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 12px; font-weight: 600; color: #4a5568; cursor: pointer; }
         .radio-tile input[type="radio"]:checked + label { background: #0a3b82; color: white; border-color: #0a3b82; }
-        .btn-calc { width: 100%; padding: 14px; background: #0a3b82; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
+        .btn-calc { width: 100%; padding: 14px; background: #0a3b82; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; margin-top: 15px; cursor: pointer; text-transform: uppercase; transition: all 0.2s ease;}
         .btn-trend { width: 100%; padding: 10px; background: #d69e2e; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; margin-top: 8px; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 6px;}
         .result-box { margin-top: 20px; padding: 12px; background: #f0f7ff; border-left: 5px solid #0a3b82; border-radius: 8px; display: none; overflow-x: auto; }
         .pha-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 15px; }
@@ -56,19 +58,23 @@
         .coil-item label { margin: 0; color: #0a3b82; font-size: 11px; font-weight: 800; }
         .coil-item input { padding: 6px; font-size: 13px; text-align: center; font-weight: bold;}
         .extra-coils-toggle { margin: 15px 0; padding: 10px; background: #f0f7ff; border: 1px dashed #3182ce; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: #2b6cb0; font-weight: 700; font-size: 12px; }
+        
         .table-responsive { overflow-x: auto; margin-top: 8px; }
         .compact-input-table { width: 100%; min-width: 450px; border-collapse: collapse; font-size: 12px; text-align: center; }
         .compact-input-table th { background: #edf2f7; color: #2d3748; padding: 6px; font-size: 11px; border-bottom: 2px solid #cbd5e0; }
         .compact-input-table td { padding: 4px 2px; border-bottom: 1px solid #e2e8f0; vertical-align: middle;}
+        
         .tap-input { width: 65px !important; padding: 4px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; font-weight: bold; font-size: 12px; color: #2c5282; background: #fff; display: inline-block !important;}
         .mini-in { width: 65px !important; padding: 6px 4px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; font-weight: bold; font-size: 13px; display: inline-block !important;}
         .ph-a { color: #b7791f; } .ph-b { color: #2f855a; } .ph-c { color: #c53030; }
+        
         .table-result { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; background: #fff; }
         .table-result th, .table-result td { border: 1px solid #cbd5e0; padding: 6px 4px; text-align: center; }
         .table-result th { background: #0a3b82; color: white; }
         .alert-banner { background: #fff5f5; border: 1px solid #fc8181; border-left: 5px solid #e32219; color: #c53030; padding: 10px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-bottom: 12px; display: none; line-height: 1.5; }
         .error-badge { background: #fed7d7; color: #c53030; padding: 2px 4px; border-radius: 4px; font-weight: 800; font-size: 10px;}
         .pass-badge { color: #2f855a; font-weight: bold; font-size: 10px;}
+        
         .history-card { margin-top: 15px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #ffffff; max-height: 400px; overflow-y: auto; }
         .history-item { border-bottom: 1px solid #edf2f7; padding: 10px 0; font-size: 12px; position: relative;}
         .history-time { font-size: 11px; color: #e32219; font-weight: bold; margin-bottom: 6px; padding-right: 120px; }
@@ -76,7 +82,6 @@
         .log-error-text { color: #e53e3e !important; background: #fff5f5; padding: 0 4px; border-radius: 4px; font-weight: 900; }
         .sync-badge { position: absolute; top: 10px; right: 55px; font-size: 10px; background: #c6f6d5; color: #276749; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
         .btn-delete-item { position: absolute; top: 10px; right: 0; font-size: 10px; background: #fff5f5; color: #e53e3e; border: 1px solid #fc8181; padding: 2px 6px; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .btn-delete-item:hover { background: #e53e3e; color: white; }
         .btn-sync-group { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap;}
         .btn-excel { flex: 1; min-width: 100%; background: #2f855a; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; }
         .btn-backup { flex: 1; background: #4a5568; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; }
@@ -84,13 +89,62 @@
         .btn-cloud-up { flex: 1; min-width: 100%; background: linear-gradient(135deg, #0284c7 0%, #2b6cb0 100%); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; text-transform: uppercase; margin-bottom: 8px;}
         .btn-cloud-down { flex: 1; min-width: 100%; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; text-transform: uppercase;}
         .btn-danger { background: #e53e3e; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; width: 100%; margin-top: 15px; text-transform: uppercase; }
+        
         .btn-xml-import { background: #d69e2e; color: white; border: none; border-radius: 6px; font-size: 11px; font-weight: bold; padding: 6px 10px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
-        .btn-xml-import:hover { background: #b7791f; }
         #chartModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .chart-container { background: white; width: 90%; max-width: 700px; padding: 20px; border-radius: 16px; position: relative; }
+        .chart-container { background: white; width: 90%; max-width: 700px; padding: 20px; border-radius: 16px; position: relative; transition: all 0.3s ease; }
         .close-chart { position: absolute; top: 10px; right: 15px; font-size: 24px; font-weight: bold; color: #a0aec0; cursor: pointer; }
+        
         #ios-pwa-popup { display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); width:90%; max-width:350px; background:#fff; padding:15px; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.2); z-index:9999; border:2px solid #0a3b82; text-align:center; }
         #ios-pwa-popup::after { content:''; position:absolute; bottom:-10px; left:50%; transform:translateX(-50%); border-width:10px 10px 0; border-style:solid; border-color:#fff transparent transparent transparent; }
+        .footer-copy { text-align: center; margin-top: 25px; font-size: 12px; color: #718096; font-weight: bold; border-top: 1px dashed #cbd5e0; padding-top: 15px; }
+
+        /* ================== RESPONSIVE AUTO-SCALING CHO PC / IPAD LỚN ================== */
+        @media screen and (min-width: 1024px) {
+            body { padding: 30px; }
+            .card { max-width: 1100px; padding: 35px; border-radius: 16px; }
+            .brand-logo { max-height: 100px; }
+            .app-title { font-size: 22px; margin-top: 8px; }
+            
+            /* Phóng to Menu và Tab điều hướng */
+            .master-tab-btn { font-size: 16px; padding: 18px 8px; }
+            .tab-btn { font-size: 14px; padding: 15px 4px; }
+            
+            /* Phóng to Form Nhập liệu */
+            label { font-size: 15px; margin-bottom: 8px; }
+            select, input[type="text"], input[type="number"] { font-size: 16px; padding: 14px 16px; }
+            .grid-2col-input { gap: 20px; }
+            .grid-3col-input { gap: 20px; }
+            .radio-tile label { font-size: 14px; padding: 12px 8px; }
+            
+            /* Căn chỉnh không gian Bảng số liệu rộng rãi, dễ đọc */
+            .pha-title { font-size: 18px; padding-bottom: 12px; }
+            .compact-input-table th { font-size: 14px; padding: 12px; }
+            .compact-input-table td { font-size: 14px; padding: 10px; }
+            .tap-input { width: 85px !important; font-size: 15px; padding: 8px; }
+            .mini-in { width: 85px !important; font-size: 16px; padding: 10px 6px; }
+            
+            /* Phóng to Bảng Kết quả và Cảnh báo */
+            .btn-calc { font-size: 18px; padding: 20px; margin-top: 25px; }
+            .alert-banner { font-size: 15px; padding: 15px; }
+            .table-result { font-size: 14px; margin-top: 20px; }
+            .table-result th, .table-result td { padding: 12px 8px; }
+            .error-badge, .pass-badge { font-size: 13px; padding: 4px 6px; }
+            
+            /* Khu vực Lịch sử */
+            .history-card { max-height: 600px; padding: 20px; }
+            .history-item { font-size: 14px; padding: 15px 0; }
+            .history-time { font-size: 13px; margin-bottom: 10px; }
+            .history-detail { font-size: 14px; padding: 16px; }
+            
+            /* Nút thao tác Đồng bộ */
+            .btn-cloud-up, .btn-cloud-down, .btn-excel { font-size: 15px; padding: 16px; }
+            .btn-backup, .btn-import, .btn-danger { font-size: 14px; padding: 14px; }
+            
+            /* Chart Popup Modal */
+            .chart-container { max-width: 900px; padding: 30px; }
+            #chartTitle { font-size: 22px; margin-bottom: 15px; }
+        }
     </style>
 </head>
 <body>
@@ -357,7 +411,6 @@ document.addEventListener("DOMContentLoaded", function() {
     document.addEventListener('click', function(e) { if (e.target && e.target.matches('[data-action="master-tab"]')) { switchMasterTab(e.target.dataset.type); } });
 });
 
-// LOGIC XỬ LÝ DỮ LIỆU TỐI ƯU BỘ NHỚ V7.4 (Đã sửa lỗi nhận diện Baseline 5%)
 function luuVaoLocalStorage(type, record) {
     try {
         var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
@@ -407,11 +460,10 @@ function checkHistoryDrift(type, currentTag, currentData, dataType) {
         var alertStr = ""; 
         var curTagClean = (currentTag || "").replace(/\s/g,'').toUpperCase();
         
-        // V7.4: Lấy TẤT CẢ lịch sử đã lưu của trạm này để làm mốc so sánh (không bỏ sót test cùng ngày)
         var pastRecords = history.filter(r => (r.tag || "").replace(/\s/g,'').toUpperCase() === curTagClean);
         
         if (pastRecords.length === 0) {
-            return "<br>ℹ️ <i>Chưa có dữ liệu gốc (Baseline) để so sánh 5%. App sẽ lấy lần lưu này làm mốc cho các lần đo sau.</i>";
+            return "<br>ℹ️ <i>Chưa có dữ liệu gốc (Baseline) để so sánh. App sẽ lấy lần lưu này làm mốc cho các lần đo sau.</i>";
         }
 
         var oldRecord = pastRecords[0]; 
@@ -425,7 +477,7 @@ function checkHistoryDrift(type, currentTag, currentData, dataType) {
         else if (dataType === 'R1C') {
             if (oldRecord && oldRecord.rawR1C) {
                 var diffR1c = Math.abs(currentData.maxLech - oldRecord.rawR1C.maxLech);
-                if (diffR1c > 2.0) { alertStr += "<br>⚠️ <b>CẢNH BÁO CBM R1C:</b> Độ lệch pha R1C tăng " + diffR1c.toFixed(2) + "% so với lần đo gần nhất (" + oldRecord.time + ")!"; } 
+                if (diffR1c > 2.0) { alertStr += "<br>⚠️ <b>CẢNH BÁO CBM R1C:</b> Độ lệch pha tăng " + diffR1c.toFixed(2) + "% so với lần đo gần nhất (" + oldRecord.time + ")!"; } 
             }
             
             if (initialRecord && initialRecord.rawR1C && initialRecord.rawR1C.coils) {
@@ -447,7 +499,7 @@ function checkHistoryDrift(type, currentTag, currentData, dataType) {
                     }
                 }
                 if (has5PercentDrift) {
-                    alertStr += "<br>🚨 <b>BÁO ĐỘNG ĐỎ R1C (>5%):</b> Điện trở R1C thay đổi VƯỢT 5% so với giá trị ban đầu (" + initialRecord.time + ")! Chi tiết: " + driftDetails.join("; ");
+                    alertStr += "<br>🚨 <b>BÁO ĐỘNG ĐỎ R1C (>5%):</b> Điện trở thay đổi VƯỢT 5% so với giá trị ban đầu (" + initialRecord.time + ")! Chi tiết: " + driftDetails.join("; ");
                 } else {
                     alertStr += "<br>✅ <b>CBM R1C:</b> Điện trở tuyệt đối ổn định (<5%) so với mốc ban đầu (" + initialRecord.time + ").";
                 }
