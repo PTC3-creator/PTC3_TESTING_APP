@@ -11,15 +11,22 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Cấu hình PWA Cơ bản -->
+    <!-- KHAI BÁO PWA MANIFEST -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a3b82">
+    <!-- Cấu hình PWA Apple -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CBM PTC3">
+    <link rel="apple-touch-icon" href="image_da12fe.png">
+    
     <title>Thí Nghiệm TU & TI - PTC3</title>
+    <!-- THƯ VIỆN BÊN NGOÀI -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
+
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f7fa; margin: 0; padding: 12px; padding-bottom: 50px; color: #2d3748; }
-        /* Khung mặc định cho Mobile */
         .card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 8px 24px rgba(10, 59, 130, 0.08); max-width: 650px; margin: 0 auto; position: relative; border-top: 4px solid #0a3b82; transition: all 0.3s ease; }
         .brand-header { text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px; }
         .brand-logo { max-height: 80px; object-fit: contain; margin-bottom: 8px; }
@@ -89,8 +96,8 @@
         .btn-cloud-up { flex: 1; min-width: 100%; background: linear-gradient(135deg, #0284c7 0%, #2b6cb0 100%); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; text-transform: uppercase; margin-bottom: 8px;}
         .btn-cloud-down { flex: 1; min-width: 100%; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; text-transform: uppercase;}
         .btn-danger { background: #e53e3e; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; width: 100%; margin-top: 15px; text-transform: uppercase; }
-        
         .btn-xml-import { background: #d69e2e; color: white; border: none; border-radius: 6px; font-size: 11px; font-weight: bold; padding: 6px 10px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        
         #chartModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .chart-container { background: white; width: 90%; max-width: 700px; padding: 20px; border-radius: 16px; position: relative; transition: all 0.3s ease; }
         .close-chart { position: absolute; top: 10px; right: 15px; font-size: 24px; font-weight: bold; color: #a0aec0; cursor: pointer; }
@@ -99,55 +106,51 @@
         #ios-pwa-popup::after { content:''; position:absolute; bottom:-10px; left:50%; transform:translateX(-50%); border-width:10px 10px 0; border-style:solid; border-color:#fff transparent transparent transparent; }
         .footer-copy { text-align: center; margin-top: 25px; font-size: 12px; color: #718096; font-weight: bold; border-top: 1px dashed #cbd5e0; padding-top: 15px; }
 
-        /* ================== RESPONSIVE AUTO-SCALING CHO PC / IPAD LỚN ================== */
         @media screen and (min-width: 1024px) {
             body { padding: 30px; }
             .card { max-width: 1100px; padding: 35px; border-radius: 16px; }
             .brand-logo { max-height: 100px; }
             .app-title { font-size: 22px; margin-top: 8px; }
-            
-            /* Phóng to Menu và Tab điều hướng */
             .master-tab-btn { font-size: 16px; padding: 18px 8px; }
             .tab-btn { font-size: 14px; padding: 15px 4px; }
-            
-            /* Phóng to Form Nhập liệu */
             label { font-size: 15px; margin-bottom: 8px; }
             select, input[type="text"], input[type="number"] { font-size: 16px; padding: 14px 16px; }
             .grid-2col-input { gap: 20px; }
             .grid-3col-input { gap: 20px; }
             .radio-tile label { font-size: 14px; padding: 12px 8px; }
-            
-            /* Căn chỉnh không gian Bảng số liệu rộng rãi, dễ đọc */
             .pha-title { font-size: 18px; padding-bottom: 12px; }
             .compact-input-table th { font-size: 14px; padding: 12px; }
             .compact-input-table td { font-size: 14px; padding: 10px; }
             .tap-input { width: 85px !important; font-size: 15px; padding: 8px; }
             .mini-in { width: 85px !important; font-size: 16px; padding: 10px 6px; }
-            
-            /* Phóng to Bảng Kết quả và Cảnh báo */
             .btn-calc { font-size: 18px; padding: 20px; margin-top: 25px; }
             .alert-banner { font-size: 15px; padding: 15px; }
             .table-result { font-size: 14px; margin-top: 20px; }
             .table-result th, .table-result td { padding: 12px 8px; }
             .error-badge, .pass-badge { font-size: 13px; padding: 4px 6px; }
-            
-            /* Khu vực Lịch sử */
             .history-card { max-height: 600px; padding: 20px; }
             .history-item { font-size: 14px; padding: 15px 0; }
             .history-time { font-size: 13px; margin-bottom: 10px; }
             .history-detail { font-size: 14px; padding: 16px; }
-            
-            /* Nút thao tác Đồng bộ */
             .btn-cloud-up, .btn-cloud-down, .btn-excel { font-size: 15px; padding: 16px; }
             .btn-backup, .btn-import, .btn-danger { font-size: 14px; padding: 14px; }
-            
-            /* Chart Popup Modal */
             .chart-container { max-width: 900px; padding: 30px; }
             #chartTitle { font-size: 22px; margin-bottom: 15px; }
         }
+
+        /* TOAST CSS */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; width: 90%; max-width: 400px; }
+        .toast { background: #1a202c; color: #fff; padding: 14px 20px; border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); opacity: 0; transform: translateY(-20px); transition: all 0.3s ease; font-size: 14px; font-weight: 600; text-align: center; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.warning { border-left: 5px solid #d69e2e; background: #fffbeb; color: #975a16; }
+        .toast.error { border-left: 5px solid #e53e3e; background: #fff5f5; color: #c53030; }
+        .toast.success { border-left: 5px solid #38a169; background: #f0fff4; color: #22543d; }
     </style>
 </head>
 <body>
+
+<!-- CHỨA TOAST THÔNG BÁO -->
+<div id="toast-container"></div>
 
 <datalist id="danhSachTram">
     <option value="TBA 220KV BẢO LỘC"></option>
@@ -217,9 +220,9 @@
                 </div>
             </div>
             <div class="grid-3col-input" style="background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e0; margin-bottom: 15px;">
-                <div style="font-size: 12px; font-weight: bold; color:#1a365d;">🌡️ T_Pha A: <input type="number" id="ti_temp_a_r1c" value="30" class="mini-in">°C</div>
-                <div style="font-size: 12px; font-weight: bold; color:#1a365d;">🌡️ T_Pha B: <input type="number" id="ti_temp_b_r1c" value="30" class="mini-in">°C</div>
-                <div style="font-size: 12px; font-weight: bold; color:#1a365d;">🌡️ T_Pha C: <input type="number" id="ti_temp_c_r1c" value="30" class="mini-in">°C</div>
+                <div style="font-size: 12px; font-weight: bold; color:#1a365d;">🌡️ T_Pha A: <input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_temp_a_r1c" value="30" class="mini-in">°C</div>
+                <div style="font-size: 12px; font-weight: bold; color:#1a365d;">🌡️ T_Pha B: <input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_temp_b_r1c" value="30" class="mini-in">°C</div>
+                <div style="font-size: 12px; font-weight: bold; color:#1a365d;">🌡️ T_Pha C: <input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_temp_c_r1c" value="30" class="mini-in">°C</div>
             </div>
             <label class="extra-coils-toggle" style="background: #e6fffa; border-color: #319795; color: #285e61;"><input type="checkbox" id="ti_full_taps_r1c" onchange="toggleFullTapsR1CTI(this.checked)"> 🛠️ BẬT CHẾ ĐỘ ĐO NGHIỆM THU R1C</label>
             <div id="ti_r1c_grid_container"></div>
@@ -345,20 +348,53 @@
 </div>
 
 <script>
-// Sếp thay Link Web App mới của Sếp vào đây
+// --- CẤU HÌNH CLOUD & DATABASE ---
 const CLOUD_URL = "https://script.google.com/macros/s/AKfycbx32OT-P6qjRkIpc02z1P02dJWvit6Bd01fdkTGNXxzzuaaYRJWuLNHybTtI68eO6vO/exec";
+
+// Cấu hình Database ngầm (IndexedDB) qua localForage
+localforage.config({
+    name: 'CBM_PTC3_App',
+    storeName: 'evn_cbm_store', 
+    description: 'Lưu trữ lịch sử thí nghiệm TU TI Offline'
+});
 
 // Kích hoạt PWA Popup cho iOS Safari
 if (/(iPhone|iPad|iPod)/i.test(navigator.userAgent) && !window.navigator.standalone) {
     setTimeout(function() { document.getElementById('ios-pwa-popup').style.display = 'block'; }, 2000);
 }
 
+// ĐĂNG KÝ SERVICE WORKER (PWA)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.error('Service Worker lỗi:', err));
+    });
+}
+
+// HỆ THỐNG TOAST THÔNG BÁO
+function showToast(message, type = 'warning') {
+    let container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = message;
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+// Override alert để không block UI
+window.alert = function(msg) { showToast(msg, 'warning'); };
+
+// ==========================================
+// RENDER UI LƯỚI GRID BAN ĐẦU (Tối ưu Bàn Phím)
+// ==========================================
 document.addEventListener("DOMContentLoaded", function() {
     const phases = ['a', 'b', 'c'];
     const phaseIcons = ['🟡 PHA A', '🟢 PHA B', '🔴 PHA C'];
     const tapNames = ['S1-S2', 'S1-S3', 'S1-S4', 'S1-S5', 'S1-S6']; 
     
-    // ---RENDER UI---
+    // --- TI TSB ---
     let tiTsbGridHtml = '';
     for(let c=1; c<=8; c++) {
         let coilDisplay = c > 5 ? 'style="display:none;" class="pha-card ti-extra-coil"' : 'class="pha-card ti-coil-card"';
@@ -366,77 +402,81 @@ document.addEventListener("DOMContentLoaded", function() {
         for(let t=1; t<=5; t++) {
             let tapDisplay = t > 1 ? 'style="display:none;" class="ti-extra-tap-row"' : '';
             let defaultIp = 500; if(t===2) defaultIp = 600; if(t===3) defaultIp = 1000; if(t===4) defaultIp = 1500; if(t===5) defaultIp = 2000;
-            tiTsbGridHtml += `<tr ${tapDisplay}><td><input type="text" id="ti_tap_name_tsb_c${c}_t${t}" value="${c}${tapNames[t-1]}" class="tap-input"></td><td style="white-space: nowrap; text-align: center;"><input type="number" id="ti_ip_c${c}_t${t}" value="${defaultIp}" class="mini-in" style="width: 65px !important;"> / <input type="number" id="ti_is_c${c}_t${t}" value="1" class="mini-in" style="width: 45px !important;"></td><td><input type="number" id="ti_a_c${c}_t${t}" class="mini-in ph-a" step="any"></td><td><input type="number" id="ti_b_c${c}_t${t}" class="mini-in ph-b" step="any"></td><td><input type="number" id="ti_c_c${c}_t${t}" class="mini-in ph-c" step="any"></td></tr>`;
+            tiTsbGridHtml += `<tr ${tapDisplay}><td><input type="text" id="ti_tap_name_tsb_c${c}_t${t}" value="${c}${tapNames[t-1]}" class="tap-input"></td><td style="white-space: nowrap; text-align: center;"><input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_ip_c${c}_t${t}" value="${defaultIp}" class="mini-in" style="width: 65px !important;"> / <input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_is_c${c}_t${t}" value="1" class="mini-in" style="width: 45px !important;"></td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_a_c${c}_t${t}" class="mini-in ph-a" step="any"></td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_b_c${c}_t${t}" class="mini-in ph-b" step="any"></td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_c_c${c}_t${t}" class="mini-in ph-c" step="any"></td></tr>`;
         }
         tiTsbGridHtml += `</tbody></table></div></div>`;
     }
     document.getElementById('ti_tsb_grid_container').innerHTML = tiTsbGridHtml;
 
+    // --- TI R1C ---
     let tiR1cHtml = '';
     for(let c=1; c<=8; c++) {
         let coilDisplay = c > 5 ? 'style="display:none;" class="pha-card ti-extra-coil-r1c"' : 'class="pha-card ti-coil-card"';
         tiR1cHtml += `<div ${coilDisplay}><div class="pha-title"><span>Cuộn ${c}</span></div><div class="table-responsive"><table class="compact-input-table"><thead><tr><th>Phân dòng</th><th>Pha A (Ω) <span style="color:#d69e2e">●</span></th><th>Pha B (Ω) <span style="color:#38a169">●</span></th><th>Pha C (Ω) <span style="color:#e53e3e">●</span></th></tr></thead><tbody>`;
         for(let t=1; t<=5; t++) {
             let tapDisplay = t > 1 ? 'style="display:none;" class="ti-extra-tap-row-r1c"' : '';
-            tiR1cHtml += `<tr ${tapDisplay}><td><input type="text" id="ti_tap_name_r1c_c${c}_t${t}" value="${c}${tapNames[t-1]}" class="tap-input"></td><td><input type="number" id="ti_r_a_c${c}_t${t}" class="mini-in ph-a" step="any"></td><td><input type="number" id="ti_r_b_c${c}_t${t}" class="mini-in ph-b" step="any"></td><td><input type="number" id="ti_r_c_c${c}_t${t}" class="mini-in ph-c" step="any"></td></tr>`;
+            tiR1cHtml += `<tr ${tapDisplay}><td><input type="text" id="ti_tap_name_r1c_c${c}_t${t}" value="${c}${tapNames[t-1]}" class="tap-input"></td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_r_a_c${c}_t${t}" class="mini-in ph-a" step="any"></td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_r_b_c${c}_t${t}" class="mini-in ph-b" step="any"></td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_r_c_c${c}_t${t}" class="mini-in ph-c" step="any"></td></tr>`;
         }
         tiR1cHtml += `</tbody></table></div></div>`;
     }
     document.getElementById('ti_r1c_grid_container').innerHTML = tiR1cHtml;
 
+    // --- TI TỪ HOÁ ---
     let tiTuHoaHtml = '';
     const phasesR = [{id:'a', name:'🟡 PHA A'}, {id:'b', name:'🟢 PHA B'}, {id:'c', name:'🔴 PHA C'}];
     phasesR.forEach((ph) => {
         tiTuHoaHtml += `<div class="pha-card"><div class="pha-title"><span>${ph.name} - TỪ HOÁ</span><span><input type="file" id="file_th_${ph.id}" style="display:none;" accept=".xml" onchange="handleXmlTuHoa(event, '${ph.id}')"><button class="btn-xml-import" onclick="document.getElementById('file_th_${ph.id}').click()">📁 Nạp XML ${ph.name}</button></span></div><div class="table-responsive"><table class="compact-input-table" style="min-width: 800px;"><thead><tr><th style="width:40px;">Cuộn</th><th style="width:65px;">Phân dòng</th><th>Đ.1 (U/I)</th><th>Đ.2 (U/I)</th><th>Đ.3 (U/I)</th><th>Khuỷu (Uk/Ik)</th></tr></thead><tbody>`;
         for(let c=1; c<=8; c++) {
             let rowDisplay = c > 5 ? 'style="display:none;" class="th-extra-coil"' : '';
-            tiTuHoaHtml += `<tr ${rowDisplay}><td><b>${c}</b></td><td><input type="text" id="ti_th_tap_${ph.id}_${c}" class="tap-input"></td><td style="white-space: nowrap; text-align: center;"><input type="number" id="ti_th_u1_${ph.id}_${c}" class="mini-in" placeholder="V" step="any"> / <input type="number" id="ti_th_i1_${ph.id}_${c}" class="mini-in" placeholder="mA" step="any"></td><td style="white-space: nowrap; text-align: center;"><input type="number" id="ti_th_u2_${ph.id}_${c}" class="mini-in" placeholder="V" step="any"> / <input type="number" id="ti_th_i2_${ph.id}_${c}" class="mini-in" placeholder="mA" step="any"></td><td style="white-space: nowrap; text-align: center;"><input type="number" id="ti_th_u3_${ph.id}_${c}" class="mini-in" placeholder="V" step="any"> / <input type="number" id="ti_th_i3_${ph.id}_${c}" class="mini-in" placeholder="mA" step="any"></td><td style="white-space: nowrap; text-align: center;"><input type="number" id="ti_th_uk_${ph.id}_${c}" class="mini-in" placeholder="V" style="background:#fffaf0;" step="any"> / <input type="number" id="ti_th_ik_${ph.id}_${c}" class="mini-in" placeholder="mA" style="background:#fffaf0;" step="any"></td></tr>`;
+            tiTuHoaHtml += `<tr ${rowDisplay}><td><b>${c}</b></td><td><input type="text" id="ti_th_tap_${ph.id}_${c}" class="tap-input"></td><td style="white-space: nowrap; text-align: center;"><input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_th_u1_${ph.id}_${c}" class="mini-in" placeholder="V" step="any"> / <input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_th_i1_${ph.id}_${c}" class="mini-in" placeholder="mA" step="any"></td><td style="white-space: nowrap; text-align: center;"><input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_th_u2_${ph.id}_${c}" class="mini-in" placeholder="V" step="any"> / <input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_th_i2_${ph.id}_${c}" class="mini-in" placeholder="mA" step="any"></td><td style="white-space: nowrap; text-align: center;"><input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_th_u3_${ph.id}_${c}" class="mini-in" placeholder="V" step="any"> / <input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_th_i3_${ph.id}_${c}" class="mini-in" placeholder="mA" step="any"></td><td style="white-space: nowrap; text-align: center;"><input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_th_uk_${ph.id}_${c}" class="mini-in" placeholder="V" style="background:#fffaf0;" step="any"> / <input type="number" inputmode="decimal" pattern="[0-9]*" id="ti_th_ik_${ph.id}_${c}" class="mini-in" placeholder="mA" style="background:#fffaf0;" step="any"></td></tr>`;
         }
         tiTuHoaHtml += `</tbody></table></div></div>`;
     });
     document.getElementById('ti_th_grid_container').innerHTML = tiTuHoaHtml;
 
+    // --- TU TSB ---
     let tuTsbHtml = '';
     phases.forEach((p, idx) => {
-        tuTsbHtml += `<div class="pha-card"><div class="pha-title"><span>${phaseIcons[idx]}</span></div><div class="grid-2col-input" style="margin-bottom:6px;"><div>U1 sơ (kV): <input type="number" id="tu_u${p}_s1" value="10"></div><div>U2 sơ (kV): <input type="number" id="tu_u${p}_s2" value="10"></div></div><div class="sec-title">Cuộn Thứ 1 (V):</div><div class="grid-2col-input" style="margin-bottom:6px;"><input type="number" id="tu_u2${p}1_1" step="any"><input type="number" id="tu_u2${p}1_2" step="any"></div><div class="sec-title">Cuộn Thứ 2 (V):</div><div class="grid-2col-input" style="margin-bottom:6px;"><input type="number" id="tu_u2${p}2_1" step="any"><input type="number" id="tu_u2${p}2_2" step="any"></div><div class="sec-title">Cuộn Thứ 3 (V):</div><div class="grid-2col-input"><input type="number" id="tu_u2${p}3_1" step="any"><input type="number" id="tu_u2${p}3_2" step="any"></div></div>`;
+        tuTsbHtml += `<div class="pha-card"><div class="pha-title"><span>${phaseIcons[idx]}</span></div><div class="grid-2col-input" style="margin-bottom:6px;"><div>U1 sơ (kV): <input type="number" inputmode="decimal" pattern="[0-9]*" id="tu_u${p}_s1" value="10"></div><div>U2 sơ (kV): <input type="number" inputmode="decimal" pattern="[0-9]*" id="tu_u${p}_s2" value="10"></div></div><div class="sec-title">Cuộn Thứ 1 (V):</div><div class="grid-2col-input" style="margin-bottom:6px;"><input type="number" inputmode="decimal" pattern="[0-9]*" id="tu_u2${p}1_1" step="any"><input type="number" inputmode="decimal" pattern="[0-9]*" id="tu_u2${p}1_2" step="any"></div><div class="sec-title">Cuộn Thứ 2 (V):</div><div class="grid-2col-input" style="margin-bottom:6px;"><input type="number" inputmode="decimal" pattern="[0-9]*" id="tu_u2${p}2_1" step="any"><input type="number" inputmode="decimal" pattern="[0-9]*" id="tu_u2${p}2_2" step="any"></div><div class="sec-title">Cuộn Thứ 3 (V):</div><div class="grid-2col-input"><input type="number" inputmode="decimal" pattern="[0-9]*" id="tu_u2${p}3_1" step="any"><input type="number" inputmode="decimal" pattern="[0-9]*" id="tu_u2${p}3_2" step="any"></div></div>`;
     });
     document.getElementById('tu_phas_container').innerHTML = tuTsbHtml;
 
+    // --- TU R1C ---
     let tuR1cHtml = '';
     phases.forEach((p, idx) => {
-        tuR1cHtml += `<div class="pha-card"><div class="pha-title"><span>${phaseIcons[idx]}</span><span>🌡️ T (°C): <input type="number" id="tu_temp_${p}" value="30" class="mini-in" style="width:55px !important;"></span></div><div class="grid-3col-input"><div class="coil-item"><label>Cuộn 1</label><input type="number" id="tu_r${p}_1" step="any"></div><div class="coil-item"><label>Cuộn 2</label><input type="number" id="tu_r${p}_2" step="any"></div><div class="coil-item"><label>Cuộn 3</label><input type="number" id="tu_r${p}_3" step="any"></div></div></div>`;
+        tuR1cHtml += `<div class="pha-card"><div class="pha-title"><span>${phaseIcons[idx]}</span><span>🌡️ T (°C): <input type="number" inputmode="decimal" pattern="[0-9]*" id="tu_temp_${p}" value="30" class="mini-in" style="width:55px !important;"></span></div><div class="grid-3col-input"><div class="coil-item"><label>Cuộn 1</label><input type="number" inputmode="decimal" pattern="[0-9]*" id="tu_r${p}_1" step="any"></div><div class="coil-item"><label>Cuộn 2</label><input type="number" inputmode="decimal" pattern="[0-9]*" id="tu_r${p}_2" step="any"></div><div class="coil-item"><label>Cuộn 3</label><input type="number" inputmode="decimal" pattern="[0-9]*" id="tu_r${p}_3" step="any"></div></div></div>`;
     });
     document.getElementById('tu_phas_container_r1c').innerHTML = tuR1cHtml;
     
     document.addEventListener('click', function(e) { if (e.target && e.target.matches('[data-action="master-tab"]')) { switchMasterTab(e.target.dataset.type); } });
 });
 
-function luuVaoLocalStorage(type, record) {
+// ==========================================
+// CÁC HÀM TƯƠNG TÁC VỚI DATABASE (INDEXEDDB)
+// ==========================================
+
+async function luuVaoDatabase(type, record) {
     try {
         var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
-        var history = JSON.parse(localStorage.getItem(key) || '[]');
+        var history = (await localforage.getItem(key)) || [];
         var currentDay = record.time.split(" ")[0];
         var recTag = (record.tag || "").replace(/\s/g,'').toUpperCase();
-
         var merged = false;
+
         if (history.length > 0) {
             var histTag = (history[0].tag || "").replace(/\s/g,'').toUpperCase();
             var histDay = (history[0].time || "").split(" ")[0];
-
             if (histTag === recTag && histDay === currentDay) {
                 var isTSB = record.type.includes("Tỉ Số"); var isR1C = record.type.includes("R1C"); var isTH = record.type.includes("Từ Hoá");
-                
                 if ((isTSB && !history[0].rawTSB) || (isR1C && !history[0].rawR1C) || (isTH && !history[0].rawTH)) {
                     if (isTSB) { history[0].tsbDetail = record.detail; history[0].rawTSB = record.rawData; }
                     if (isR1C) { history[0].r1cDetail = record.detail; history[0].rawR1C = record.rawData; }
                     if (isTH)  { history[0].thDetail = record.detail; history[0].rawTH = record.rawData; }
-                    
                     history[0].type = "Đã lưu Biên bản Đầy Đủ"; history[0].time = record.time; history[0].synced = false;
                     merged = true;
                 }
             }
         }
-
         if (!merged) {
             var newRecord = {
                 time: record.time, tag: record.tag, equip: record.equip, station: record.station, type: record.type, synced: false,
@@ -449,67 +489,192 @@ function luuVaoLocalStorage(type, record) {
             };
             history.unshift(newRecord);
         }
-        localStorage.setItem(key, JSON.stringify(history)); hienThiNhatKy(type);
-    } catch(e) { console.error("Lỗi tối ưu Storage:", e); alert("Vượt quá giới hạn bộ nhớ!"); }
+        await localforage.setItem(key, history); 
+        hienThiNhatKy(type);
+    } catch(e) { console.error("Lỗi Database:", e); showToast("Lỗi lưu trữ dữ liệu!", "error"); }
 }
 
-function checkHistoryDrift(type, currentTag, currentData, dataType) {
+async function checkHistoryDrift(type, currentTag, currentData, dataType) {
     try {
         var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
-        var history = JSON.parse(localStorage.getItem(key) || '[]');
+        var history = (await localforage.getItem(key)) || [];
         var alertStr = ""; 
         var curTagClean = (currentTag || "").replace(/\s/g,'').toUpperCase();
-        
         var pastRecords = history.filter(r => (r.tag || "").replace(/\s/g,'').toUpperCase() === curTagClean);
         
-        if (pastRecords.length === 0) {
-            return "<br>ℹ️ <i>Chưa có dữ liệu gốc (Baseline) để so sánh. App sẽ lấy lần lưu này làm mốc cho các lần đo sau.</i>";
-        }
+        if (pastRecords.length === 0) return "<br>ℹ️ <i>Chưa có dữ liệu gốc (Baseline) để so sánh.</i>";
 
         var oldRecord = pastRecords[0]; 
         var initialRecord = pastRecords[pastRecords.length - 1]; 
         
         if (dataType === 'TSB' && oldRecord && oldRecord.rawTSB) {
             var diffTsb = Math.abs(Math.abs(currentData.maxError) - Math.abs(oldRecord.rawTSB.maxError));
-            if (diffTsb > 0.5) { alertStr += "<br>⚠️ <b>CẢNH BÁO CBM TSB:</b> Sai số TSB thay đổi " + diffTsb.toFixed(3) + "% so với lần đo gần nhất (" + oldRecord.time + "). Vượt ngưỡng 0.5%!"; } 
-            else { alertStr += "<br>🔍 <b>Lịch sử TSB:</b> Ổn định so với lần đo gần nhất (" + oldRecord.time + ") (Δ = " + diffTsb.toFixed(3) + "%)."; }
+            if (diffTsb > 0.5) { alertStr += "<br>⚠️ <b>CBM TSB:</b> Sai số thay đổi " + diffTsb.toFixed(3) + "% so với lần đo gần nhất!"; } 
         }
         else if (dataType === 'R1C') {
-            if (oldRecord && oldRecord.rawR1C) {
-                var diffR1c = Math.abs(currentData.maxLech - oldRecord.rawR1C.maxLech);
-                if (diffR1c > 2.0) { alertStr += "<br>⚠️ <b>CẢNH BÁO CBM R1C:</b> Độ lệch pha tăng " + diffR1c.toFixed(2) + "% so với lần đo gần nhất (" + oldRecord.time + ")!"; } 
-            }
-            
             if (initialRecord && initialRecord.rawR1C && initialRecord.rawR1C.coils) {
-                var has5PercentDrift = false;
-                var driftDetails = [];
+                var has5PercentDrift = false; var driftDetails = [];
                 for (var c in currentData.coils) {
                     if (currentData.coils[c] && initialRecord.rawR1C.coils[c]) {
                         ['A', 'B', 'C'].forEach(p => {
-                            var curVal = currentData.coils[c][p];
-                            var initVal = initialRecord.rawR1C.coils[c][p];
-                            if (curVal !== null && curVal !== undefined && initVal !== null && initVal !== undefined && initVal > 0) {
+                            var curVal = currentData.coils[c][p]; var initVal = initialRecord.rawR1C.coils[c][p];
+                            if (curVal && initVal && initVal > 0) {
                                 var change = Math.abs(curVal - initVal) / initVal * 100;
-                                if (change > 5.0) {
-                                    has5PercentDrift = true;
-                                    driftDetails.push(`Cuộn ${c} Pha ${p} lệch ${change.toFixed(1)}%`);
-                                }
+                                if (change > 5.0) { has5PercentDrift = true; driftDetails.push(`Cuộn ${c} Pha ${p} lệch ${change.toFixed(1)}%`); }
                             }
                         });
                     }
                 }
-                if (has5PercentDrift) {
-                    alertStr += "<br>🚨 <b>BÁO ĐỘNG ĐỎ R1C (>5%):</b> Điện trở thay đổi VƯỢT 5% so với giá trị ban đầu (" + initialRecord.time + ")! Chi tiết: " + driftDetails.join("; ");
-                } else {
-                    alertStr += "<br>✅ <b>CBM R1C:</b> Điện trở tuyệt đối ổn định (<5%) so với mốc ban đầu (" + initialRecord.time + ").";
-                }
+                if (has5PercentDrift) alertStr += "<br>🚨 <b>BÁO ĐỘNG R1C (>5%):</b> Điện trở thay đổi VƯỢT 5% so với ban đầu! Chi tiết: " + driftDetails.join("; ");
             }
         }
         return alertStr;
     } catch(e) { return ""; }
 }
 
-function tinhTisoTI() {
+async function hienThiNhatKy(type) {
+    var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
+    var history = (await localforage.getItem(key)) || [];
+    var listDiv = document.getElementById(type + '_history_list');
+    if (history.length === 0) { listDiv.innerHTML = "<div style='color:#a0aec0; text-align:center; padding: 10px;'>Chưa có lịch sử.</div>"; return; }
+    
+    var html = "";
+    for (var i = 0; i < history.length; i++) {
+        var item = history[i];
+        var syncStatus = item.synced ? '<span class="sync-badge">Đã đồng bộ ☁️</span>' : '<span class="sync-badge" style="background:#fed7d7; color:#c53030;">Chưa đồng bộ</span>';
+        var deleteBtn = '<button class="btn-delete-item" onclick="xoaNhatKyRiengLe(\'' + type + '\', ' + i + ')">🗑️ Xóa</button>';
+        html += '<div class="history-item">' + syncStatus + deleteBtn + '<div class="history-time">' + item.time + ' - [' + item.tag + ']</div><div class="history-detail">' + (item.tsbDetail||"") + (item.r1cDetail||"") + (item.thDetail||"") + '</div></div>';
+    }
+    listDiv.innerHTML = html;
+}
+
+// XÓA NGHIỆP VỤ BẤT ĐỒNG BỘ
+async function xoaNhatKyRiengLe(type, index) { 
+    if(confirm("Sếp có chắc muốn xóa bản ghi này?")) { 
+        var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history'; 
+        var history = (await localforage.getItem(key)) || []; 
+        history.splice(index,1); 
+        await localforage.setItem(key, history); 
+        hienThiNhatKy(type); 
+    } 
+}
+async function xoaNhatKy(type) { 
+    if(confirm("CẢNH BÁO: Xóa TOÀN BỘ lịch sử thiết bị này?")) { 
+        var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history'; 
+        await localforage.removeItem(key); 
+        hienThiNhatKy(type); 
+        showToast("Đã xóa sạch dữ liệu!", "success");
+    } 
+}
+
+// VẼ BIỂU ĐỒ TỪ DB (BẤT ĐỒNG BỘ)
+let cbmChart = null;
+async function showTrendChart(type) {
+    const equip = document.getElementById(`${type}_equip_global`).value.trim();
+    const station = document.getElementById(`${type}_station_global`).value.trim();
+    if (!equip || !station) { showToast("Sếp vui lòng nhập Tên Thiết Bị và Trạm!", "warning"); return; }
+    
+    const tag = `${equip} - ${station}`.toUpperCase();
+    const key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
+    const rawHistory = (await localforage.getItem(key)) || [];
+    const history = rawHistory.filter(r => (r.tag || "").replace(/\s/g,'').toUpperCase() === tag.replace(/\s/g,''));
+    
+    if (history.length === 0) { showToast(`Chưa có dữ liệu cho ${equip}!`, "error"); return; }
+
+    document.getElementById('chartModal').style.display = 'flex';
+    document.getElementById('chartTitle').innerText = `XU HƯỚNG ĐỘ LỆCH R1C - ${equip}`;
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    if (cbmChart) cbmChart.destroy();
+    
+    const timeLabels = history.map(h => h.time.split(" ")[0]).reverse();
+    const dataPoints = history.map(h => (h.rawR1C && h.rawR1C.maxLech) ? parseFloat(h.rawR1C.maxLech) : 0).reverse();
+    
+    cbmChart = new Chart(ctx, {
+        type: 'line', data: { labels: timeLabels, datasets: [{ label: 'Độ lệch R1C lớn nhất (%)', data: dataPoints, borderColor: '#e32219', backgroundColor: 'rgba(227, 34, 25, 0.2)', tension: 0.3, fill: true, pointBackgroundColor: '#0a3b82', pointRadius: 5 }] },
+        options: { responsive: true, scales: { y: { beginAtZero: true, suggestedMax: 10 } } }
+    });
+}
+
+// XUẤT NHẬP DỮ LIỆU
+async function xuatExcelCSV(type) {
+    var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
+    var history = (await localforage.getItem(key)) || [];
+    if (history.length === 0) { showToast("Không có dữ liệu để xuất!", "warning"); return; }
+    
+    var html = "<html xmlns:x='urn:schemas-microsoft-com:office:excel'><head><meta charset='utf-8'><style>body{font-family:'Times New Roman';}h2{color:#0a3b82;text-align:center;}h3{color:#e32219;border-bottom:1px solid #ccc;padding-bottom:5px;}</style></head><body><h2>BÁO CÁO CBM " + type.toUpperCase() + "</h2>";
+    history.forEach(item => {
+        html += "<h3>📍 Trạm/Thiết bị: " + item.tag + " | ⏱ Lần đo: " + item.time + "</h3>";
+        if (item.tsbDetail) html += "<h4>1. TỈ SỐ (TSB)</h4><p>" + item.tsbDetail.replace(/<span[^>]*>|<\/span>/g, "") + "</p>";
+        if (item.r1cDetail) html += "<h4>2. R1C</h4><p>" + item.r1cDetail.replace(/<span[^>]*>|<\/span>/g, "") + "</p>";
+        if (item.thDetail) html += "<h4>3. TỪ HOÁ</h4><p>" + item.thDetail.replace(/<span[^>]*>|<\/span>/g, "") + "</p><hr>";
+    });
+    html += "</body></html>";
+    
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8;' }));
+    a.download = "Baocao_CBM_" + type.toUpperCase() + "_" + new Date().toISOString().slice(0,10) + ".xls";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+async function saulapBackupJSON(type) {
+    var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
+    var history = (await localforage.getItem(key)) || [];
+    if(history.length === 0) { showToast("Không có dữ liệu để Backup!", "warning"); return; }
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(history));
+    var a = document.createElement('a'); a.href = dataStr;
+    a.download = `Backup_DB_${type.toUpperCase()}_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+}
+
+async function nhapDulieutuJSON(event, type) {
+    var file = event.target.files[0]; if (!file) return;
+    var reader = new FileReader();
+    reader.onload = async function(e) {
+        try {
+            var importedData = JSON.parse(e.target.result);
+            if(Array.isArray(importedData)) {
+                var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
+                var existing = (await localforage.getItem(key)) || [];
+                var merged = existing.concat(importedData.filter(imp => !existing.some(ex => ex.time === imp.time)));
+                await localforage.setItem(key, merged);
+                showToast("Đã nạp DB thành công!", "success");
+                hienThiNhatKy(type);
+            }
+        } catch(err) { showToast("File Backup bị lỗi!", "error"); }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+async function dongBoCloudUp(typeStr) {
+    if (!CLOUD_URL) { showToast("Chưa cấu hình link Cloud!", "error"); return; }
+    var key = typeStr.toLowerCase() === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
+    var history = (await localforage.getItem(key)) || [];
+    var unsynced = history.filter(r => r.synced !== true);
+    if (unsynced.length === 0) { showToast("Dữ liệu " + typeStr + " đã đồng bộ hết!", "success"); return; }
+
+    var payload = { action: "upload", type: typeStr, records: unsynced }; 
+    var btn = event.target; var originalText = btn.innerText; btn.innerText = "⏳ ĐANG GỬI..."; btn.disabled = true;
+
+    fetch(CLOUD_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) })
+    .then(res => res.json()).then(async data => {
+        if (data.status === "success") {
+            history.forEach(r => { if(r.synced !== true) r.synced = true; }); 
+            await localforage.setItem(key, history);
+            showToast("Đã đẩy lên Google Sheets!", "success"); hienThiNhatKy(typeStr.toLowerCase());
+        } else { showToast("Lỗi máy chủ: " + data.message, "error"); }
+    }).catch(err => showToast("Lỗi mạng: " + err, "error")).finally(() => { btn.innerText = originalText; btn.disabled = false; });
+}
+
+function dongBoCloudDown(typeStr) {
+    // Placeholder chức năng kéo dữ liệu từ Sheets
+    showToast("Tính năng kéo dữ liệu từ Cloud đang được hoàn thiện, sẽ update ở bản sau Sếp nhé!", "warning");
+}
+
+// ==========================================
+// CÁC HÀM TÍNH TOÁN NGHIỆP VỤ CỐT LÕI (TI & TU)
+// ==========================================
+
+async function tinhTisoTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
@@ -543,36 +708,33 @@ function tinhTisoTI() {
                         if(Math.abs(saiso) > Math.abs(rawDataTSB.maxError)) rawDataTSB.maxError = saiso;
                         var Ratio_P_Actual = (ip_n / meas) * is_n;
                         var isHighError = Math.abs(saiso) > 0.5; if(isHighError) { tapHasError = true; hasAlert = true; }
-                        
-                        rowObj[key] = { ratio: `${Ratio_P_Actual.toFixed(2)}/${is_n}`, err: saiso.toFixed(3), isErr: isHighError };
                         rowCells += `<td style="${isHighError?'background-color:#fff5f5;color:#e53e3e;':''}"><b>${Ratio_P_Actual.toFixed(2)}/${is_n}</b><br><span class="${isHighError?'error-badge':'pass-badge'}">${(saiso>0?"+":"")+saiso.toFixed(3)}%</span></td>`;
-                        
                         var pLog = `Pha ${key.toUpperCase()}: ${Ratio_P_Actual.toFixed(2)}/${is_n} (${(saiso>0?"+":"")+saiso.toFixed(3)}%)`;
                         logBlock += `&nbsp;&nbsp;${idx===2?"└":"├"} ${isHighError?`<span class="log-error-text">${pLog}</span>`:pLog}<br>`;
                     } else { rowCells += `<td>-</td>`; }
                 });
-                
-                rawDataTSB.tableData.push(rowObj);
                 coilRowsHtml += `<tr>${t===1 ? `<td rowspan="[ROWSPAN]" style="vertical-align:middle;"><b>${c}</b></td>` : ""}<td><b>${tapHasError?`<span style="color:#e53e3e;">${tapName}</span>`:tapName}</b></td><td>${ip_n}/${is_n}</td>${rowCells}</tr>`;
-                detailLog += `${tapHasError?`<span class="log-error-text"><b>▶ Cuộn ${c} [${tapName}]</b> - Đ/M: ${ip_n}/${is_n}</span>`:`<b>▶ Cuộn ${c} [${tapName}]</b> - Đ/M: ${ip_n}/${is_n}`}<br>${logBlock}`;
+                detailLog += `${tapHasError?`<span class="log-error-text"><b>▶ Cuộn ${c} [${tapName}]</b></span>`:`<b>▶ Cuộn ${c} [${tapName}]</b>`}<br>${logBlock}`;
             }
         }
         if(coilHasData) { tbodyHtml += coilRowsHtml.replace('[ROWSPAN]', (coilRowsHtml.match(/<tr>/g) || []).length); }
     }
     
-    if (!hasData) { alert("Vui lòng nhập dòng thứ cấp đo được!"); return; }
+    if (!hasData) { showToast("Nhập dữ liệu TSB TI Sếp nhé!", "warning"); return; }
     
+    var historyDrift = await checkHistoryDrift('ti', tag, rawDataTSB, 'TSB');
     var alertMsg = hasAlert ? "⚠️ <b>CẢNH BÁO SAI SỐ TSB THIẾT BỊ: Vượt ngưỡng 0.5%</b>" : "";
-    var historyDrift = checkHistoryDrift('ti', tag, rawDataTSB, 'TSB');
     var alertDiv = document.getElementById('ti_alert_box');
     alertDiv.style.display = (hasAlert || historyDrift !== "") ? 'block' : 'none';
     alertDiv.innerHTML = alertMsg + historyDrift;
 
-    document.getElementById('ti_result_table_body').innerHTML = tbodyHtml; document.getElementById('ti_result_tiso').style.display = 'block';
-    luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Tỉ Số Biến TI", tag: tag, equip: equip, station: station, detail: detailLog, rawData: rawDataTSB });
+    document.getElementById('ti_result_table_body').innerHTML = tbodyHtml; 
+    document.getElementById('ti_result_tiso').style.display = 'block';
+    
+    await luuVaoDatabase('ti', { time: layThoiGian(), type: "Tỉ Số Biến TI", tag: tag, equip: equip, station: station, detail: detailLog, rawData: rawDataTSB });
 }
 
-function tinhR1CTI() {
+async function tinhR1CTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
@@ -615,20 +777,16 @@ function tinhR1CTI() {
                     if (lechTap > 10.0) { isHighErrorTap = true; hasAlertR1C = true; }
                 }
 
-                var rowObj = { coil: c, tap: tapName, isErr: isHighErrorTap, lechTap: lechTap.toFixed(1) };
                 var rowCells = ""; var logBlock = "";
-                
                 r_75_vals.forEach((r_75, idx) => {
                     var key = ['a','b','c'][idx];
                     if (r_75 !== null) {
-                        rowObj[key] = r_75.toFixed(4);
                         rowCells += `<td style="${isHighErrorTap?'background-color:#fff5f5;color:#e53e3e;':''}"><b>${r_75.toFixed(4)}</b></td>`;
                         var pLog = `Pha ${key.toUpperCase()}: ${r_75.toFixed(4)} Ω`;
                         logBlock += `&nbsp;&nbsp;${idx===2?"└":"├"} ${isHighErrorTap?`<span class="log-error-text">${pLog}</span>`:pLog}<br>`;
                     } else { rowCells += `<td>-</td>`; }
                 });
 
-                rawDataR1C.tableData.push(rowObj);
                 var tapHtml = isHighErrorTap ? `<span style="color:#e53e3e;">${tapName}</span><br><span class="error-badge">Lệch ${lechTap.toFixed(1)}%</span>` : tapName;
                 coilRowsHtml += `<tr>${t===1 ? `<td rowspan="[ROWSPAN]" style="vertical-align:middle;"><b>${c}</b></td>` : ""}<td><b>${tapHtml}</b></td>${rowCells}</tr>`;
                 detailLog += `${isHighErrorTap?`<span class="log-error-text"><b>▶ Cuộn ${c} [${tapName}]</b> (Lệch ${lechTap.toFixed(1)}%)</span>`:`<b>▶ Cuộn ${c} [${tapName}]</b>`}:<br>${logBlock}`;
@@ -638,74 +796,21 @@ function tinhR1CTI() {
         if(coilHasData) { tbodyHtml += coilRowsHtml.replace('[ROWSPAN]', (coilRowsHtml.match(/<tr>/g) || []).length); }
     }
     
-    if (!hasData) { alert("Vui lòng nhập số liệu R1C!"); return; }
+    if (!hasData) { showToast("Nhập dữ liệu R1C TI Sếp nhé!", "warning"); return; }
     
+    var historyDrift = await checkHistoryDrift('ti', tag, rawDataR1C, 'R1C');
     var alertR1CMsg = hasAlertR1C ? "⚠️ <b>CẢNH BÁO ĐỘ LỆCH PHA GIỮA CÁC PHA A-B-C (>10%)</b>" : "";
-    var historyDrift = checkHistoryDrift('ti', tag, rawDataR1C, 'R1C');
     var alertDiv = document.getElementById('ti_alert_box_r1c');
     alertDiv.style.display = (hasAlertR1C || historyDrift !== "") ? 'block' : 'none';
     alertDiv.innerHTML = alertR1CMsg + historyDrift;
 
-    document.getElementById('ti_result_r1c_body').innerHTML = tbodyHtml; document.getElementById('ti_result_r1c').style.display = 'block';
-    luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Quy Đổi R1C TI", tag: tag, equip: equip, station: station, detail: detailLog, rawData: rawDataR1C });
+    document.getElementById('ti_result_r1c_body').innerHTML = tbodyHtml; 
+    document.getElementById('ti_result_r1c').style.display = 'block';
+    
+    await luuVaoDatabase('ti', { time: layThoiGian(), type: "Quy Đổi R1C TI", tag: tag, equip: equip, station: station, detail: detailLog, rawData: rawDataR1C });
 }
 
-function handleXmlTuHoa(event, ph) {
-    var file = event.target.files[0]; if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            var xmlDoc = new DOMParser().parseFromString(e.target.result, "text/xml");
-            var validCards = Array.from(xmlDoc.getElementsByTagName("Cards_Item")).filter(card => 
-                card.getElementsByTagName("bHasResults")[0]?.textContent === "1" && 
-                card.getElementsByTagName("nType")[0]?.textContent === "8"
-            );
-            if(validCards.length === 0) { alert("File XML không có kết quả Đặc tính từ hoá hợp lệ!"); return; }
-            var limit = Math.min(validCards.length, 8);
-            if (limit > 5) { document.getElementById('ti_show_extra_th').checked = true; toggleExtraCoilsTH(true); }
-            
-            for(let i=0; i<limit; i++) {
-                let targetCard = validCards[i]; let c = i + 1; 
-                document.getElementById('ti_th_tap_' + ph + '_' + c).value = targetCard.getElementsByTagName("bstrName")[0]?.textContent || "";
-                var vKnee = 0, iKnee = 0;
-                var vValNode = targetCard.getElementsByTagName("Vknee")[0]?.getElementsByTagName("dValue")[0];
-                var iValNode = targetCard.getElementsByTagName("Iknee")[0]?.getElementsByTagName("dValue")[0];
-                
-                if(vValNode && vValNode.textContent.indexOf("IND") === -1) vKnee = parseFloat(vValNode.textContent);
-                if(iValNode && iValNode.textContent.indexOf("IND") === -1) iKnee = parseFloat(iValNode.textContent) * 1000;
-                if(vKnee > 0) document.getElementById('ti_th_uk_' + ph + '_' + c).value = vKnee.toFixed(2);
-                if(iKnee > 0) document.getElementById('ti_th_ik_' + ph + '_' + c).value = iKnee.toFixed(4);
-                
-                var points = [];
-                Array.from(targetCard.getElementsByTagName("Results_Item")).forEach(res => {
-                    var vStr = res.getElementsByTagName("V")[0]?.getElementsByTagName("dValue")[0]?.textContent;
-                    var iStr = res.getElementsByTagName("I")[0]?.getElementsByTagName("dValue")[0]?.textContent;
-                    if (vStr && iStr && vStr.indexOf("IND") === -1 && iStr.indexOf("IND") === -1) {
-                        points.push({v: parseFloat(vStr), i: parseFloat(iStr) * 1000});
-                    }
-                });
-                points.sort((a,b) => a.v - b.v);
-                var linearPoints = (vKnee > 0) ? points.filter(p => p.v < vKnee) : points;
-                if (linearPoints.length < 3) linearPoints = points;
-                
-                if(linearPoints.length > 0) {
-                    var p1 = linearPoints[Math.floor(linearPoints.length * 0.25)] || linearPoints[0];
-                    var p2 = linearPoints[Math.floor(linearPoints.length * 0.50)] || linearPoints[Math.floor(linearPoints.length/2)];
-                    var p3 = linearPoints[Math.floor(linearPoints.length * 0.75)] || linearPoints[linearPoints.length-1];
-                    
-                    document.getElementById('ti_th_u1_' + ph + '_' + c).value = p1.v.toFixed(2); document.getElementById('ti_th_i1_' + ph + '_' + c).value = p1.i.toFixed(4);
-                    document.getElementById('ti_th_u2_' + ph + '_' + c).value = p2.v.toFixed(2); document.getElementById('ti_th_i2_' + ph + '_' + c).value = p2.i.toFixed(4);
-                    document.getElementById('ti_th_u3_' + ph + '_' + c).value = p3.v.toFixed(2); document.getElementById('ti_th_i3_' + ph + '_' + c).value = p3.i.toFixed(4);
-                }
-            }
-            alert("Đã phân tích " + limit + " cuộn Từ Hoá cho Pha " + ph.toUpperCase() + "!");
-        } catch(err) { alert("Lỗi đọc XML Omicron: " + err); }
-        event.target.value = ''; 
-    };
-    reader.readAsText(file);
-}
-
-function luuTuHoaTI() {
+async function luuTuHoaTI() {
     var equip = document.getElementById('ti_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('ti_station_global').value.trim() || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
@@ -725,7 +830,6 @@ function luuTuHoaTI() {
             
             if(tap !== "" && u1 !== "") {
                 hasData = true; phaseHasData = true;
-                rawDataTH.tableData.push({ phase: ph.name, coil: c, tap: tap, p1: {u: u1, i: i1}, p2: {u: u2, i: i2}, p3: {u: u3, i: i3}, knee: {u: uk, i: ik} });
                 phaseHtml += `<tr><td>U(V) / I(mA)<br><b style="color:#e32219;">${tap}</b></td><td>${u1}<br><b>${i1}</b></td><td>${u2}<br><b>${i2}</b></td><td>${u3}<br><b>${i3}</b></td><td style="background:#fffaf0;"><span style="color:#d69e2e">Khuỷu</span><br><b>${uk}V / ${ik}mA</b></td></tr>`;
                 phaseLog += `&nbsp;&nbsp;├ <b>Cuộn ${c} [${tap}]</b>: Điểm khuỷu (${uk}V, ${ik}mA)<br>&nbsp;&nbsp;│ &nbsp;&nbsp;└ P1(${u1}V, ${i1}mA) | P2(${u2}V, ${i2}mA) | P3(${u3}V, ${i3}mA)<br>`;
             }
@@ -733,12 +837,13 @@ function luuTuHoaTI() {
         if(phaseHasData) { tbodyHtml += phaseHtml; detailLog += `<br>${ph.name.replace('🟡','').replace('🟢','').replace('🔴','')}<br>` + phaseLog; }
     });
     
-    if(!hasData) { alert("Sếp chưa nhập số liệu Từ hoá ạ!"); return; }
+    if(!hasData) { showToast("Sếp chưa nhập số liệu Từ hoá ạ!", "warning"); return; }
     document.getElementById('ti_result_th_body').innerHTML = tbodyHtml; document.getElementById('ti_result_th').style.display = 'block';
-    luuVaoLocalStorage('ti', { time: layThoiGian(), type: "Từ Hoá TI", tag: tag, equip: equip, station: station, detail: detailLog, rawData: rawDataTH });
+    
+    await luuVaoDatabase('ti', { time: layThoiGian(), type: "Từ Hoá TI", tag: tag, equip: equip, station: station, detail: detailLog, rawData: rawDataTH });
 }
 
-function tinhTisoTU() {
+async function tinhTisoTU() {
     var equip = document.getElementById('tu_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('tu_station_global').value.trim() || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
@@ -752,7 +857,6 @@ function tinhTisoTU() {
         var pname = ['Pha A', 'Pha B', 'Pha C'][idx];
         var us1 = parseFloat(document.getElementById('tu_u' + ph + '_s1')?.value || 10); 
         var us2 = parseFloat(document.getElementById('tu_u' + ph + '_s2')?.value || 10);
-        
         var v1_1 = parseFloat(document.getElementById('tu_u2' + ph + '1_1')?.value); var v1_2 = parseFloat(document.getElementById('tu_u2' + ph + '1_2')?.value);
         var v2_1 = parseFloat(document.getElementById('tu_u2' + ph + '2_1')?.value); var v2_2 = parseFloat(document.getElementById('tu_u2' + ph + '2_2')?.value);
         var v3_1 = parseFloat(document.getElementById('tu_u2' + ph + '3_1')?.value); var v3_2 = parseFloat(document.getElementById('tu_u2' + ph + '3_2')?.value);
@@ -767,7 +871,6 @@ function tinhTisoTU() {
                 if(Math.abs(saiso) > Math.abs(rawDataTSB.maxError)) rawDataTSB.maxError = saiso;
                 var isHighError = Math.abs(saiso) > 0.5; if (isHighError) hasAlert = true;
 
-                rawDataTSB.tableData.push({ phase: pname, coil: c.name, kn: c.Kn.toFixed(3), kDo: Ktt.toFixed(3), err: saiso.toFixed(3), isErr: isHighError });
                 var style = isHighError ? "background-color: #fff5f5; color: #e53e3e;" : "";
                 tbodyHtml += `<tr><td><b>${pname}</b></td><td>${c.name}</td><td>${c.Kn.toFixed(3)}</td><td style="${style}"><b>${Ktt.toFixed(3)}</b></td><td style="${style}"><span class="${isHighError?'error-badge':'pass-badge'}">${(saiso>0?"+":"")+saiso.toFixed(3)}%</span></td></tr>`;
                 detailLog += `<b>▶ ${pname} - ${c.name}</b> [Đ/M: ${c.Kn.toFixed(3)}]<br>&nbsp;&nbsp;└ K_đo: ${Ktt.toFixed(3)} ${isHighError?`<span class="log-error-text">(Sai số: ${(saiso>0?"+":"")+saiso.toFixed(3)}%)</span>`:`(Sai số: ${(saiso>0?"+":"")+saiso.toFixed(3)}%)`}<br>`;
@@ -775,19 +878,21 @@ function tinhTisoTU() {
         });
     });
     
-    if (!hasData) { alert("Nhập dữ liệu TU!"); return; }
+    if (!hasData) { showToast("Nhập dữ liệu TU Sếp nhé!", "warning"); return; }
     
+    var historyDrift = await checkHistoryDrift('tu', tag, rawDataTSB, 'TSB');
     var alertMsg = hasAlert ? "⚠️ <b>CẢNH BÁO SAI SỐ TU OVER-LIMIT (>0.5%)</b>" : "";
-    var historyDrift = checkHistoryDrift('tu', tag, rawDataTSB, 'TSB');
     var alertDiv = document.getElementById('tu_alert_box');
     alertDiv.style.display = (hasAlert || historyDrift !== "") ? 'block' : 'none';
     alertDiv.innerHTML = alertMsg + historyDrift;
 
-    document.getElementById('tu_result_table_body').innerHTML = tbodyHtml; document.getElementById('tu_result_tiso').style.display = 'block';
-    luuVaoLocalStorage('tu', { time: layThoiGian(), type: "Tỉ Số Biến TU", tag: tag, equip: equip, station: station, detail: detailLog, rawData: rawDataTSB });
+    document.getElementById('tu_result_table_body').innerHTML = tbodyHtml; 
+    document.getElementById('tu_result_tiso').style.display = 'block';
+    
+    await luuVaoDatabase('tu', { time: layThoiGian(), type: "Tỉ Số Biến TU", tag: tag, equip: equip, station: station, detail: detailLog, rawData: rawDataTSB });
 }
 
-function tinhR1CTU() {
+async function tinhR1CTU() {
     var equip = document.getElementById('tu_equip_global').value.trim() || "Chưa rõ TB";
     var station = document.getElementById('tu_station_global').value.trim() || "Chưa rõ Trạm";
     var tag = equip + " - " + station;
@@ -817,10 +922,10 @@ function tinhR1CTU() {
         }
     });
     
-    if (!hasData) { alert("Nhập R1C TU!"); return; }
+    if (!hasData) { showToast("Nhập R1C TU!", "warning"); return; }
 
     var hasAlertR1C = false;
-    var checkLech = function(cNum, cObj) {
+    var checkLech = function(cObj) {
         var arr = [cObj.A, cObj.B, cObj.C].filter(v => v !== null);
         if(arr.length >= 2) {
             var lech = ((Math.max.apply(null, arr) - Math.min.apply(null, arr)) / Math.min.apply(null, arr)) * 100;
@@ -829,136 +934,31 @@ function tinhR1CTU() {
         }
         return 0;
     };
-    var lechC1 = checkLech(1, rawDataR1C.coils[1]); var lechC2 = checkLech(2, rawDataR1C.coils[2]); var lechC3 = checkLech(3, rawDataR1C.coils[3]);
+    var lechC1 = checkLech(rawDataR1C.coils[1]); var lechC2 = checkLech(rawDataR1C.coils[2]); var lechC3 = checkLech(rawDataR1C.coils[3]);
 
     var tbodyHtml = ""; var detailLog = "";
     if(hasAlertR1C) { detailLog = `<span class="log-error-text">▶ CẢNH BÁO: ĐỘ LỆCH R1C VƯỢT 10%</span><br>`; }
 
     phaRows.forEach(row => {
-        rawDataR1C.tableData.push({
-            phase: row.name, t: row.t, k: row.k.toFixed(4),
-            r1: !isNaN(row.r1)?row.r1.toFixed(3):"-", r2: !isNaN(row.r2)?row.r2.toFixed(3):"-", r3: !isNaN(row.r3)?row.r3.toFixed(3):"-",
-            errC1: lechC1 > 10, errC2: lechC2 > 10, errC3: lechC3 > 10
-        });
         tbodyHtml += `<tr><td><b>${row.name}</b></td><td>${row.t}</td><td>${row.k.toFixed(4)}</td><td style="${lechC1>10?"background-color:#fff5f5;color:#e53e3e;":""}"><b>${(!isNaN(row.r1)?row.r1.toFixed(3):"-")}</b></td><td style="${lechC2>10?"background-color:#fff5f5;color:#e53e3e;":""}"><b>${(!isNaN(row.r2)?row.r2.toFixed(3):"-")}</b></td><td style="${lechC3>10?"background-color:#fff5f5;color:#e53e3e;":""}"><b>${(!isNaN(row.r3)?row.r3.toFixed(3):"-")}</b></td></tr>`;
         detailLog += `<b>▶ ${row.name} (${row.t}°C)</b> - k: ${row.k.toFixed(4)}<br>&nbsp;&nbsp;├ R1: ${lechC1>10?`<span class="log-error-text">${!isNaN(row.r1)?row.r1.toFixed(3):"-"}</span>`:(!isNaN(row.r1)?row.r1.toFixed(3):"-")} mΩ<br>&nbsp;&nbsp;├ R2: ${lechC2>10?`<span class="log-error-text">${!isNaN(row.r2)?row.r2.toFixed(3):"-"}</span>`:(!isNaN(row.r2)?row.r2.toFixed(3):"-")} mΩ<br>&nbsp;&nbsp;└ R3: ${lechC3>10?`<span class="log-error-text">${!isNaN(row.r3)?row.r3.toFixed(3):"-"}</span>`:(!isNaN(row.r3)?row.r3.toFixed(3):"-")} mΩ<br>`;
     });
 
+    var historyDrift = await checkHistoryDrift('tu', tag, rawDataR1C, 'R1C');
     var alertR1CMsg = hasAlertR1C ? "⚠️ <b>CẢNH BÁO ĐỘ LỆCH PHA GIỮA CÁC PHA A-B-C (>10%)</b>" : "";
-    var historyDrift = checkHistoryDrift('tu', tag, rawDataR1C, 'R1C');
     var alertDiv = document.getElementById('tu_alert_box_r1c');
     alertDiv.style.display = (hasAlertR1C || historyDrift !== "") ? 'block' : 'none';
     alertDiv.innerHTML = alertR1CMsg + historyDrift;
 
-    document.getElementById('tu_result_r1c_table_body').innerHTML = tbodyHtml; document.getElementById('tu_result_r1c').style.display = 'block';
-    luuVaoLocalStorage('tu', { time: layThoiGian(), type: "Quy Đổi R1C TU", tag: tag, equip: equip, station: station, detail: detailLog, rawData: rawDataR1C });
-}
-
-function renderTableFromJSON(dataType, rawData) {
-    if (!rawData || !rawData.tableData || rawData.tableData.length === 0) return "";
-    var html = "<table style='width:100%; border-collapse:collapse; margin-top:10px; font-size:11pt; text-align:center;'>";
+    document.getElementById('tu_result_r1c_table_body').innerHTML = tbodyHtml; 
+    document.getElementById('tu_result_r1c').style.display = 'block';
     
-    if (dataType === 'TI_TSB') {
-        html += "<thead><tr><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Cuộn</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Phân dòng</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>TSB Chuẩn</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Pha A</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Pha B</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Pha C</th></tr></thead><tbody>";
-        rawData.tableData.forEach(row => {
-            html += `<tr><td style="border:1px solid #000;padding:6px;"><b>${row.coil}</b></td><td style="border:1px solid #000;padding:6px;"><b>${row.tap}</b></td><td style="border:1px solid #000;padding:6px;">${row.nominal}</td>`;
-            ['a', 'b', 'c'].forEach(p => {
-                if (row[p]) {
-                    var style = row[p].isErr ? "background-color: #fff5f5; color: #e53e3e;" : "";
-                    html += `<td style="border:1px solid #000;padding:6px;${style}"><b>${row[p].ratio}</b><br><span>${(row[p].err>0?"+":"")+row[p].err}%</span></td>`;
-                } else html += "<td style='border:1px solid #000;padding:6px;'>-</td>";
-            });
-            html += "</tr>";
-        });
-    } else if (dataType === 'TI_R1C') {
-        html += "<thead><tr><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Cuộn</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Phân dòng</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Pha A (75°C)</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Pha B (75°C)</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Pha C (75°C)</th></tr></thead><tbody>";
-        rawData.tableData.forEach(row => {
-            var style = row.isErr ? "background-color: #fff5f5; color: #e53e3e;" : "";
-            var tapStr = row.isErr ? `<span style="color:#e53e3e;">${row.tap}</span><br><span style="color:#c53030; font-size:10px;">Lệch ${row.lechTap}%</span>` : row.tap;
-            html += `<tr><td style="border:1px solid #000;padding:6px;"><b>${row.coil}</b></td><td style="border:1px solid #000;padding:6px;"><b>${tapStr}</b></td>`;
-            ['a', 'b', 'c'].forEach(p => { html += `<td style="border:1px solid #000;padding:6px;${style}"><b>${row[p] || "-"}</b></td>`; });
-            html += "</tr>";
-        });
-    } else if (dataType === 'TI_TH') {
-        html += "<thead><tr><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Pha</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Cuộn</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Phân dòng</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Điểm 1</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Điểm 2</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Điểm 3</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Khuỷu</th></tr></thead><tbody>";
-        rawData.tableData.forEach(row => {
-            html += `<tr><td style="border:1px solid #000;padding:6px;"><b>${row.phase}</b></td><td style="border:1px solid #000;padding:6px;"><b>${row.coil}</b></td><td style="border:1px solid #000;padding:6px;"><b style="color:#e32219;">${row.tap}</b></td><td style="border:1px solid #000;padding:6px;">${row.p1.u}V<br><b>${row.p1.i}mA</b></td><td style="border:1px solid #000;padding:6px;">${row.p2.u}V<br><b>${row.p2.i}mA</b></td><td style="border:1px solid #000;padding:6px;">${row.p3.u}V<br><b>${row.p3.i}mA</b></td><td style="border:1px solid #000;padding:6px;background:#fffaf0;">${row.knee.u}V<br><b>${row.knee.i}mA</b></td></tr>`;
-        });
-    } else if (dataType === 'TU_TSB') {
-        html += "<thead><tr><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Pha</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Cuộn</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Kn Chuẩn</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>K_đo</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Sai số (%)</th></tr></thead><tbody>";
-        rawData.tableData.forEach(row => {
-            var style = row.isErr ? "background-color: #fff5f5; color: #e53e3e;" : "";
-            html += `<tr><td style="border:1px solid #000;padding:6px;"><b>${row.phase}</b></td><td style="border:1px solid #000;padding:6px;">${row.coil}</td><td style="border:1px solid #000;padding:6px;">${row.kn}</td><td style="border:1px solid #000;padding:6px;${style}"><b>${row.kDo}</b></td><td style="border:1px solid #000;padding:6px;${style}"><span>${(row.err>0?"+":"")+row.err}%</span></td></tr>`;
-        });
-    } else if (dataType === 'TU_R1C') {
-        html += "<thead><tr><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Pha</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Nhiệt độ (°C)</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>Hệ số k</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>R1 @ 75°C (mΩ)</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>R2 @ 75°C (mΩ)</th><th style='background:#0a3b82;color:#fff;border:1px solid #000;padding:6px;'>R3 @ 75°C (mΩ)</th></tr></thead><tbody>";
-        rawData.tableData.forEach(row => {
-            html += `<tr><td style="border:1px solid #000;padding:6px;"><b>${row.phase}</b></td><td style="border:1px solid #000;padding:6px;">${row.t}</td><td style="border:1px solid #000;padding:6px;">${row.k}</td><td style="border:1px solid #000;padding:6px;${row.errC1?"background-color:#fff5f5;color:#e53e3e;":""}"><b>${row.r1}</b></td><td style="border:1px solid #000;padding:6px;${row.errC2?"background-color:#fff5f5;color:#e53e3e;":""}"><b>${row.r2}</b></td><td style="border:1px solid #000;padding:6px;${row.errC3?"background-color:#fff5f5;color:#e53e3e;":""}"><b>${row.r3}</b></td></tr>`;
-        });
-    }
-    html += "</tbody></table><br>"; return html;
+    await luuVaoDatabase('tu', { time: layThoiGian(), type: "Quy Đổi R1C TU", tag: tag, equip: equip, station: station, detail: detailLog, rawData: rawDataR1C });
 }
 
-function xuatExcelCSV(type) {
-    var key = type === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
-    var history = JSON.parse(localStorage.getItem(key) || '[]');
-    if (history.length === 0) { alert("Không có dữ liệu để xuất!"); return; }
-
-    var html = "<html xmlns:x='urn:schemas-microsoft-com:office:excel'><head><meta charset='utf-8'><style>body{font-family:'Times New Roman',sans-serif;}h2{color:#0a3b82;text-align:center;}h3{color:#e32219;border-bottom:1px solid #ccc;padding-bottom:5px;}</style></head><body><h2>BÁO CÁO CBM THÍ NGHIỆM " + type.toUpperCase() + " - PTC3</h2>";
-
-    history.forEach(item => {
-        html += "<h3>📍 Trạm/Thiết bị: " + item.tag + " &nbsp;&nbsp;|&nbsp;&nbsp; ⏱ Lần đo: " + item.time + "</h3>";
-        if (item.rawTSB && item.rawTSB.tableData) html += "<h4>1. KẾT QUẢ TỈ SỐ (TSB)</h4>" + renderTableFromJSON(type === 'ti' ? 'TI_TSB' : 'TU_TSB', item.rawTSB);
-        else if (item.tsbDetail) html += "<h4>1. KẾT QUẢ TỈ SỐ (TSB)</h4><p>" + item.tsbDetail.replace(/<span[^>]*>|<\/span>/g, "") + "</p>";
-        
-        if (item.rawR1C && item.rawR1C.tableData) html += "<h4>2. KẾT QUẢ QUY ĐỔI R1C</h4>" + renderTableFromJSON(type === 'ti' ? 'TI_R1C' : 'TU_R1C', item.rawR1C);
-        else if (item.r1cDetail) html += "<h4>2. KẾT QUẢ QUY ĐỔI R1C</h4><p>" + item.r1cDetail.replace(/<span[^>]*>|<\/span>/g, "") + "</p>";
-        
-        if (item.rawTH && item.rawTH.tableData) html += "<h4>3. KẾT QUẢ ĐẶC TÍNH TỪ HOÁ</h4>" + renderTableFromJSON('TI_TH', item.rawTH);
-        else if (item.thDetail) html += "<h4>3. KẾT QUẢ ĐẶC TÍNH TỪ HOÁ</h4><p>" + item.thDetail.replace(/<span[^>]*>|<\/span>/g, "") + "</p>";
-        html += "<br><hr><br>";
-    });
-    html += "</body></html>";
-    
-    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([html], { type: 'application/vnd.ms-excel;charset=utf-8;' }));
-    a.download = "Baocao_CBM_" + type.toUpperCase() + "_" + new Date().toISOString().slice(0,10) + ".xls";
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-}
-
-function dongBoCloudUp(typeStr) {
-    if (!CLOUD_URL) { alert("Chưa cấu hình link Cloud!"); return; }
-    var key = typeStr.toLowerCase() === 'ti' ? 'evn_ti_history' : 'evn_tu_history';
-    var history = JSON.parse(localStorage.getItem(key) || '[]');
-    var unsynced = history.filter(r => r.synced !== true);
-    if (unsynced.length === 0) { alert("Dữ liệu " + typeStr + " đã đồng bộ lên Cloud rồi!"); return; }
-
-    var payload = { action: "upload", type: typeStr, records: unsynced }; 
-    var btn = event.target; var originalText = btn.innerText; btn.innerText = "⏳ ĐANG GỬI LÊN..."; btn.disabled = true;
-
-    fetch(CLOUD_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) })
-    .then(res => res.json()).then(data => {
-        if (data.status === "success") {
-            history.forEach(r => { if(r.synced !== true) r.synced = true; }); localStorage.setItem(key, JSON.stringify(history));
-            alert("Đã đẩy thành công bản ghi lên Google Sheets!"); hienThiNhatKy(typeStr.toLowerCase());
-        } else { alert("Lỗi từ Máy chủ: " + data.message); }
-    }).catch(err => alert("Lỗi kết nối mạng: " + err)).finally(() => { btn.innerText = originalText; btn.disabled = false; });
-}
-
-function hienThiNhatKy(type) {
-    var history = JSON.parse(localStorage.getItem(type === 'ti' ? 'evn_ti_history' : 'evn_tu_history') || '[]');
-    var listDiv = document.getElementById(type + '_history_list');
-    if (history.length === 0) { listDiv.innerHTML = "<div style='color:#a0aec0; text-align:center; padding: 10px;'>Chưa có lịch sử.</div>"; return; }
-    var html = "";
-    for (var i = 0; i < history.length; i++) {
-        var item = history[i];
-        var syncStatus = item.synced ? '<span class="sync-badge">Đã đồng bộ ☁️</span>' : '<span class="sync-badge" style="background:#fed7d7; color:#c53030;">Chưa đồng bộ</span>';
-        var deleteBtn = '<button class="btn-delete-item" onclick="xoaNhatKyRiengLe(\'' + type + '\', ' + i + ')">🗑️ Xóa</button>';
-        html += '<div class="history-item">' + syncStatus + deleteBtn + '<div class="history-time">' + item.time + ' - [' + item.tag + ']</div><div class="history-detail">' + (item.tsbDetail||"") + (item.r1cDetail||"") + (item.thDetail||"") + '</div></div>';
-    }
-    listDiv.innerHTML = html;
-}
-function xoaNhatKyRiengLe(type, index) { if(confirm("Xóa bản ghi?")){ var k = type==='ti'?'evn_ti_history':'evn_tu_history'; var h = JSON.parse(localStorage.getItem(k)); h.splice(index,1); localStorage.setItem(k, JSON.stringify(h)); hienThiNhatKy(type); } }
-function xoaNhatKy(type) { if(confirm("Xóa TOÀN BỘ?")){ localStorage.removeItem(type==='ti'?'evn_ti_history':'evn_tu_history'); hienThiNhatKy(type); } }
+// ==========================================
+// CÁC HÀM TIỆN ÍCH UI & EVENT (Không dùng Async)
+// ==========================================
 
 function switchMasterTab(type) {
     document.querySelectorAll('.master-tab-btn').forEach(b => b.classList.remove('active'));
@@ -976,23 +976,85 @@ function switchSubTab(masterType, tabId) {
     if (btns[tabIndex]) btns[tabIndex].classList.add('active');
     var contentElem = document.getElementById(tabId);
     if (contentElem) contentElem.classList.add('active');
+    
     if (tabId.endsWith('tab4') || (masterType === 'tu' && tabId.endsWith('tab3'))) {
         hienThiNhatKy(masterType);
     }
 }
 
 function layThoiGian() {
-    var now = new Date();
-    var pad = function(n) { return n < 10 ? '0' + n : n; };
+    var now = new Date(); var pad = function(n) { return n < 10 ? '0' + n : n; };
     return pad(now.getDate()) + '/' + pad(now.getMonth() + 1) + '/' + now.getFullYear() + " " + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
 }
 
 function getRadioValue(name) { var radios = document.getElementsByName(name); for (var i = 0; i < radios.length; i++) { if (radios[i].checked) return radios[i].value; } return null; }
+
+function getKnTU(uSo, valThu) {
+    if (valThu === 'none') return null;
+    let tuThu = 0;
+    if (valThu === '110_sqrt3') tuThu = 110 / Math.sqrt(3);
+    else if (valThu === '100_sqrt3') tuThu = 100 / Math.sqrt(3);
+    else if (valThu === '110_3') tuThu = 110 / 3;
+    else if (valThu === '100_3') tuThu = 100 / 3;
+    return (uSo * 1000 / Math.sqrt(3)) / tuThu;
+}
+
+function handleXmlTuHoa(event, ph) {
+    var file = event.target.files[0]; if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            var xmlDoc = new DOMParser().parseFromString(e.target.result, "text/xml");
+            var validCards = Array.from(xmlDoc.getElementsByTagName("Cards_Item")).filter(card => 
+                card.getElementsByTagName("bHasResults")[0]?.textContent === "1" && card.getElementsByTagName("nType")[0]?.textContent === "8"
+            );
+            if(validCards.length === 0) { showToast("XML Không có kết quả hợp lệ!", "error"); return; }
+            var limit = Math.min(validCards.length, 8);
+            if (limit > 5) { document.getElementById('ti_show_extra_th').checked = true; toggleExtraCoilsTH(true); }
+            for(let i=0; i<limit; i++) {
+                let targetCard = validCards[i]; let c = i + 1; 
+                document.getElementById('ti_th_tap_' + ph + '_' + c).value = targetCard.getElementsByTagName("bstrName")[0]?.textContent || "";
+                var vKnee = 0, iKnee = 0;
+                var vValNode = targetCard.getElementsByTagName("Vknee")[0]?.getElementsByTagName("dValue")[0];
+                var iValNode = targetCard.getElementsByTagName("Iknee")[0]?.getElementsByTagName("dValue")[0];
+                if(vValNode && vValNode.textContent.indexOf("IND") === -1) vKnee = parseFloat(vValNode.textContent);
+                if(iValNode && iValNode.textContent.indexOf("IND") === -1) iKnee = parseFloat(iValNode.textContent) * 1000;
+                if(vKnee > 0) document.getElementById('ti_th_uk_' + ph + '_' + c).value = vKnee.toFixed(2);
+                if(iKnee > 0) document.getElementById('ti_th_ik_' + ph + '_' + c).value = iKnee.toFixed(4);
+                
+                var points = [];
+                Array.from(targetCard.getElementsByTagName("Results_Item")).forEach(res => {
+                    var vStr = res.getElementsByTagName("V")[0]?.getElementsByTagName("dValue")[0]?.textContent;
+                    var iStr = res.getElementsByTagName("I")[0]?.getElementsByTagName("dValue")[0]?.textContent;
+                    if (vStr && iStr && vStr.indexOf("IND") === -1 && iStr.indexOf("IND") === -1) points.push({v: parseFloat(vStr), i: parseFloat(iStr) * 1000});
+                });
+                points.sort((a,b) => a.v - b.v);
+                var linearPoints = (vKnee > 0) ? points.filter(p => p.v < vKnee) : points;
+                if (linearPoints.length < 3) linearPoints = points;
+                
+                if(linearPoints.length > 0) {
+                    var p1 = linearPoints[Math.floor(linearPoints.length * 0.25)] || linearPoints[0];
+                    var p2 = linearPoints[Math.floor(linearPoints.length * 0.50)] || linearPoints[Math.floor(linearPoints.length/2)];
+                    var p3 = linearPoints[Math.floor(linearPoints.length * 0.75)] || linearPoints[linearPoints.length-1];
+                    document.getElementById('ti_th_u1_' + ph + '_' + c).value = p1.v.toFixed(2); document.getElementById('ti_th_i1_' + ph + '_' + c).value = p1.i.toFixed(4);
+                    document.getElementById('ti_th_u2_' + ph + '_' + c).value = p2.v.toFixed(2); document.getElementById('ti_th_i2_' + ph + '_' + c).value = p2.i.toFixed(4);
+                    document.getElementById('ti_th_u3_' + ph + '_' + c).value = p3.v.toFixed(2); document.getElementById('ti_th_i3_' + ph + '_' + c).value = p3.i.toFixed(4);
+                }
+            }
+            showToast("Đã nhập " + limit + " cuộn Từ Hoá Pha " + ph.toUpperCase() + "!", "success");
+        } catch(err) { showToast("Lỗi XML Omicron", "error"); }
+        event.target.value = ''; 
+    };
+    reader.readAsText(file);
+}
+
+// Chức năng Toggle UI
 function toggleFullTapsTI(isChecked) { document.querySelectorAll('.ti-extra-tap-row').forEach(e=>e.style.display = isChecked ? 'table-row' : 'none'); }
 function toggleFullTapsR1CTI(isChecked) { document.querySelectorAll('.ti-extra-tap-row-r1c').forEach(e=>e.style.display = isChecked ? 'table-row' : 'none'); }
 function toggleExtraCoilsTI(isChecked) { document.querySelectorAll('.ti-extra-coil').forEach(e=>e.style.display = isChecked ? 'block' : 'none'); }
 function toggleExtraCoilsR1CTI(isChecked) { document.querySelectorAll('.ti-extra-coil-r1c').forEach(e=>e.style.display = isChecked ? 'block' : 'none'); }
 function toggleExtraCoilsTH(isChecked) { document.querySelectorAll('.th-extra-coil').forEach(e=>e.style.display = isChecked ? 'table-row' : 'none'); }
+
 </script>
 </body>
 </html>
