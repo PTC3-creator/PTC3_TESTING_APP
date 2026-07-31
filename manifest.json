@@ -1,0 +1,23 @@
+{
+  "name": "CBM Thí Nghiệm TU & TI - PTC3",
+  "short_name": "CBM PTC3",
+  "description": "Ứng dụng hỗ trợ kiểm tra và đánh giá CBM thiết bị TU/TI PTC3",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f7fa",
+  "theme_color": "#0a3b82",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "image_da12fe.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "image_da12fe.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
