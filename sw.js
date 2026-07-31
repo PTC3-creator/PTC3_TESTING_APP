@@ -1,10 +1,11 @@
-const CACHE_NAME = 'cbm-ptc3-v1.5';
+const CACHE_NAME = 'cbm-ptc3-v1.6';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
   './image_da12fe.png',
-  'https://cdn.jsdelivr.net/npm/chart.js'
+  'https://cdn.jsdelivr.net/npm/chart.js',
+  'https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js' // Fix P0: Đã bổ sung thư viện Database vào bộ nhớ Offline
 ];
 
 // Cài đặt Service Worker và lưu cache tĩnh
@@ -18,7 +19,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Xóa cache cũ khi có phiên bản mới (đổi tên CACHE_NAME)
+// Xóa cache cũ khi có phiên bản mới
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -37,18 +38,14 @@ self.addEventListener('activate', (event) => {
 
 // Chiến lược Caching: "Cache First, falling back to Network"
 self.addEventListener('fetch', (event) => {
-  // Bỏ qua các API call đồng bộ (như gọi lên Google Sheets)
   if (event.request.url.includes('script.google.com')) {
     return;
   }
-
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      // Nếu có trong cache thì trả về ngay (Dùng offline)
       if (cachedResponse) {
         return cachedResponse;
       }
-      // Không có thì tải từ mạng
       return fetch(event.request);
     })
   );
